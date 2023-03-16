@@ -2,18 +2,24 @@ import styled from "styled-components";
 import { useState } from "react";
 
 const StyledNavBar = styled.div`
-  width: 20%;
-  height: 85%;
+  width: 23%;
+  height: 90vh;
   position: absolute;
-  background: rgba(255, 255, 255, 0.7);
-  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 3rem;
   font-size: 1.5vw;
 `;
 
 const Title = styled.h1`
   font-size: 1.5rem;
-  text-align: center;
-  color: {colors.white};
+  text-align: left;
+  color: white;
+  padding: 30px;
+  height: 80px;
+  left: 20%;
+  position: absolute;
+  font-family: "Noto Sans", sans-serif;
+  weight: bold;
 `;
 
 function NavBar() {

@@ -6,7 +6,7 @@ import Home from "./Components/Home";
 
 const colors = {
   black: "black",
-  white: "white",
+  white: "rgba(0,0,0,0.95)",
 };
 function App() {
   const [apiResult, setApiResult] = useState("");
@@ -24,7 +24,7 @@ function App() {
         backgroundSize: "cover",
         width: "100vw",
         height: "100vh",
-        backgroundColor: "#1d1723",
+        backgroundColor: "#aab6b8",
         fontSize: "20px",
         overflow: "hidden",
       }}
