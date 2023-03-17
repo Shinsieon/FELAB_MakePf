@@ -35,7 +35,7 @@ function Home() {
               position: "absolute",
               backgroundColor: "#fff5ea",
               width: "80%",
-              height: "90vh",
+              height: "85vh",
               left: "18%",
               borderRadius: "4rem",
             }}
