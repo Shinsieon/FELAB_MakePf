@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { FaDashcube } from "react-icons/fa";
+import { FaDiceD6 } from "react-icons/fa";
 
 const StyledNavBar = styled.div`
   width: 23%;
@@ -24,16 +24,19 @@ const Title = styled.h1`
 `;
 
 const StyledMenuItemUl = styled.div`
+  width: 100%;
   liststyle: none;
   position: absolute;
-  top: 20vh;
+  top: 30vh;
   color: #cccccc;
+  font-size: 1rem;
 `;
 
 const StyledMenuItemLi = styled.div`
   padding: 20px;
+  padding-left: 1.5vw;
   width: 100%;
-  height: 15px;
+  height: 18px;
   text-align: left;
   cursor: default;
   &:hover {
@@ -43,28 +46,29 @@ const StyledMenuItemLi = styled.div`
   }
 `;
 
-interface propsType {
-  menuItems: string[];
+interface menuPropsType {
+  name: string;
   icon: JSX.Element;
 }
 
-function NavBarItem({ menuItems }: propsType) {
-  const listItems = menuItems.map((item) => (
-    <StyledMenuItemLi onClick={() => console.log("hello")} key={item}>
-      <FaDashcube />
-      <a>{item}</a>
+function NavBarItem({ name, icon }: menuPropsType) {
+  return (
+    <StyledMenuItemLi onClick={() => console.log("hello")} key={name}>
+      {icon}
+      <a>{name}</a>
     </StyledMenuItemLi>
-  ));
-  return <StyledMenuItemUl>{listItems}</StyledMenuItemUl>;
+  );
 }
 
 function NavBar() {
   const [userName, setUserName] = useState<string>("User");
-  const [menus, setMenus] = useState<string[]>(["Dashboard", "Portfolio"]);
   return (
     <StyledNavBar>
       <Title>hello {userName}</Title>
-      <NavBarItem menuItems={menus}></NavBarItem>
+      <StyledMenuItemUl>
+        <NavBarItem name="Dashboard" icon={<FaDiceD6 />}></NavBarItem>
+        <NavBarItem name="Portfoilo" icon={<FaDiceD6 />}></NavBarItem>
+      </StyledMenuItemUl>
     </StyledNavBar>
   );
 }

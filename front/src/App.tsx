@@ -4,10 +4,6 @@ import axios from "axios";
 import { Route, Routes } from "react-router";
 import Home from "./Components/Home";
 
-const colors = {
-  black: "black",
-  white: "rgba(0,0,0,0.95)",
-};
 function App() {
   const [apiResult, setApiResult] = useState("");
 
