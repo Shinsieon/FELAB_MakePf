@@ -2,7 +2,7 @@ import "./App.css";
 import React, { useEffect, useState } from "react";
 import { Route, Routes } from "react-router";
 import Home from "./Components/Home";
-
+import axios, { AxiosRequestConfig } from "axios";
 function App() {
   const [apiResult, setApiResult] = useState("");
 

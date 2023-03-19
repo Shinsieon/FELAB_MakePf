@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { FaDiceD6 } from "react-icons/fa";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 const Title = styled.h1`
   font-size: 1rem;
   text-align: left;
@@ -18,11 +18,18 @@ interface IStocks {
 }
 function Dashboard() {
   const [stocks, setStocks] = useState({});
+  useEffect(() => {
+    axios.get("http://localhost:8000/getStocks").then((response) => {
+      console.log(response);
+      setStocks(response.data);
+    });
+  }, []);
+  // const axiosConfig: AxiosRequestConfig = {
+  //   baseURL: "http://localhost:8000",
+  // };
+  // const client = axios.create(axiosConfig);
+  // const response = client.get("/getStocks");
 
-  axios.get("/getStocks").then((response) => {
-    console.log(response);
-    setStocks(response.data);
-  });
   return (
     <div>
       <Title>

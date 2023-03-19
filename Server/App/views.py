@@ -2,11 +2,13 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from datetime import datetime
 from pykrx import stock 
+import json
 
 # Create your views here.
 def apiHome(request):
     print("hello apiHome is called")
     return HttpResponse("DJANGO API")
+
 
 def getStocks(request):
     today = datetime.today().strftime("%Y%m%d")    # YYYYmmddHHMMSS 형태의 시간 출력
@@ -15,4 +17,4 @@ def getStocks(request):
     for ticker in tickers:
         name = stock.get_market_ticker_name(ticker)
         stocks[ticker] = name
-    return stocks
+    return HttpResponse(json.dumps(stocks))
