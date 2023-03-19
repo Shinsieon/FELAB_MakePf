@@ -1,6 +1,7 @@
 import { useMediaQuery } from "react-responsive";
 import React from "react";
 import NavBar from "./NavBar";
+import NavBar2 from "./NavBar2";
 import Container from "./Container";
 export const Mobile = ({
   children,
@@ -25,10 +26,10 @@ export const Pc = ({
 };
 function Home() {
   return (
-    <div style={{ padding: "4rem 3rem" }}>
+    <div>
       <Pc>
         <div>
-          <NavBar></NavBar>
+          <NavBar2></NavBar2>
           <Container></Container>
         </div>
       </Pc>
