@@ -3,7 +3,7 @@ import Dashboard from "./Dashboard";
 
 const StyledContainer = styled.div`
   position: absolute;
-  background-color: #fff5ea;
+  background-color: #fff2ee;
   width: 100%;
   height: 100%;
 `;
