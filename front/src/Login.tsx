@@ -3,8 +3,10 @@ import kakaoLoginIcon from "./assets/images/kakao_login_medium_narrow.png";
 
 const { Kakao } = window;
 const loginWithKakao = () => {
+  console.log("kakao button pressed");
   Kakao.Auth.authorize({
-    redirectUri: `https://localhost:3000/login/auth`,
+    redirectUri: "http://localhost:3000/login/oauth",
+    scope: "profile_nickname",
   });
 };
 
@@ -14,7 +16,7 @@ function LoginButton() {
       <img
         src={kakaoLoginIcon}
         style={{ cursor: "pointer" }}
-        onClick={() => loginWithKakao}
+        onClick={loginWithKakao}
         alt="카카오로 로그인하기!"
       ></img>
     </div>

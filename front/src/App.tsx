@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Route, Routes } from "react-router";
 import Home from "./Components/Home";
 import Login from "./Login";
+import KakaoRedirectHandler from "./KakaoRedirectHandler";
 import axios, { AxiosRequestConfig } from "axios";
 
 function App() {
@@ -23,7 +24,9 @@ function App() {
       }}
     >
       <Routes>
-        <Route path="/" Component={Login} />
+        <Route path="/" Component={Home} />
+        <Route path="/login" Component={Login} />
+        <Route path="/login/oauth" Component={KakaoRedirectHandler} />
       </Routes>
     </div>
   );
