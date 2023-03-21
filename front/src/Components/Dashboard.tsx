@@ -3,6 +3,7 @@ import { FaDiceD6 } from "react-icons/fa";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import React from "react";
+import StyledProfile from "./Profile";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -108,7 +109,7 @@ function Dashboard_ment() {
         left: "3rem",
         fontSize: "rem",
         textAlign: "left",
-        letterSpacing: "0.25rem",
+        letterSpacing: "0.2rem",
       }}
     >
       <h1>
@@ -131,12 +132,27 @@ function Dashboard_PfPieBox() {
         borderRadius: "1rem",
       }}
     >
-      <Line options={options} data={data2}></Line>
       <Pie data={data}></Pie>
     </div>
   );
 }
-function Dashboard_PfRetLinBox() {}
+function Dashboard_PfRetLinBox() {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        top: "15rem",
+        backgroundColor: "white",
+        height: "50vh",
+        width: "55vw",
+        left: "40vw",
+        borderRadius: "1rem",
+      }}
+    >
+      <Line options={options} data={data2}></Line>
+    </div>
+  );
+}
 function Dashboard() {
   const [stocks, setStocks] = useState({});
   useEffect(() => {
@@ -159,6 +175,26 @@ function Dashboard() {
       </TitleLabel>
       <Dashboard_ment></Dashboard_ment>
       <Dashboard_PfPieBox></Dashboard_PfPieBox>
+      <Dashboard_PfRetLinBox></Dashboard_PfRetLinBox>
+      <StyledProfile
+        width="10vw"
+        height="5vh"
+        left=""
+        right="5vw"
+        top="6.5vh"
+        color="#f1c232"
+      >
+        <h3
+          style={{
+            position: "absolute",
+            margin: 0,
+            fontSize: "1rem",
+            top: "50%",
+          }}
+        >
+          shinsieon
+        </h3>
+      </StyledProfile>
     </div>
   );
 }
