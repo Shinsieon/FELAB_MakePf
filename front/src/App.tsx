@@ -24,7 +24,7 @@ function App() {
       }}
     >
       <Routes>
-        <Route path="/" Component={Home} />
+        <Route path="/home" Component={Home} />
         <Route path="/login" Component={Login} />
         <Route path="/login/oauth" Component={KakaoRedirectHandler} />
       </Routes>

@@ -9,6 +9,8 @@ def apiHome(request):
     print("hello apiHome is called")
     return HttpResponse("DJANGO API")
 
+def kakaoLoginDone(request):
+    return HttpResponse("kakao login done")
 
 def getStocks(request):
     today = datetime.today().strftime("%Y%m%d")    # YYYYmmddHHMMSS 형태의 시간 출력

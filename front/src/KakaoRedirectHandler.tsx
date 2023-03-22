@@ -3,7 +3,7 @@ import axios from "axios";
 
 const { Kakao } = window;
 const api = axios.create({
-  baseURL: "https://localhost:3000",
+  baseURL: "http://localhost:8000",
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -15,11 +15,11 @@ const KakaoRedirectHandler = () => {
     let code = params.get("code");
     let grant_type = "authorization_code";
     let client_id = "999489b616f1e164fe961a7a3a7ca257";
-    let redirectUri = "https://localhost:3000/login/oauth";
+    let redirectUri = "http://localhost:3000/login/oauth";
     console.log(code);
     axios
       .post(
-        `https://kauth.kakao.com/oauth/token?grant_type=${grant_type}&client_id=${client_id}&redirect_uri=${redirectUri}/login/oauth&code=${code}`,
+        `https://kauth.kakao.com/oauth/token?grant_type=${grant_type}&client_id=${client_id}&redirect_uri=${redirectUri}&code=${code}`,
         {
           headers: {
             "Content-type": "application/x-www-form-urlencoded;charset = utf-8",
@@ -27,7 +27,6 @@ const KakaoRedirectHandler = () => {
         }
       )
       .then((res) => {
-        console.log(res + "here?");
         Kakao.Auth.setAccessToken(res.data.access_token);
         Kakao.API.request({
           url: "/v2/user/me",
@@ -38,13 +37,14 @@ const KakaoRedirectHandler = () => {
             console.log(error);
           },
         });
-        api
-          .post("/api/user/account/login/kakao", {
-            accessToken: res.data.access_token,
-          })
-          .then((res) => {
-            console.log(res);
-          });
+        fetch("http://localhost:8000/kakaoLoginDone", {
+          credentials: "include",
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify("asd"),
+        })
+          .then((result) => console.log("success====:", result))
+          .catch((error) => console.log("error============:", error));
       });
   }, []);
   return <div>login완료!</div>;
