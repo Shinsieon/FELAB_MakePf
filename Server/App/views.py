@@ -3,12 +3,14 @@ from django.http import HttpResponse
 from datetime import datetime
 from pykrx import stock 
 import json
-
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 # Create your views here.
 def apiHome(request):
     print("hello apiHome is called")
     return HttpResponse("DJANGO API")
 
+@method_decorator(csrf_exempt, name='dispatch')
 def kakaoLoginDone(request):
     return HttpResponse("kakao login done")
 

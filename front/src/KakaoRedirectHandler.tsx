@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const { Kakao } = window;
@@ -9,7 +10,10 @@ const api = axios.create({
     "Content-Type": "application/json",
   },
 });
+axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+axios.defaults.xsrfCookieName = "csrftoken";
 const KakaoRedirectHandler = () => {
+  const navigate = useNavigate();
   useEffect(() => {
     let params = new URL(document.location.toString()).searchParams;
     let code = params.get("code");
@@ -37,17 +41,18 @@ const KakaoRedirectHandler = () => {
             console.log(error);
           },
         });
-        fetch("http://localhost:8000/kakaoLoginDone", {
-          credentials: "include",
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify("asd"),
-        })
-          .then((result) => console.log("success====:", result))
-          .catch((error) => console.log("error============:", error));
+        api
+          .post("/kakaoLoginDone", {
+            accessToken: res.data.access_token,
+          })
+          .then((res) => {
+            window.Kakao.init(client_id);
+            window.Kakao.Auth.setAccessToken(res.data.access_token);
+            navigate("./Components/Home.tsx");
+          });
       });
   }, []);
-  return <div>login완료!</div>;
+  return <div></div>;
 };
 
 export default KakaoRedirectHandler;

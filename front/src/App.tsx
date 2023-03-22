@@ -1,14 +1,9 @@
 import "./App.css";
-import React, { useEffect, useState } from "react";
 import { Route, Routes } from "react-router";
 import Home from "./Components/Home";
 import Login from "./Login";
 import KakaoRedirectHandler from "./KakaoRedirectHandler";
-import axios, { AxiosRequestConfig } from "axios";
-
 function App() {
-  const [apiResult, setApiResult] = useState("");
-
   return (
     <div
       className="App"
@@ -24,9 +19,9 @@ function App() {
       }}
     >
       <Routes>
-        <Route path="/home" Component={Home} />
-        <Route path="/login" Component={Login} />
-        <Route path="/login/oauth" Component={KakaoRedirectHandler} />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/login/oauth" element={<KakaoRedirectHandler />} />
       </Routes>
     </div>
   );

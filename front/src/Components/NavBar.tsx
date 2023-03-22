@@ -1,76 +1,121 @@
-import styled from "styled-components";
 import { useState } from "react";
-import { FaDiceD6 } from "react-icons/fa";
-
-const StyledNavBar = styled.div`
-  width: 23%;
-  height: 85vh;
-  position: absolute;
-  background: rgba(0, 0, 0, 0.7);
-  border-radius: 3rem;
-  font-size: 1.5vw;
-`;
-
-const Title = styled.h1`
-  font-size: 1.5rem;
-  text-align: left;
-  color: white;
-  padding: 30px;
-  height: 80px;
-  left: 13%;
-  position: absolute;
-  font-family: "Noto Sans", sans-serif;
-  weight: bold;
-`;
-
-const StyledMenuItemUl = styled.div`
-  width: 100%;
-  liststyle: none;
-  position: absolute;
-  top: 30vh;
-  color: #cccccc;
-  font-size: 1rem;
-`;
+import styled from "styled-components";
+import { FaDiceD6, FaChartPie } from "react-icons/fa";
 
 const StyledMenuItemLi = styled.div`
-  padding: 20px;
-  padding-left: 1.5vw;
+  padding-top: 17px;
   width: 100%;
-  height: 18px;
-  text-align: left;
+  text-align: center;
   cursor: default;
+  font-size: 1rem;
+`;
+const StyledMenuItemLiOnHover = styled.div`
+  width: 80px;
+  padding: 15px;
+  text-align: center;
+  cursor: default;
+  color: white;
+  font-size: 0.7rem;
+  white-space: pre-wrap;
   &:hover {
-    color: white;
-    font-size: 1.1rem;
-    background-color: rgba(0, 0, 0, 0.1);
+    font-size: 0.75rem;
   }
 `;
-
 interface menuPropsType {
   name: string;
   icon: JSX.Element;
 }
+class CiconMap {
+  name: string;
+  icon: JSX.Element;
+  constructor(name: string, icon: JSX.Element) {
+    this.name = name;
+    this.icon = icon;
+  }
+}
+function NavBar2() {
+  const [onNavBarHover, setOnNavBarHover] = useState(false);
+  const [selectedNavBarItem, setSelectedNavBarItem] = useState("Dashboard");
+  let iconMap = new Map();
+  iconMap.set("Dashboard", <FaDiceD6 />);
+  iconMap.set("Portfolio", <FaChartPie />);
+  const NavBarOnHover = () => {
+    if (!onNavBarHover) {
+      return (
+        <NavBarItem
+          name={selectedNavBarItem}
+          icon={iconMap.get(selectedNavBarItem)}
+        ></NavBarItem>
+      );
+    } else
+      return (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+        >
+          <NavBarItemOnHover
+            name="Dashboard"
+            icon={<FaDiceD6 />}
+          ></NavBarItemOnHover>
+          <NavBarItemOnHover
+            name="Portfolio"
+            icon={<FaChartPie />}
+          ></NavBarItemOnHover>
+        </div>
+      );
+  };
 
-function NavBarItem({ name, icon }: menuPropsType) {
+  const NavBarItem = ({ name, icon }: menuPropsType) => {
+    return (
+      <StyledMenuItemLi key={name}>
+        {icon}
+        <a>{name}</a>
+      </StyledMenuItemLi>
+    );
+  };
+
+  const NavBarItemOnHover = ({ name, icon }: menuPropsType) => {
+    return (
+      <StyledMenuItemLiOnHover
+        key={name}
+        onClick={() => {
+          setSelectedNavBarItem(name);
+        }}
+      >
+        {icon}
+        <br />
+        <a>{name}</a>
+      </StyledMenuItemLiOnHover>
+    );
+  };
   return (
-    <StyledMenuItemLi onClick={() => console.log("hello")} key={name}>
-      {icon}
-      <a>{name}</a>
-    </StyledMenuItemLi>
+    <div
+      onMouseEnter={() => {
+        setOnNavBarHover(true);
+      }}
+      onMouseLeave={() => {
+        setOnNavBarHover(false);
+      }}
+      style={{
+        position: "absolute",
+        bottom: "1rem",
+        left: "50%",
+        transform: "translate(-50%)",
+        width: onNavBarHover ? "30vw" : "15vw",
+        transition: "width .2s linear",
+        height: "8vh",
+        borderRadius: "2rem",
+        color: "white",
+        zIndex: 5,
+        backgroundColor: "black",
+      }}
+    >
+      <NavBarOnHover></NavBarOnHover>
+    </div>
   );
 }
 
-function NavBar() {
-  const [userName, setUserName] = useState<string>("User");
-  return (
-    <StyledNavBar>
-      <Title>hello {userName}</Title>
-      <StyledMenuItemUl>
-        <NavBarItem name="Dashboard" icon={<FaDiceD6 />}></NavBarItem>
-        <NavBarItem name="Portfoilo" icon={<FaDiceD6 />}></NavBarItem>
-      </StyledMenuItemUl>
-    </StyledNavBar>
-  );
-}
-
-export default NavBar;
+export default NavBar2;
