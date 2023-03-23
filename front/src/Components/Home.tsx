@@ -1,7 +1,7 @@
 import { useMediaQuery } from "react-responsive";
 import NavBar2 from "./NavBar";
 import Container from "./Container";
-import { Navigate, useNavigate } from "react-router-dom";
+import Login from "../Login";
 import { useState, useEffect } from "react";
 export const Mobile = ({
   children,
@@ -25,23 +25,27 @@ export const Pc = ({
   return <>{isPc && children}</>;
 };
 function Home() {
-  const navigate = useNavigate();
   // Kakao SDK API를 이용해 사용자 정보 획득
-  try {
-    let data = window.Kakao.API.request({
-      url: "/v2/user/me",
-    });
-    console.log(data);
+  const [token, setToken] = useState();
+  useEffect(() => {
+    try {
+      let data = window.Kakao.API.request({
+        url: "/v2/user/me",
+      });
+      console.log(data);
+      if (!data || !data._result) setToken(data);
 
-    if (!data) {
-      //redirect to login
-      navigate("/login");
+      if (!token) {
+        //redirect to login
+        return <Login />;
+      }
+      // 사용자 정보 변수에 저장
+    } catch (err) {
+      console.log(err);
+      return <Login />;
     }
-    // 사용자 정보 변수에 저장
-  } catch (err) {
-    console.log(err);
-    navigate("/login");
-  }
+  }, []);
+
   return (
     <div>
       <Pc>

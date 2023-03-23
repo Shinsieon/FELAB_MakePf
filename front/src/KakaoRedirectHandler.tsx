@@ -46,9 +46,7 @@ const KakaoRedirectHandler = () => {
             accessToken: res.data.access_token,
           })
           .then((res) => {
-            window.Kakao.init(client_id);
-            window.Kakao.Auth.setAccessToken(res.data.access_token);
-            navigate("./Components/Home.tsx");
+            navigate("/");
           });
       });
   }, []);
