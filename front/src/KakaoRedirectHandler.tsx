@@ -41,12 +41,13 @@ const KakaoRedirectHandler = () => {
             console.log(error);
           },
         });
+        localStorage.setItem("access_token", res.data.access_token);
         api
           .post("/kakaoLoginDone", {
             accessToken: res.data.access_token,
           })
           .then((res) => {
-            navigate("/");
+            navigate("/home");
           });
       });
   }, []);

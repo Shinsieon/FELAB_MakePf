@@ -1,7 +1,7 @@
 import React from "react";
 import kakaoLoginIcon from "./assets/images/kakao_login_medium_narrow.png";
-
 const { Kakao } = window;
+
 const loginWithKakao = () => {
   console.log("kakao button pressed");
   Kakao.Auth.authorize({
