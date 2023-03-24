@@ -37,8 +37,6 @@ const KakaoRedirectHandler = () => {
             api
               .post("/kakaoLoginDone", {
                 userInfo: response.properties,
-
-                test: "sieon",
                 //accessToken: res.data.access_token,
               })
               .then((res) => {

@@ -100,6 +100,12 @@ export const data2 = {
     },
   ],
 };
+const logout = () => {
+  window.Kakao.Auth.logout(() => {
+    console.log("로그아웃 되었습니다.", window.Kakao.Auth.getAccessToken());
+    localStorage.clear();
+  });
+};
 function Dashboard_ment() {
   return (
     <div
@@ -116,6 +122,7 @@ function Dashboard_ment() {
         Manage your <br />
         Portfolio
       </h1>
+      <button onClick={logout}>logout</button>
     </div>
   );
 }

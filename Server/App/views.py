@@ -5,6 +5,7 @@ from pykrx import stock
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from .models import Usertbl
 # Create your views here.
 def apiHome(request):
     print("hello apiHome is called")
@@ -12,7 +13,12 @@ def apiHome(request):
 
 @method_decorator(csrf_exempt, name='dispatch')
 def kakaoLoginDone(request):
-    print(json.loads(request.body))
+    data = json.loads(request.body)
+    usertbl = Usertbl()
+    usertbl.k_name = data['userInfo']['nickname']
+    usertbl.k_email = data['userInfo']['email'] if 'email' in data['userInfo'] else ""
+    usertbl.save()
+    print(Usertbl.objects.all())
     return HttpResponse("kakao login done")
 
 def getStocks(request):

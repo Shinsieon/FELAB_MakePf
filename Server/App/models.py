@@ -1,7 +1,10 @@
 from django.db import models
 
+class Usertbl(models.Model):
+    k_number = models.BigAutoField(primary_key=True)
+    k_name = models.CharField(max_length=20)
+    k_email = models.CharField(max_length=50)
 
-class Tutorial(models.Model):
-    title = models.CharField(max_length=70, blank=False, default='')
-    description = models.CharField(max_length=200,blank=False, default='')
-    published = models.BooleanField(default=False)
+    class Meta:
+        managed = False
+        db_table = 'UserTBL'
