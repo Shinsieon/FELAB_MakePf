@@ -12,6 +12,7 @@ def apiHome(request):
 
 @method_decorator(csrf_exempt, name='dispatch')
 def kakaoLoginDone(request):
+    print(json.loads(request.body))
     return HttpResponse("kakao login done")
 
 def getStocks(request):

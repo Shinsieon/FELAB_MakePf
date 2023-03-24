@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { FaDiceD6, FaChartPie } from "react-icons/fa";
 
 const StyledMenuItemLi = styled.div`
-  padding-top: 17px;
+  padding-top: 14px;
   width: 100%;
   text-align: center;
   cursor: default;
@@ -106,7 +106,7 @@ function NavBar2() {
         transform: "translate(-50%)",
         width: onNavBarHover ? "30vw" : "15vw",
         transition: "width .2s linear",
-        height: "8vh",
+        height: "3rem",
         borderRadius: "2rem",
         color: "white",
         zIndex: 5,

@@ -6,7 +6,7 @@ const loginWithKakao = () => {
   console.log("kakao button pressed");
   Kakao.Auth.authorize({
     redirectUri: "http://localhost:3000/login/oauth",
-    scope: "profile_nickname",
+    scope: "profile_nickname, account_email",
   });
 };
 

@@ -14,6 +14,7 @@ function App() {
     const userToken = localStorage.getItem("access_token");
     if (!userToken) {
       navigate("/login");
+      return;
     }
     try {
       //window.Kakao.Auth.setAccessToken(userToken);

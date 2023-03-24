@@ -20,7 +20,6 @@ const KakaoRedirectHandler = () => {
     let grant_type = "authorization_code";
     let client_id = "999489b616f1e164fe961a7a3a7ca257";
     let redirectUri = "http://localhost:3000/login/oauth";
-    console.log(code);
     axios
       .post(
         `https://kauth.kakao.com/oauth/token?grant_type=${grant_type}&client_id=${client_id}&redirect_uri=${redirectUri}&code=${code}`,
@@ -35,20 +34,22 @@ const KakaoRedirectHandler = () => {
         Kakao.API.request({
           url: "/v2/user/me",
           success: (response: any) => {
-            console.log(response);
+            api
+              .post("/kakaoLoginDone", {
+                userInfo: response.properties,
+
+                test: "sieon",
+                //accessToken: res.data.access_token,
+              })
+              .then((res) => {
+                navigate("/home");
+              });
           },
           fail: (error: any) => {
             console.log(error);
           },
         });
         localStorage.setItem("access_token", res.data.access_token);
-        api
-          .post("/kakaoLoginDone", {
-            accessToken: res.data.access_token,
-          })
-          .then((res) => {
-            navigate("/home");
-          });
       });
   }, []);
   return <div></div>;
