@@ -6,7 +6,7 @@ const loginWithKakao = () => {
   console.log("kakao button pressed");
   Kakao.Auth.authorize({
     redirectUri: "http://localhost:3000/login/oauth",
-    scope: "profile_nickname, account_email",
+    scope: "profile_nickname, account_email, profile_image, gender, age_range",
   });
 };
 
@@ -32,12 +32,16 @@ function Login() {
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: "50vw",
-          height: "20vh",
+          padding: "40px",
+          marginTop: "2rem",
+          width: "30vw",
+          height: "30vh",
           borderRadius: "1rem",
+          backgroundColor: "rgba(255,255,255,0.4)",
           zIndex: 3,
         }}
       >
+        <h1>Manage your Portfolio</h1>
         <LoginButton></LoginButton>
 
         <p style={{ fontSize: "0.7rem" }}>
@@ -50,7 +54,7 @@ function Login() {
           width: "20rem",
           height: "20rem",
           top: "20vh",
-          left: "50vw",
+          left: "50%",
           backgroundColor: "rgba(255,192,203,0.3)",
           borderRadius: "20rem",
           filter: "blur(10px)",
@@ -63,7 +67,7 @@ function Login() {
           width: "30rem",
           height: "30rem",
           top: "30vh",
-          left: "10vw",
+          left: "25%",
           backgroundColor: "rgba(0,0,255,0.3)",
           borderRadius: "20rem",
           filter: "blur(10px)",

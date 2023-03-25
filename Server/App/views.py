@@ -15,11 +15,16 @@ def apiHome(request):
 def kakaoLoginDone(request):
     data = json.loads(request.body)
     usertbl = Usertbl()
-    usertbl.k_name = data['userInfo']['nickname']
-    usertbl.k_email = data['userInfo']['email'] if 'email' in data['userInfo'] else ""
-    usertbl.save()
-    print(Usertbl.objects.all())
+    usertbl.k_name = data['userInfo']['properties']['nickname']
+    usertbl.k_email = data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else ""
+    usertbl.k_image = data['userInfo']['properties']['profile_image']
+    usertbl.k_gender = data['userInfo']['kakao_account']['gender']
+    usertbl.k_age_range = data['userInfo']['kakao_account']['age_range']
+    print(data)
+    if(len(Usertbl.objects.filter(k_email = (data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else "")))==0):
+        usertbl.save()
     return HttpResponse("kakao login done")
+    
 
 def getStocks(request):
     today = datetime.today().strftime("%Y%m%d")    # YYYYmmddHHMMSS 형태의 시간 출력

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { KAKAO_APIKEY } from "../src/config";
 
 const { Kakao } = window;
 const api = axios.create({
@@ -18,7 +19,7 @@ const KakaoRedirectHandler = () => {
     let params = new URL(document.location.toString()).searchParams;
     let code = params.get("code");
     let grant_type = "authorization_code";
-    let client_id = "999489b616f1e164fe961a7a3a7ca257";
+    let client_id = KAKAO_APIKEY;
     let redirectUri = "http://localhost:3000/login/oauth";
     axios
       .post(
@@ -34,9 +35,10 @@ const KakaoRedirectHandler = () => {
         Kakao.API.request({
           url: "/v2/user/me",
           success: (response: any) => {
+            console.log(response);
             api
               .post("/kakaoLoginDone", {
-                userInfo: response.properties,
+                userInfo: response,
                 //accessToken: res.data.access_token,
               })
               .then((res) => {
