@@ -36,6 +36,11 @@ const KakaoRedirectHandler = () => {
           url: "/v2/user/me",
           success: (response: any) => {
             console.log(response);
+            localStorage.setItem("userName", response.properties.nickname);
+            localStorage.setItem(
+              "userImage",
+              response.properties.profile_image
+            );
             api
               .post("/kakaoLoginDone", {
                 userInfo: response,

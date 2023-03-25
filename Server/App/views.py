@@ -6,6 +6,7 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from .models import Usertbl
+from .models import UserStocks
 # Create your views here.
 def apiHome(request):
     print("hello apiHome is called")
@@ -15,6 +16,8 @@ def apiHome(request):
 def kakaoLoginDone(request):
     data = json.loads(request.body)
     usertbl = Usertbl()
+    userStocks = UserStocks()
+    userStocks.email = data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else ""
     usertbl.k_name = data['userInfo']['properties']['nickname']
     usertbl.k_email = data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else ""
     usertbl.k_image = data['userInfo']['properties']['profile_image']
@@ -23,7 +26,29 @@ def kakaoLoginDone(request):
     print(data)
     if(len(Usertbl.objects.filter(k_email = (data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else "")))==0):
         usertbl.save()
-    return HttpResponse("kakao login done")
+
+    if(len(UserStocks.objects.filter(email = (data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else "")))==0):
+        userStocks.save()
+    return HttpResponse(json.dumps(data))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
 
 def getStocks(request):

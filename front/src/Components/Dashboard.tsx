@@ -3,7 +3,7 @@ import { FaDiceD6 } from "react-icons/fa";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import React from "react";
-import StyledProfile from "./Profile";
+import Profile from "./Profile";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -100,12 +100,6 @@ export const data2 = {
     },
   ],
 };
-const logout = () => {
-  window.Kakao.Auth.logout(() => {
-    console.log("로그아웃 되었습니다.", window.Kakao.Auth.getAccessToken());
-    localStorage.clear();
-  });
-};
 function Dashboard_ment() {
   return (
     <div
@@ -122,7 +116,6 @@ function Dashboard_ment() {
         Manage your <br />
         Portfolio
       </h1>
-      <button onClick={logout}>logout</button>
     </div>
   );
 }
@@ -162,9 +155,9 @@ function Dashboard_PfRetLinBox() {
 }
 function Dashboard() {
   const [stocks, setStocks] = useState({});
+
   useEffect(() => {
     axios.get("http://localhost:8000/getStocks").then((response) => {
-      console.log(response);
       setStocks(response.data);
     });
   }, []);
@@ -176,32 +169,14 @@ function Dashboard() {
 
   return (
     <div>
-      <TitleLabel>
+      {/* <TitleLabel>
         <FaDiceD6 />
         Dashboard
-      </TitleLabel>
+      </TitleLabel> */}
       <Dashboard_ment></Dashboard_ment>
       <Dashboard_PfPieBox></Dashboard_PfPieBox>
       <Dashboard_PfRetLinBox></Dashboard_PfRetLinBox>
-      <StyledProfile
-        width="10vw"
-        height="5vh"
-        left=""
-        right="5vw"
-        top="6.5vh"
-        color="#f1c232"
-      >
-        <h3
-          style={{
-            position: "absolute",
-            margin: 0,
-            fontSize: "1rem",
-            top: "50%",
-          }}
-        >
-          shinsieon
-        </h3>
-      </StyledProfile>
+      <Profile></Profile>
     </div>
   );
 }

@@ -22,6 +22,13 @@ function LoginButton() {
     </div>
   );
 }
+function LogoutButton() {
+  return (
+    <div>
+      <button value="logout"></button>
+    </div>
+  );
+}
 
 function Login() {
   return (
