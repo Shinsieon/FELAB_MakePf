@@ -41,6 +41,7 @@ const KakaoRedirectHandler = () => {
               "userImage",
               response.properties.profile_image
             );
+            localStorage.setItem("userMail", response.kakao_account.email);
             api
               .post("/kakaoLoginDone", {
                 userInfo: response,

@@ -27,31 +27,19 @@ def kakaoLoginDone(request):
     if(len(Usertbl.objects.filter(k_email = (data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else "")))==0):
         usertbl.save()
 
-    if(len(UserStocks.objects.filter(email = (data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else "")))==0):
-        userStocks.save()
-    return HttpResponse(json.dumps(data))
+    # if(len(UserStocks.objects.filter(email = (data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else "")))==0):
+    #     userStocks.save()
+    return HttpResponse("Login Done!")
 
+@method_decorator(csrf_exempt, name='dispatch')
+def getMyStocks(request):
+    dataFromView = json.loads(request.body)
+    print(dataFromView)
+    myStocks = UserStocks.objects.filter(email=dataFromView['email'])
+    print(myStocks)
+    return HttpResponse(myStocks.values())
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-def getStocks(request):
+def getAllStocks(req):
     today = datetime.today().strftime("%Y%m%d")    # YYYYmmddHHMMSS 형태의 시간 출력
     stocks = {}
     tickers = stock.get_market_ticker_list(today)

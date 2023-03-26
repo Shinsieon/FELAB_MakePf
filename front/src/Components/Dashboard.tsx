@@ -16,6 +16,7 @@ import {
   Title,
 } from "chart.js";
 import { Pie, Line } from "react-chartjs-2";
+import { type } from "os";
 
 ChartJS.register(
   ArcElement,
@@ -37,38 +38,6 @@ const TitleLabel = styled.h1`
   font-family: "Noto Sans", sans-serif;
 `;
 
-interface IStocks {
-  code: string;
-  name: string;
-  market: string;
-}
-
-export const data = {
-  labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-  datasets: [
-    {
-      label: "# of Votes",
-      data: [12, 19, 3, 5, 2, 3],
-      backgroundColor: [
-        "rgba(255, 99, 132, 0.2)",
-        "rgba(54, 162, 235, 0.2)",
-        "rgba(255, 206, 86, 0.2)",
-        "rgba(75, 192, 192, 0.2)",
-        "rgba(153, 102, 255, 0.2)",
-        "rgba(255, 159, 64, 0.2)",
-      ],
-      borderColor: [
-        "rgba(255, 99, 132, 1)",
-        "rgba(54, 162, 235, 1)",
-        "rgba(255, 206, 86, 1)",
-        "rgba(75, 192, 192, 1)",
-        "rgba(153, 102, 255, 1)",
-        "rgba(255, 159, 64, 1)",
-      ],
-      borderWidth: 1,
-    },
-  ],
-};
 export const options = {
   responsive: true,
   plugins: {
@@ -119,7 +88,57 @@ function Dashboard_ment() {
     </div>
   );
 }
-function Dashboard_PfPieBox() {
+
+interface Iasset {
+  email: string;
+  stock: string;
+  weight: number;
+  amount: number;
+}
+const Dashboard_PfPieBox = ({ assets }: { assets: Iasset[] }) => {
+  const data = {
+    labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+    datasets: [
+      {
+        label: "# of Votes",
+        data: [12, 19, 3, 5, 2, 3],
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.2)",
+          "rgba(54, 162, 235, 0.2)",
+          "rgba(255, 206, 86, 0.2)",
+          "rgba(75, 192, 192, 0.2)",
+          "rgba(153, 102, 255, 0.2)",
+          "rgba(255, 159, 64, 0.2)",
+        ],
+        borderColor: [
+          "rgba(255, 99, 132, 1)",
+          "rgba(54, 162, 235, 1)",
+          "rgba(255, 206, 86, 1)",
+          "rgba(75, 192, 192, 1)",
+          "rgba(153, 102, 255, 1)",
+          "rgba(255, 159, 64, 1)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+  if (assets.length == 0) {
+    return (
+      <div
+        style={{
+          position: "absolute",
+          top: "15rem",
+          backgroundColor: "white",
+          height: "55vh",
+          width: "30vw",
+          left: "3rem",
+          borderRadius: "1rem",
+        }}
+      >
+        <h1>없어요</h1>
+      </div>
+    );
+  }
   return (
     <div
       style={{
@@ -135,7 +154,7 @@ function Dashboard_PfPieBox() {
       <Pie data={data}></Pie>
     </div>
   );
-}
+};
 function Dashboard_PfRetLinBox() {
   return (
     <div
@@ -154,19 +173,26 @@ function Dashboard_PfRetLinBox() {
   );
 }
 function Dashboard() {
-  const [stocks, setStocks] = useState({});
+  const [assets, setAssets] = useState<Iasset[] | null>([]);
 
   useEffect(() => {
-    axios.get("http://localhost:8000/getStocks").then((response) => {
-      setStocks(response.data);
-    });
+    axios
+      .post("http://localhost:8000/getMyStocks", {
+        email: localStorage.getItem("userMail"),
+      })
+      .then((response) => {
+        const result: Iasset[] = [];
+        if (response.data.length == 0) {
+        } else {
+          response.data.map((item: Iasset, idx: number) => {
+            result.push(item);
+          });
+        }
+        console.log(typeof result);
+        setAssets(result);
+        console.log(result);
+      });
   }, []);
-  // const axiosConfig: AxiosRequestConfig = {
-  //   baseURL: "http://localhost:8000",
-  // };
-  // const client = axios.create(axiosConfig);
-  // const response = client.get("/getStocks");
-
   return (
     <div>
       {/* <TitleLabel>
@@ -174,7 +200,7 @@ function Dashboard() {
         Dashboard
       </TitleLabel> */}
       <Dashboard_ment></Dashboard_ment>
-      <Dashboard_PfPieBox></Dashboard_PfPieBox>
+      <Dashboard_PfPieBox assets={assets ? assets : []}></Dashboard_PfPieBox>
       <Dashboard_PfRetLinBox></Dashboard_PfRetLinBox>
       <Profile></Profile>
     </div>
