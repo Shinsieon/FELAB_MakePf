@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { FaDiceD6 } from "react-icons/fa";
+import { AiOutlinePlusCircle } from "react-icons/ai";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import React from "react";
@@ -128,14 +129,23 @@ const Dashboard_PfPieBox = ({ assets }: { assets: Iasset[] }) => {
         style={{
           position: "absolute",
           top: "15rem",
-          backgroundColor: "white",
+          backgroundColor: "rgba(0,0,0,0.3)",
           height: "55vh",
           width: "30vw",
           left: "3rem",
           borderRadius: "1rem",
         }}
       >
-        <h1>없어요</h1>
+        <div
+          style={{
+            padding: "40% 0",
+          }}
+        >
+          <AiOutlinePlusCircle size={"5rem"} color={"white"} />
+          <p style={{ color: "white", fontSize: "1rem" }}>
+            보유한 자산이 없습니다. 추가해주세요
+          </p>
+        </div>
       </div>
     );
   }
