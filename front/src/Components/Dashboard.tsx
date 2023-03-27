@@ -143,7 +143,7 @@ const Dashboard_PfPieBox = ({ assets }: { assets: Iasset[] }) => {
         >
           <AiOutlinePlusCircle size={"5rem"} color={"white"} />
           <p style={{ color: "white", fontSize: "1rem" }}>
-            보유한 자산이 없습니다. 추가해주세요
+            보유한 자산이 없습니다. 추가해주세요s
           </p>
         </div>
       </div>
