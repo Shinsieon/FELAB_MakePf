@@ -5,6 +5,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import React from "react";
 import Profile from "./Profile";
+import Modal from "./Modal";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -97,6 +98,12 @@ interface Iasset {
   amount: number;
 }
 const Dashboard_PfPieBox = ({ assets }: { assets: Iasset[] }) => {
+  const [assetModalOpen, setAssetModelOpen] = useState(false);
+  const showModal = () => {
+    console.log("modal open");
+    setAssetModelOpen(true);
+  };
+
   const data = {
     labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
     datasets: [
@@ -141,10 +148,15 @@ const Dashboard_PfPieBox = ({ assets }: { assets: Iasset[] }) => {
             padding: "40% 0",
           }}
         >
-          <AiOutlinePlusCircle size={"5rem"} color={"white"} />
+          <AiOutlinePlusCircle
+            size={"5rem"}
+            color={"white"}
+            onClick={showModal}
+          />
           <p style={{ color: "white", fontSize: "1rem" }}>
-            보유한 자산이 없습니다. 추가해주세요s
+            보유한 자산이 없습니다. 추가해주세요
           </p>
+          {assetModalOpen && <Modal setAssetModalOpen={setAssetModelOpen} />}
         </div>
       </div>
     );
