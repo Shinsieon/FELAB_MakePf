@@ -52,7 +52,7 @@ const Dashboard_PfPieBox = ({ assets }: { assets: Iasset[] }) => {
       >
         <div
           style={{
-            padding: "40% 0",
+            padding: "35% 0",
           }}
         >
           <AiOutlinePlusCircle

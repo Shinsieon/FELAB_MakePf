@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Dashboard from "./Dashboard";
+import { useState } from "react";
 
 const StyledContainer = styled.div`
   position: absolute;
@@ -7,12 +8,7 @@ const StyledContainer = styled.div`
   width: 100%;
   height: 100%;
 `;
-
-function Container() {
-  return (
-    <StyledContainer>
-      <Dashboard></Dashboard>
-    </StyledContainer>
-  );
+function Container({ screen }: { screen: JSX.Element }) {
+  return <StyledContainer>{screen}</StyledContainer>;
 }
 export default Container;

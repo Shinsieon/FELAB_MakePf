@@ -1,6 +1,8 @@
 import { useMediaQuery } from "react-responsive";
-import NavBar2 from "./NavBar";
+import NavBar from "./NavBar";
 import Container from "./Container";
+import Dashboard from "./Dashboard";
+import { useState } from "react";
 
 export const Mobile = ({
   children,
@@ -24,12 +26,16 @@ export const Pc = ({
   return <>{isPc && children}</>;
 };
 function Home() {
+  const [screen, setScreen] = useState(<Dashboard />);
+  const changeScreen = (screen: JSX.Element) => {
+    setScreen(screen);
+  };
   return (
     <div>
       <Pc>
         <div>
-          <NavBar2></NavBar2>
-          <Container></Container>
+          <NavBar changeFunc={changeScreen}></NavBar>
+          <Container screen={screen}></Container>
         </div>
       </Pc>
       <Mobile>

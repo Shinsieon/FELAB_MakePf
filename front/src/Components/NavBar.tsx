@@ -1,6 +1,8 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { FaDiceD6, FaChartPie } from "react-icons/fa";
+import Dashboard from "./Dashboard";
+import Portfolio from "./Portfolio";
 
 const StyledMenuItemLi = styled.div`
   padding-top: 14px;
@@ -22,20 +24,17 @@ const StyledMenuItemLiOnHover = styled.div`
   }
 `;
 interface menuPropsType {
+  comp: JSX.Element;
   name: string;
   icon: JSX.Element;
 }
-class CiconMap {
-  name: string;
-  icon: JSX.Element;
-  constructor(name: string, icon: JSX.Element) {
-    this.name = name;
-    this.icon = icon;
-  }
-}
-function NavBar2() {
+function NavBar({ changeFunc }: { changeFunc: Function }) {
   const [onNavBarHover, setOnNavBarHover] = useState(false);
   const [selectedNavBarItem, setSelectedNavBarItem] = useState("Dashboard");
+
+  const changeNavBar = ({ item }: { item: JSX.Element }) => {
+    changeFunc(item);
+  };
   let iconMap = new Map();
   iconMap.set("Dashboard", <FaDiceD6 />);
   iconMap.set("Portfolio", <FaChartPie />);
@@ -43,6 +42,7 @@ function NavBar2() {
     if (!onNavBarHover) {
       return (
         <NavBarItem
+          comp={<Dashboard />}
           name={selectedNavBarItem}
           icon={iconMap.get(selectedNavBarItem)}
         ></NavBarItem>
@@ -57,10 +57,12 @@ function NavBar2() {
           }}
         >
           <NavBarItemOnHover
+            comp={<Dashboard />}
             name="Dashboard"
             icon={<FaDiceD6 />}
           ></NavBarItemOnHover>
           <NavBarItemOnHover
+            comp={<Portfolio />}
             name="Portfolio"
             icon={<FaChartPie />}
           ></NavBarItemOnHover>
@@ -77,12 +79,13 @@ function NavBar2() {
     );
   };
 
-  const NavBarItemOnHover = ({ name, icon }: menuPropsType) => {
+  const NavBarItemOnHover = ({ comp, name, icon }: menuPropsType) => {
     return (
       <StyledMenuItemLiOnHover
         key={name}
         onClick={() => {
           setSelectedNavBarItem(name);
+          changeFunc(comp);
         }}
       >
         {icon}
@@ -118,4 +121,4 @@ function NavBar2() {
   );
 }
 
-export default NavBar2;
+export default NavBar;
