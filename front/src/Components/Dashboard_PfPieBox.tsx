@@ -6,6 +6,7 @@ import { Pie } from "react-chartjs-2";
 
 const Dashboard_PfPieBox = ({ assets }: { assets: Iasset[] }) => {
   const [assetModalOpen, setAssetModelOpen] = useState(false);
+  const [mouseOn, setMouseOn] = useState(false);
   const showModal = () => {
     console.log("modal open");
     setAssetModelOpen(true);
@@ -40,10 +41,12 @@ const Dashboard_PfPieBox = ({ assets }: { assets: Iasset[] }) => {
   if (assets.length == 0) {
     return (
       <div
+        onMouseEnter={() => setMouseOn(true)}
+        onMouseLeave={() => setMouseOn(false)}
         style={{
           position: "absolute",
           top: "15rem",
-          backgroundColor: "rgba(0,0,0,0.3)",
+          backgroundColor: mouseOn ? "rgba(0,0,0,0.2)" : "rgba(0,0,0,0.3)",
           height: "55vh",
           width: "30vw",
           left: "3rem",
@@ -52,7 +55,7 @@ const Dashboard_PfPieBox = ({ assets }: { assets: Iasset[] }) => {
       >
         <div
           style={{
-            padding: "35% 0",
+            marginTop: "9rem",
           }}
         >
           <AiOutlinePlusCircle

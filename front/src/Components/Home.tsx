@@ -1,6 +1,5 @@
 import { useMediaQuery } from "react-responsive";
 import NavBar from "./NavBar";
-import Container from "./Container";
 import Dashboard from "./Dashboard";
 import { useState } from "react";
 
@@ -33,9 +32,16 @@ function Home() {
   return (
     <div>
       <Pc>
-        <div>
+        <div
+          style={{
+            position: "absolute",
+            backgroundColor: "#f2f2f2",
+            width: "100%",
+            height: "100%",
+          }}
+        >
           <NavBar changeFunc={changeScreen}></NavBar>
-          <Container screen={screen}></Container>
+          {screen}
         </div>
       </Pc>
       <Mobile>

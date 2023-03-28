@@ -92,7 +92,9 @@ function Dashboard() {
       </TitleLabel> */}
       <Dashboard_ment></Dashboard_ment>
       <Dashboard_PfPieBox assets={assets ? assets : []}></Dashboard_PfPieBox>
-      <Dashboard_PfRetLinBox></Dashboard_PfRetLinBox>
+      <Dashboard_PfRetLinBox
+        assets={assets ? assets : []}
+      ></Dashboard_PfRetLinBox>
       <Profile></Profile>
     </div>
   );
