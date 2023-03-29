@@ -1,9 +1,9 @@
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import Modal from "./Modal";
 import { Iasset } from "./Dashboard";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Pie } from "react-chartjs-2";
-
+import { connect } from "react-redux";
 const Dashboard_PfPieBox = ({ assets }: { assets: Iasset[] }) => {
   const [assetModalOpen, setAssetModelOpen] = useState(false);
   const [mouseOn, setMouseOn] = useState(false);
@@ -87,5 +87,7 @@ const Dashboard_PfPieBox = ({ assets }: { assets: Iasset[] }) => {
     </div>
   );
 };
-
-export default Dashboard_PfPieBox;
+function mapStateToProps(state: JSX.Element) {
+  return { currentScr: state };
+}
+export default connect(mapStateToProps)(Dashboard_PfPieBox);

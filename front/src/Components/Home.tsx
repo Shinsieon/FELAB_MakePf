@@ -2,7 +2,7 @@ import { useMediaQuery } from "react-responsive";
 import NavBar from "./NavBar";
 import Dashboard from "./Dashboard";
 import { useState } from "react";
-
+import { connect } from "react-redux";
 export const Mobile = ({
   children,
 }: {
@@ -24,11 +24,7 @@ export const Pc = ({
   });
   return <>{isPc && children}</>;
 };
-function Home() {
-  const [screen, setScreen] = useState(<Dashboard />);
-  const changeScreen = (screen: JSX.Element) => {
-    setScreen(screen);
-  };
+function Home(props: any) {
   return (
     <div>
       <Pc>
@@ -40,8 +36,8 @@ function Home() {
             height: "100%",
           }}
         >
-          <NavBar changeFunc={changeScreen}></NavBar>
-          {screen}
+          <NavBar></NavBar>
+          {props.currentScr}
         </div>
       </Pc>
       <Mobile>
@@ -50,4 +46,7 @@ function Home() {
     </div>
   );
 }
-export default Home;
+function mapStateToProps(state: JSX.Element) {
+  return { currentScr: state };
+}
+export default connect(mapStateToProps)(Home);

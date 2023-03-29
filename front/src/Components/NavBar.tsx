@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { FaDiceD6, FaChartPie } from "react-icons/fa";
 import Dashboard from "./Dashboard";
 import Portfolio from "./Portfolio";
-
+import { connect } from "react-redux";
 const StyledMenuItemLi = styled.div`
   padding-top: 14px;
   width: 100%;
@@ -24,16 +24,15 @@ const StyledMenuItemLiOnHover = styled.div`
   }
 `;
 interface menuPropsType {
-  comp: JSX.Element;
   name: string;
   icon: JSX.Element;
 }
-function NavBar({ changeFunc }: { changeFunc: Function }) {
+function NavBar(props: any) {
+  console.log(props);
   const [onNavBarHover, setOnNavBarHover] = useState(false);
-  const [selectedNavBarItem, setSelectedNavBarItem] = useState("Dashboard");
 
-  const changeNavBar = ({ item }: { item: JSX.Element }) => {
-    changeFunc(item);
+  const changeNavBar = (name: string) => {
+    props.dispatch({ type: name });
   };
   let iconMap = new Map();
   iconMap.set("Dashboard", <FaDiceD6 />);
@@ -42,9 +41,8 @@ function NavBar({ changeFunc }: { changeFunc: Function }) {
     if (!onNavBarHover) {
       return (
         <NavBarItem
-          comp={<Dashboard />}
-          name={selectedNavBarItem}
-          icon={iconMap.get(selectedNavBarItem)}
+          name={props.currentScr.type.name}
+          icon={iconMap.get(props.currentScr.type.name)}
         ></NavBarItem>
       );
     } else
@@ -57,12 +55,10 @@ function NavBar({ changeFunc }: { changeFunc: Function }) {
           }}
         >
           <NavBarItemOnHover
-            comp={<Dashboard />}
             name="Dashboard"
             icon={<FaDiceD6 />}
           ></NavBarItemOnHover>
           <NavBarItemOnHover
-            comp={<Portfolio />}
             name="Portfolio"
             icon={<FaChartPie />}
           ></NavBarItemOnHover>
@@ -79,13 +75,12 @@ function NavBar({ changeFunc }: { changeFunc: Function }) {
     );
   };
 
-  const NavBarItemOnHover = ({ comp, name, icon }: menuPropsType) => {
+  const NavBarItemOnHover = ({ name, icon }: menuPropsType) => {
     return (
       <StyledMenuItemLiOnHover
         key={name}
         onClick={() => {
-          setSelectedNavBarItem(name);
-          changeFunc(comp);
+          changeNavBar(name);
         }}
       >
         {icon}
@@ -120,5 +115,7 @@ function NavBar({ changeFunc }: { changeFunc: Function }) {
     </div>
   );
 }
-
-export default NavBar;
+function mapStateToProps(state: JSX.Element) {
+  return { currentScr: state };
+}
+export default connect(mapStateToProps)(NavBar);

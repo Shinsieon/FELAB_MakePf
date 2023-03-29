@@ -79,9 +79,7 @@ function Dashboard() {
             result.push(item);
           });
         }
-        console.log(typeof result);
         setAssets(result);
-        console.log(result);
       });
   }, []);
   return (
