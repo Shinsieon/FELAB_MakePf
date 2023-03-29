@@ -3,17 +3,17 @@ import "./index.css";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
-import Store from "./Store";
+import { scrStore } from "./Store";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLFormElement
 );
 root.render(
-  <Provider store={Store}>
-    <BrowserRouter>
+  <BrowserRouter>
+    <Provider store={scrStore}>
       <App></App>
-    </BrowserRouter>
-  </Provider>
+    </Provider>
+  </BrowserRouter>
 );
 
 // If you want to start measuring performance in your app, pass a function

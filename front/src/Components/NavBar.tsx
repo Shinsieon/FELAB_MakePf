@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FaDiceD6, FaChartPie } from "react-icons/fa";
 import Dashboard from "./Dashboard";
@@ -27,12 +27,17 @@ interface menuPropsType {
   name: string;
   icon: JSX.Element;
 }
-function NavBar(props: any) {
-  console.log(props);
+function NavBar({
+  currentScr,
+  dispatch,
+}: {
+  currentScr: JSX.Element;
+  dispatch: any;
+}) {
   const [onNavBarHover, setOnNavBarHover] = useState(false);
 
   const changeNavBar = (name: string) => {
-    props.dispatch({ type: name });
+    dispatch({ type: name });
   };
   let iconMap = new Map();
   iconMap.set("Dashboard", <FaDiceD6 />);
@@ -41,8 +46,8 @@ function NavBar(props: any) {
     if (!onNavBarHover) {
       return (
         <NavBarItem
-          name={props.currentScr.type.name}
-          icon={iconMap.get(props.currentScr.type.name)}
+          name={currentScr.type.name}
+          icon={iconMap.get(currentScr.type.name)}
         ></NavBarItem>
       );
     } else
@@ -118,4 +123,7 @@ function NavBar(props: any) {
 function mapStateToProps(state: JSX.Element) {
   return { currentScr: state };
 }
-export default connect(mapStateToProps)(NavBar);
+function mapDispatchToProps(dispatch: any) {
+  return { dispatch };
+}
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
