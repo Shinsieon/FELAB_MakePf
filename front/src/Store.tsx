@@ -16,3 +16,9 @@ const scrReducer = (state = <Dashboard />, action: any) => {
   }
 };
 export const scrStore = createStore(scrReducer);
+
+//const ADD_ASSET = "add"
+const assetReducer = (state = "", action: any) => {
+  return "hi";
+};
+export const assetStore = createStore(assetReducer);
