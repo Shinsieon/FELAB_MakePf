@@ -37,7 +37,6 @@ const TitleLabel = styled.h1`
 `;
 
 export interface Iasset {
-  email: string;
   stock: string;
   weight: number;
   amount: number;

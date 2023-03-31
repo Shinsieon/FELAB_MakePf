@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { FaDiceD6, FaChartPie } from "react-icons/fa";
 import Dashboard from "./Dashboard";
 import Portfolio from "./Portfolio";
-import { connect } from "react-redux";
+import { screenChanger } from "../Store";
+import { connect, useDispatch, useSelector } from "react-redux";
 const StyledMenuItemLi = styled.div`
   padding-top: 14px;
   width: 100%;
@@ -35,9 +36,12 @@ function NavBar({
   dispatch: any;
 }) {
   const [onNavBarHover, setOnNavBarHover] = useState(false);
-
+  const state = useSelector((scr) => console.log(scr));
+  const dispat = useDispatch();
+  console.log(dispat);
   const changeNavBar = (name: string) => {
-    dispatch({ type: name });
+    console.log("asd");
+    dispatch(screenChanger.setScreenToPortfolio());
   };
   let iconMap = new Map();
   iconMap.set("Dashboard", <FaDiceD6 />);
@@ -123,7 +127,4 @@ function NavBar({
 function mapStateToProps(state: JSX.Element) {
   return { currentScr: state };
 }
-function mapDispatchToProps(dispatch: any) {
-  return { dispatch };
-}
-export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
+export default connect(mapStateToProps)(NavBar);

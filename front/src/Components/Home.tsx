@@ -24,7 +24,7 @@ export const Pc = ({
   });
   return <>{isPc && children}</>;
 };
-function Home(props: any) {
+function Home({ currentScr }: { currentScr: JSX.Element }) {
   return (
     <div>
       <Pc>
@@ -37,7 +37,7 @@ function Home(props: any) {
           }}
         >
           <NavBar></NavBar>
-          {props.currentScr}
+          {currentScr}
         </div>
       </Pc>
       <Mobile>

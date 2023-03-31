@@ -1,24 +1,38 @@
-import { createStore } from "redux";
+import {
+  createAction,
+  createReducer,
+  configureStore,
+  createSlice,
+} from "@reduxjs/toolkit";
 import Dashboard from "./Components/Dashboard";
 import Portfolio from "./Components/Portfolio";
 
-const DASHBOARD = "DashBoard";
-const PORTFOLIO = "Portfolio";
-
-const scrReducer = (state = <Dashboard />, action: any) => {
-  switch (action.type) {
-    case DASHBOARD:
-      return <Dashboard />;
-    case PORTFOLIO:
-      return <Portfolio />;
-    default:
-      return <Dashboard />;
-  }
+const setScreenToDashboard = createAction("DashBoard");
+const setScreenToPortfolio = createAction("Portfolio");
+export const screenChanger = {
+  setScreenToDashboard,
+  setScreenToPortfolio,
 };
-export const scrStore = createStore(scrReducer);
-
-//const ADD_ASSET = "add"
-const assetReducer = (state = "", action: any) => {
-  return "hi";
-};
-export const assetStore = createStore(assetReducer);
+const scrReducer = createReducer(<Dashboard />, (builder) => {
+  builder
+    .addCase(setScreenToDashboard, (state) => {
+      console.log("here~");
+      state = <Dashboard />;
+    })
+    .addCase(setScreenToPortfolio, (state) => {
+      console.log("here~ss");
+      state = <Portfolio />;
+    });
+});
+export const scrStore = configureStore({
+  reducer: scrReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ serializableCheck: false }),
+});
+// interface Iasset {
+//   stock: string;
+//   weight: number;
+//   amount: number;
+// }
+// const assetReducer = createReducer([], {});
+// export const assetStore = createStore(assetReducer);
