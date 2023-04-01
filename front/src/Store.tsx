@@ -6,29 +6,28 @@ import {
 } from "@reduxjs/toolkit";
 import Dashboard from "./Components/Dashboard";
 import Portfolio from "./Components/Portfolio";
+import { createStore } from "redux";
 
-const setScreenToDashboard = createAction("DashBoard");
-const setScreenToPortfolio = createAction("Portfolio");
+const SET_DASHBOARD = createAction("DASHOBOARD");
+const SET_PORTFOLIO = createAction("PORTFOLIO");
 export const screenChanger = {
-  setScreenToDashboard,
-  setScreenToPortfolio,
+  SET_DASHBOARD,
+  SET_PORTFOLIO,
 };
-const scrReducer = createReducer(<Dashboard />, (builder) => {
-  builder
-    .addCase(setScreenToDashboard, (state) => {
-      console.log("here~");
-      state = <Dashboard />;
-    })
-    .addCase(setScreenToPortfolio, (state) => {
-      console.log("here~ss");
-      state = <Portfolio />;
-    });
-});
-export const scrStore = configureStore({
-  reducer: scrReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false }),
-});
+
+const scrReducer = (state = <Dashboard />, action: any) => {
+  console.log(action);
+  switch (action.type) {
+    case SET_DASHBOARD.type:
+      return <Dashboard />;
+    case SET_PORTFOLIO.type:
+      return <Portfolio />;
+    default:
+      return <Dashboard />;
+  }
+};
+export const scrStore = createStore(scrReducer);
+export type scrState = ReturnType<typeof scrReducer>;
 // interface Iasset {
 //   stock: string;
 //   weight: number;

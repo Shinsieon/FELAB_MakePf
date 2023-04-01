@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FaDiceD6, FaChartPie } from "react-icons/fa";
-import Dashboard from "./Dashboard";
-import Portfolio from "./Portfolio";
-import { screenChanger } from "../Store";
-import { connect, useDispatch, useSelector } from "react-redux";
+import { screenChanger, scrState } from "../Store";
+import { useDispatch, useSelector } from "react-redux";
 const StyledMenuItemLi = styled.div`
   padding-top: 14px;
   width: 100%;
@@ -28,20 +26,16 @@ interface menuPropsType {
   name: string;
   icon: JSX.Element;
 }
-function NavBar({
-  currentScr,
-  dispatch,
-}: {
-  currentScr: JSX.Element;
-  dispatch: any;
-}) {
+function NavBar() {
   const [onNavBarHover, setOnNavBarHover] = useState(false);
-  const state = useSelector((scr) => console.log(scr));
-  const dispat = useDispatch();
-  console.log(dispat);
+
+  const dispatch = useDispatch();
+  const state = useSelector((state: scrState) => state);
+
   const changeNavBar = (name: string) => {
-    console.log("asd");
-    dispatch(screenChanger.setScreenToPortfolio());
+    console.log(name);
+    if (name === "Dashboard") dispatch(screenChanger.SET_DASHBOARD());
+    else if (name === "Portfolio") dispatch(screenChanger.SET_PORTFOLIO());
   };
   let iconMap = new Map();
   iconMap.set("Dashboard", <FaDiceD6 />);
@@ -50,8 +44,8 @@ function NavBar({
     if (!onNavBarHover) {
       return (
         <NavBarItem
-          name={currentScr.type.name}
-          icon={iconMap.get(currentScr.type.name)}
+          name={state?.type.name}
+          icon={iconMap.get(state?.type.name)}
         ></NavBarItem>
       );
     } else
@@ -124,7 +118,4 @@ function NavBar({
     </div>
   );
 }
-function mapStateToProps(state: JSX.Element) {
-  return { currentScr: state };
-}
-export default connect(mapStateToProps)(NavBar);
+export default NavBar;
