@@ -16,7 +16,6 @@ export const screenChanger = {
 };
 
 const scrReducer = (state = <Dashboard />, action: any) => {
-  console.log(action);
   switch (action.type) {
     case SET_DASHBOARD.type:
       return <Dashboard />;

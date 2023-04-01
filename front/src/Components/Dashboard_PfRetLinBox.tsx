@@ -2,6 +2,8 @@ import { Line } from "react-chartjs-2";
 import { Iasset } from "./Dashboard";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { screenChanger } from "../Store";
 export const options = {
   responsive: true,
   plugins: {
@@ -34,11 +36,16 @@ export const data2 = {
 };
 function Dashboard_PfRetLinBox({ assets }: { assets: Iasset[] }) {
   const [mouseOn, setMouseOn] = useState(false);
+  const dispatch = useDispatch();
+  const changeScreenToPf = () => {
+    dispatch(screenChanger.SET_PORTFOLIO());
+  };
   if (assets.length == 0) {
     return (
       <div
         onMouseEnter={() => setMouseOn(true)}
         onMouseLeave={() => setMouseOn(false)}
+        onClick={changeScreenToPf}
         style={{
           position: "absolute",
           top: "15rem",
