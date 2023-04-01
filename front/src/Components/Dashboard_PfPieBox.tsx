@@ -3,10 +3,15 @@ import Modal from "./Modal";
 import { Iasset } from "./Dashboard";
 import { useState } from "react";
 import { Pie } from "react-chartjs-2";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
+import { screenChanger } from "../Store";
 const Dashboard_PfPieBox = ({ assets }: { assets: Iasset[] }) => {
   const [assetModalOpen, setAssetModelOpen] = useState(false);
   const [mouseOn, setMouseOn] = useState(false);
+  const dispatch = useDispatch();
+  const changeScreenToPf = () => {
+    dispatch(screenChanger.SET_PORTFOLIO());
+  };
   const showModal = () => {
     console.log("modal open");
     setAssetModelOpen(true);
@@ -43,6 +48,7 @@ const Dashboard_PfPieBox = ({ assets }: { assets: Iasset[] }) => {
       <div
         onMouseEnter={() => setMouseOn(true)}
         onMouseLeave={() => setMouseOn(false)}
+        onClick={changeScreenToPf}
         style={{
           position: "absolute",
           top: "15rem",
@@ -87,7 +93,4 @@ const Dashboard_PfPieBox = ({ assets }: { assets: Iasset[] }) => {
     </div>
   );
 };
-function mapStateToProps(state: JSX.Element) {
-  return { currentScr: state };
-}
-export default connect(mapStateToProps)(Dashboard_PfPieBox);
+export default Dashboard_PfPieBox;
