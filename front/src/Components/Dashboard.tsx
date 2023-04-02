@@ -27,15 +27,6 @@ ChartJS.register(
   Title
 );
 
-const TitleLabel = styled.h1`
-  font-size: 1rem;
-  text-align: left;
-  color: black;
-  position: absolute;
-  margin: 50px;
-  font-family: "Noto Sans", sans-serif;
-`;
-
 export interface Iasset {
   stock: string;
   weight: number;
