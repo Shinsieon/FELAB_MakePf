@@ -1,12 +1,7 @@
-import {
-  createAction,
-  createReducer,
-  configureStore,
-  createSlice,
-} from "@reduxjs/toolkit";
+import { createAction } from "@reduxjs/toolkit";
 import Dashboard from "./Components/Dashboard";
 import Portfolio from "./Components/Portfolio";
-import { createStore } from "redux";
+import { createStore, combineReducers } from "redux";
 
 const SET_DASHBOARD = createAction("DASHOBOARD");
 const SET_PORTFOLIO = createAction("PORTFOLIO");
@@ -14,7 +9,6 @@ export const screenChanger = {
   SET_DASHBOARD,
   SET_PORTFOLIO,
 };
-
 const scrReducer = (state = <Dashboard />, action: any) => {
   switch (action.type) {
     case SET_DASHBOARD.type:
@@ -25,12 +19,40 @@ const scrReducer = (state = <Dashboard />, action: any) => {
       return <Dashboard />;
   }
 };
-export const scrStore = createStore(scrReducer);
+
+export type Iasset = {
+  stock: string;
+  weight: number;
+  amount: number;
+};
+const ADD_ASSET = createAction("ADD_ASSET");
+const DELETE_ASSET = createAction("DELETE_ASSET");
+
+export const assetChanger = {
+  ADD_ASSET,
+  DELETE_ASSET,
+};
+
+const assetReducer = (state: Iasset[] = [], action: any) => {
+  switch (action.type) {
+    case ADD_ASSET.type:
+      return [
+        {
+          stock: action.name,
+          weight: action.weight,
+          amount: action.amount,
+        },
+        ...state,
+      ];
+    default:
+      return state;
+  }
+};
+
+const rootReducer = combineReducers({ assetReducer, scrReducer });
+export const store = createStore(rootReducer);
+
 export type scrState = ReturnType<typeof scrReducer>;
-// interface Iasset {
-//   stock: string;
-//   weight: number;
-//   amount: number;
-// }
+export type assetState = ReturnType<typeof assetReducer>;
 // const assetReducer = createReducer([], {});
 // export const assetStore = createStore(assetReducer);

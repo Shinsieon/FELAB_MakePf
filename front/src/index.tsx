@@ -3,14 +3,14 @@ import "./index.css";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
-import { scrStore } from "./Store";
+import { store } from "./Store";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLFormElement
 );
 root.render(
   <BrowserRouter>
-    <Provider store={scrStore}>
+    <Provider store={store}>
       <App></App>
     </Provider>
   </BrowserRouter>

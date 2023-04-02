@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FaDiceD6, FaChartPie } from "react-icons/fa";
-import { screenChanger, scrState } from "../Store";
+import { screenChanger } from "../Store";
 import { useDispatch, useSelector } from "react-redux";
 const StyledMenuItemLi = styled.div`
   padding-top: 14px;
@@ -30,7 +30,7 @@ function NavBar() {
   const [onNavBarHover, setOnNavBarHover] = useState(false);
 
   const dispatch = useDispatch();
-  const state = useSelector((state: scrState) => state);
+  const state = useSelector((state: any) => state.scrReducer);
 
   const changeNavBar = (name: string) => {
     console.log(name);

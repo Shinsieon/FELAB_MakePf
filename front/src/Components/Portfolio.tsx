@@ -1,7 +1,8 @@
+import Profile from "./Profile";
 function Portfolio() {
   return (
     <div>
-      <h1>hi</h1>
+      <Profile></Profile>
     </div>
   );
 }

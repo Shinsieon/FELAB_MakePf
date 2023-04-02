@@ -47,7 +47,8 @@ function Home({ currentScr }: { currentScr: JSX.Element }) {
     </div>
   );
 }
-function mapStateToProps(state: JSX.Element) {
-  return { currentScr: state };
+function mapStateToProps(state: any) {
+  console.log(state);
+  return { currentScr: state.scrReducer };
 }
 export default connect(mapStateToProps)(Home);
