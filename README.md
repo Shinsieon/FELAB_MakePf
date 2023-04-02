@@ -1,5 +1,10 @@
 # MakePortfolio
 Web site development : Python Django with React by Typescript 
+
+
+
+------------------------------------
+Original Source : 
 # 경희대학교 학부연구 
 ## <포트폴리오 최적화 서비스 제공과 텍스트마이닝을 사용한 금융 데이터 분석>
 
