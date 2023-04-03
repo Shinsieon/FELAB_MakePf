@@ -6,7 +6,7 @@ function MyAssetList() {
         position: "absolute",
         top: "8rem",
         left: "3rem",
-        width: "20vw",
+        width: "25vw",
         height: "70vh",
         backgroundColor: "white",
         borderRadius: "1rem",

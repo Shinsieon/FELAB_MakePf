@@ -63,23 +63,47 @@ function SearchTF() {
             position: "absolute",
             top: "5rem",
             height: "60vh",
+            width: "95%",
             listStyle: "none",
             textAlign: "left",
             fontSize: "1rem",
-            overflow: "auto",
+            overflowY: "auto",
+            overflowX: "hidden",
             borderRadius: "1rem",
+            padding: "0 1rem",
+            margin: 0,
           }}
         >
           {findedStocks.map((item) => (
-            <li
-              style={{
-                margin: "0.5rem",
-                height: "1.5rem",
-              }}
+            <div
+              style={{ display: "flex", margin: "10px", width: "100%" }}
               key={item.code.toString()}
             >
-              {item.code + "  " + item.name}
-            </li>
+              <li
+                style={{
+                  margin: 0,
+                  height: "1.5rem",
+                  width: "70%",
+                  overflow: "hidden",
+                }}
+              >
+                {item.code + "  " + item.name}
+              </li>
+              <button
+                style={{
+                  width: "3rem",
+                  height: "1.2rem",
+                  margin: 0,
+                  overflow: "hidden",
+                  backgroundColor: "rgba(255, 83, 73, 0.7)",
+                  border: "none",
+                  borderRadius: "0.5rem",
+                  color: "white",
+                }}
+              >
+                담기
+              </button>
+            </div>
           ))}
         </ul>
       ) : (
