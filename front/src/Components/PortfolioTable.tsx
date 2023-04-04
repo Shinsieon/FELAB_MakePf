@@ -1,6 +1,10 @@
-import "bootstrap/dist/css/bootstrap.min.css";
+//import "bootstrap/dist/css/bootstrap.min.css";
 import Table from "react-bootstrap/Table";
+
 function Portfolio_Table() {
+  const noData = (): JSX.Element => {
+    return <td colSpan={6}>자산 정보가 없습니다</td>;
+  };
   return (
     <div
       style={{
@@ -17,7 +21,13 @@ function Portfolio_Table() {
         striped
         size="sm"
         responsive="sm"
-        style={{ fontSize: "1rem", width: "90%", margin: "1rem" }}
+        style={{
+          fontSize: "1rem",
+          width: "95%",
+          margin: "1rem",
+          border: "none",
+          borderCollapse: "collapse",
+        }}
       >
         <thead>
           <tr>
@@ -30,7 +40,12 @@ function Portfolio_Table() {
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr
+            style={{
+              backgroundColor: "rgba(0, 0, 0, 0.05)",
+              height: "2rem",
+            }}
+          >
             <td>1</td>
             <td>Mark</td>
             <td>Otto</td>
@@ -38,6 +53,7 @@ function Portfolio_Table() {
             <th>1개월</th>
             <th>x</th>
           </tr>
+          <tr>{noData()}</tr>
         </tbody>
       </Table>
     </div>

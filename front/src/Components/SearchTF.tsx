@@ -9,7 +9,7 @@ type stockType = {
 };
 const StyledUl = styled.ul`
   position: absolute;
-  top: 6rem;
+  top: 5rem;
   height: 55vh;
   width: 95%;
   list-style: none;
