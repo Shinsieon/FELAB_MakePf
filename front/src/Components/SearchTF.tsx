@@ -1,11 +1,29 @@
 import { AiOutlineSearch } from "react-icons/ai";
 import { useState, useEffect } from "react";
 import axios, { all } from "axios";
+import styled from "styled-components";
 
 type stockType = {
   code: string;
   name: string;
 };
+const StyledUl = styled.ul`
+  position: absolute;
+  top: 6rem;
+  height: 55vh;
+  width: 95%;
+  list-style: none;
+  text-align: left;
+  font-size: 1rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: 1rem;
+  padding: 0 1rem;
+  margin: 15px;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
 function SearchTF() {
   const [searchTxt, setSearchTxt] = useState("");
   const [allStocks, setAllStocks] = useState<stockType[]>([]);
@@ -57,23 +75,9 @@ function SearchTF() {
         }}
         onChange={changeText}
       ></input>
+
       {searchTxt !== "" ? (
-        <ul
-          style={{
-            position: "absolute",
-            top: "5rem",
-            height: "60vh",
-            width: "95%",
-            listStyle: "none",
-            textAlign: "left",
-            fontSize: "1rem",
-            overflowY: "auto",
-            overflowX: "hidden",
-            borderRadius: "1rem",
-            padding: "0 1rem",
-            margin: 0,
-          }}
-        >
+        <StyledUl>
           {findedStocks.map((item) => (
             <div
               style={{ display: "flex", margin: "10px", width: "100%" }}
@@ -92,7 +96,7 @@ function SearchTF() {
               <button
                 style={{
                   width: "3rem",
-                  height: "1.2rem",
+                  height: "1.5rem",
                   margin: 0,
                   overflow: "hidden",
                   backgroundColor: "rgba(255, 83, 73, 0.7)",
@@ -105,7 +109,7 @@ function SearchTF() {
               </button>
             </div>
           ))}
-        </ul>
+        </StyledUl>
       ) : (
         <h1>hello</h1>
       )}
