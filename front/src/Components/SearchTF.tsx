@@ -2,6 +2,8 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { useState, useEffect } from "react";
 import axios, { all } from "axios";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import { assetChanger, TEMP_assetChanger } from "../Store";
 
 type stockType = {
   code: string;
@@ -28,6 +30,7 @@ function SearchTF() {
   const [searchTxt, setSearchTxt] = useState("");
   const [allStocks, setAllStocks] = useState<stockType[]>([]);
   const [findedStocks, setFindedStocks] = useState<stockType[]>([]);
+  const dispatch = useDispatch();
   const changeText = (e: any) => {
     setSearchTxt(e.target.value);
     setFindedStocks(
@@ -37,6 +40,11 @@ function SearchTF() {
           item.code.includes(e.target.value)
       )
     );
+  };
+  const addToTempAsset = (code: string) => {
+    console.log(code);
+    console.log(TEMP_assetChanger);
+    dispatch(assetChanger.ADD_ASSET());
   };
   useEffect(() => {
     axios.get("http://localhost:8000/getAllStocks").then((response) => {
@@ -104,6 +112,7 @@ function SearchTF() {
                   borderRadius: "0.5rem",
                   color: "white",
                 }}
+                onClick={() => addToTempAsset(item.code.toString())}
               >
                 담기
               </button>
