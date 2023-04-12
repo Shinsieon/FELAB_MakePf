@@ -38,7 +38,7 @@ function Dashboard_PfRetLinBox({ assets }: { assets: Iasset[] }) {
   const [mouseOn, setMouseOn] = useState(false);
   const dispatch = useDispatch();
   const changeScreenToPf = () => {
-    dispatch(screenChanger.SET_PORTFOLIO());
+    dispatch({ type: screenChanger.SET_PORTFOLIO });
   };
   if (assets.length == 0) {
     return (
@@ -50,7 +50,7 @@ function Dashboard_PfRetLinBox({ assets }: { assets: Iasset[] }) {
           position: "absolute",
           top: "15rem",
           backgroundColor: mouseOn ? "rgba(0,0,0,0.2)" : "rgba(0,0,0,0.3)",
-          height: "55vh",
+          height: "50vh",
           width: "55vw",
           left: "40vw",
           borderRadius: "1rem",
@@ -58,7 +58,7 @@ function Dashboard_PfRetLinBox({ assets }: { assets: Iasset[] }) {
       >
         <div
           style={{
-            marginTop: "9rem",
+            marginTop: "7rem",
           }}
         >
           <AiOutlinePlusCircle
@@ -79,7 +79,7 @@ function Dashboard_PfRetLinBox({ assets }: { assets: Iasset[] }) {
           position: "absolute",
           top: "15rem",
           backgroundColor: "white",
-          height: "55vh",
+          height: "50vh",
           width: "55vw",
           left: "40vw",
           borderRadius: "1rem",

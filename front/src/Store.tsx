@@ -1,78 +1,49 @@
-import { configureStore, createAction } from "@reduxjs/toolkit";
-import Dashboard from "./Components/Dashboard";
+import { configureStore, createAction, createReducer } from "@reduxjs/toolkit";
+import Dashboard, { Iasset } from "./Components/Dashboard";
 import Portfolio from "./Components/Portfolio";
 import { createStore, combineReducers } from "redux";
 
-const SET_DASHBOARD = createAction("DASHOBOARD");
-const SET_PORTFOLIO = createAction("PORTFOLIO");
+const SET_DASHBOARD = "screenReducer/DASHBOARD";
+const SET_PORTFOLIO = "screenReducer/PORTFOLIO";
 export const screenChanger = {
   SET_DASHBOARD,
   SET_PORTFOLIO,
 };
 const scrReducer = (state = <Dashboard />, action: any) => {
   switch (action.type) {
-    case SET_DASHBOARD.type:
+    case SET_DASHBOARD:
       return <Dashboard />;
-    case SET_PORTFOLIO.type:
+    case SET_PORTFOLIO:
       return <Portfolio />;
     default:
-      return <Dashboard />;
+      return state;
   }
 };
 
-export type Iasset = {
-  code: string;
-  stock: string;
-  weight: number;
-  amount: number;
-  investmentPeriod: number;
-};
-const ADD_ASSET = createAction("ADD_ASSET");
-const DELETE_ASSET = createAction("DELETE_ASSET");
+const ADD_ASSET = "assetReducer/ADD_ASSET";
+const DELETE_ASSET = "assetReducer/DELETE_ASSET";
 
 export const assetChanger = {
   ADD_ASSET,
   DELETE_ASSET,
 };
 
-const assetReducer = (state: Iasset[] = [], action: any) => {
-  switch (action.type) {
-    case ADD_ASSET.type:
-      return [
-        {
-          code: action.code,
-          stock: action.name,
-          weight: action.weight,
-          amount: action.amount,
-          investmentPeriod: action.investmentPeriod,
-        },
-        ...state,
-      ];
-    default:
-      return state;
-  }
-};
+const assetReducer = (state: Iasset[] = [], payload: any) => {
+  switch (payload.type) {
+    case ADD_ASSET:
+      if (state.filter((item) => item.code === payload.code).length === 0) {
+        return [
+          {
+            code: payload.code,
+            stock: payload.stock,
+            weight: payload.weight,
+            amount: payload.amount,
+            investmentPeriod: payload.investmentPeriod,
+          },
+          ...state,
+        ];
+      } else return state;
 
-const TEMP_ADD_ASSET = createAction("TEMP_ADD_ASSET");
-const TEMP_DELETE_ASSET = createAction("TEMP_DELETE_ASSET");
-
-export const TEMP_assetChanger = {
-  TEMP_ADD_ASSET,
-  TEMP_DELETE_ASSET,
-};
-const tempAssetReducer = (state: Iasset[] = [], action: any) => {
-  switch (action.type) {
-    case TEMP_ADD_ASSET.type:
-      console.log(action);
-      return [
-        {
-          stock: action.name,
-          weight: action.weight,
-          amount: action.amount,
-          investmentPeriod: action.investmentPeriod,
-        },
-        ...state,
-      ];
     default:
       return state;
   }
@@ -81,7 +52,6 @@ const tempAssetReducer = (state: Iasset[] = [], action: any) => {
 const rootReducer = combineReducers({
   assetReducer,
   scrReducer,
-  tempAssetReducer,
 });
 export const store = createStore(rootReducer);
 

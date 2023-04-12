@@ -34,8 +34,9 @@ function NavBar() {
 
   const changeNavBar = (name: string) => {
     console.log(name);
-    if (name === "Dashboard") dispatch(screenChanger.SET_DASHBOARD());
-    else if (name === "Portfolio") dispatch(screenChanger.SET_PORTFOLIO());
+    if (name === "Dashboard") dispatch({ type: screenChanger.SET_DASHBOARD });
+    else if (name === "Portfolio")
+      dispatch({ type: screenChanger.SET_PORTFOLIO });
   };
   let iconMap = new Map();
   iconMap.set("Dashboard", <FaDiceD6 />);

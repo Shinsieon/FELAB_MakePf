@@ -1,7 +1,11 @@
 //import "bootstrap/dist/css/bootstrap.min.css";
 import Table from "react-bootstrap/Table";
+import Form from "react-bootstrap/Form";
+import { useDispatch, useSelector } from "react-redux";
+import { Iasset } from "./Dashboard";
 
 function Portfolio_Table() {
+  const assets = useSelector((state: any) => state.assetReducer);
   const noData = (): JSX.Element => {
     return <td colSpan={6}>자산 정보가 없습니다</td>;
   };
@@ -31,7 +35,6 @@ function Portfolio_Table() {
       >
         <thead>
           <tr>
-            <th>#</th>
             <th>종목명</th>
             <th>비중</th>
             <th>금액</th>
@@ -40,20 +43,46 @@ function Portfolio_Table() {
           </tr>
         </thead>
         <tbody>
-          <tr
-            style={{
-              backgroundColor: "rgba(0, 0, 0, 0.05)",
-              height: "2rem",
-            }}
-          >
-            <td>1</td>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-            <th>1개월</th>
-            <th>x</th>
-          </tr>
-          <tr>{noData()}</tr>
+          {assets.length > 0 ? (
+            assets.map((item: Iasset, key: number) => (
+              <tr
+                key={item.code.toString()}
+                style={{
+                  backgroundColor: "rgba(0, 0, 0, 0.05)",
+                  height: "2rem",
+                }}
+              >
+                <td>{item.stock}</td>
+                <td>
+                  <Form.Range
+                    onChange={(e) => console.log(e)}
+                    min="1"
+                    max="100"
+                  ></Form.Range>
+                </td>
+                <th>
+                  <Form.Control type="number"></Form.Control>
+                </th>
+                <th>
+                  <Form.Control
+                    placeholder="개월수로 입력해주세요"
+                    type="number"
+                  ></Form.Control>
+                </th>
+                <th>
+                  <button>x</button>
+                </th>
+              </tr>
+            ))
+          ) : (
+            <tr
+              style={{
+                height: "2rem",
+              }}
+            >
+              {noData()}
+            </tr>
+          )}
         </tbody>
       </Table>
     </div>

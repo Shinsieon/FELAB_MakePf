@@ -28,9 +28,11 @@ ChartJS.register(
 );
 
 export interface Iasset {
+  code: string;
   stock: string;
   weight: number;
   amount: number;
+  investmentPeriod: number;
 }
 
 function Dashboard() {
