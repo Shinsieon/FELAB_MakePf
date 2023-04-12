@@ -118,7 +118,6 @@ function SearchTF() {
                   color: "white",
                 }}
                 onClick={() => {
-                  console.log(item);
                   addToAsset(item.code.toString(), item.stock.toString());
                 }}
               >

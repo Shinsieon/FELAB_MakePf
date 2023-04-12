@@ -40,7 +40,7 @@ function Dashboard_PfRetLinBox({ assets }: { assets: Iasset[] }) {
   const changeScreenToPf = () => {
     dispatch({ type: screenChanger.SET_PORTFOLIO });
   };
-  if (assets.length == 0) {
+  if (assets.length === 0) {
     return (
       <div
         onMouseEnter={() => setMouseOn(true)}
