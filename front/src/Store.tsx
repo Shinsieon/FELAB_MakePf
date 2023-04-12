@@ -43,7 +43,8 @@ const assetReducer = (state: Iasset[] = [], payload: any) => {
           ...state,
         ];
       } else return state;
-
+    case DELETE_ASSET:
+      return state.filter((item) => item.code !== payload.code);
     default:
       return state;
   }

@@ -3,9 +3,15 @@ import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import { useDispatch, useSelector } from "react-redux";
 import { Iasset } from "./Dashboard";
+import { assetChanger } from "../Store";
 
 function Portfolio_Table() {
   const assets = useSelector((state: any) => state.assetReducer);
+  const dispatch = useDispatch();
+  const deleteAsset = (code: string) => {
+    console.log(code);
+    dispatch({ type: assetChanger.DELETE_ASSET, code: code });
+  };
   const noData = (): JSX.Element => {
     return <td colSpan={6}>자산 정보가 없습니다</td>;
   };
@@ -44,7 +50,7 @@ function Portfolio_Table() {
         </thead>
         <tbody>
           {assets.length > 0 ? (
-            assets.map((item: Iasset, key: number) => (
+            assets.map((item: Iasset) => (
               <tr
                 key={item.code.toString()}
                 style={{
@@ -70,7 +76,13 @@ function Portfolio_Table() {
                   ></Form.Control>
                 </th>
                 <th>
-                  <button>x</button>
+                  <button
+                    onClick={() => {
+                      deleteAsset(item.code);
+                    }}
+                  >
+                    x
+                  </button>
                 </th>
               </tr>
             ))
