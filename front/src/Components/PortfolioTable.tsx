@@ -97,6 +97,7 @@ function Portfolio_Table() {
           )}
         </tbody>
       </Table>
+      <button>저장하기</button>
     </div>
   );
 }
