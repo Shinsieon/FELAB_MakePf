@@ -21,66 +21,73 @@ function Portfolio_Table() {
     <div
       style={{
         position: "absolute",
-        width: "45vw",
+        width: "60vw",
         height: "35vh",
         top: "8rem",
-        left: "30vw",
-        backgroundColor: "white",
-        borderRadius: "1rem",
-        fontSize: "1rem",
-        padding: "10px",
-        overflowY: "auto",
+        left: "32vw",
       }}
     >
-      <Table striped size="sm" responsive="sm">
-        <thead>
-          <tr>
-            <th style={{ width: "30%" }}>종목명</th>
-            <th style={{ width: "20%" }}>비중</th>
-            <th style={{ width: "30%" }}>금액</th>
-            <th style={{ width: "20%" }}>투자기간</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {assets.length > 0 ? (
-            assets.map((item: Iasset) => (
-              <tr key={item.code.toString()}>
-                <td>{item.stock}</td>
-                <td>
-                  <Form.Range
-                    onChange={(e) => console.log(e)}
-                    min="1"
-                    max="100"
-                  ></Form.Range>
-                </td>
-                <th>
-                  <Form.Control type="number" size="sm"></Form.Control>
-                </th>
-                <th>
-                  <Form.Control
-                    placeholder="개월수로 입력해주세요"
-                    type="number"
-                    size="sm"
-                  ></Form.Control>
-                </th>
-                <th>
-                  <AiFillDelete
-                    onClick={() => {
-                      deleteAsset(item.code);
-                    }}
-                  >
-                    x
-                  </AiFillDelete>
-                </th>
-              </tr>
-            ))
-          ) : (
-            <tr>{noData()}</tr>
-          )}
-        </tbody>
-      </Table>
-      <Button variant="dark">저장</Button>
+      <div
+        style={{
+          backgroundColor: "white",
+          borderRadius: "1rem",
+          fontSize: "1rem",
+          padding: "10px",
+          overflowY: "auto",
+        }}
+      >
+        <Table striped size="sm" responsive="sm">
+          <thead>
+            <tr>
+              <th style={{ width: "30%" }}>종목명</th>
+              <th style={{ width: "20%" }}>비중</th>
+              <th style={{ width: "30%" }}>금액</th>
+              <th style={{ width: "20%" }}>투자기간</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody style={{ overflowY: "scroll" }}>
+            {assets.length > 0 ? (
+              assets.map((item: Iasset) => (
+                <tr key={item.code.toString()}>
+                  <td>{item.stock}</td>
+                  <td>
+                    <Form.Range
+                      onChange={(e) => console.log(e)}
+                      min="1"
+                      max="100"
+                    ></Form.Range>
+                  </td>
+                  <th>
+                    <Form.Control type="number" size="sm"></Form.Control>
+                  </th>
+                  <th>
+                    <Form.Control
+                      placeholder="개월수로 입력해주세요"
+                      type="number"
+                      size="sm"
+                    ></Form.Control>
+                  </th>
+                  <th>
+                    <AiFillDelete
+                      onClick={() => {
+                        deleteAsset(item.code);
+                      }}
+                    >
+                      x
+                    </AiFillDelete>
+                  </th>
+                </tr>
+              ))
+            ) : (
+              <tr>{noData()}</tr>
+            )}
+          </tbody>
+        </Table>
+      </div>
+      <Button variant="dark" style={{ position: "relative" }}>
+        저장
+      </Button>
     </div>
   );
 }
