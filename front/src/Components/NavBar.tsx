@@ -4,22 +4,21 @@ import { FaDiceD6, FaChartPie } from "react-icons/fa";
 import { screenChanger } from "../Store";
 import { useDispatch, useSelector } from "react-redux";
 const StyledMenuItemLi = styled.div`
-  padding-top: 14px;
+  padding-top: 6px;
   width: 100%;
   text-align: center;
   cursor: default;
-  font-size: 1rem;
+  font-size: 1.5rem;
 `;
 const StyledMenuItemLiOnHover = styled.div`
   width: 80px;
-  padding: 15px;
   text-align: center;
   cursor: default;
   color: white;
-  font-size: 0.7rem;
+  font-size: 1rem;
   white-space: pre-wrap;
   &:hover {
-    font-size: 0.75rem;
+    font-size: 1.1rem;
   }
 `;
 interface menuPropsType {
@@ -33,7 +32,6 @@ function NavBar() {
   const state = useSelector((state: any) => state.scrReducer);
 
   const changeNavBar = (name: string) => {
-    console.log(name);
     if (name === "Dashboard") dispatch({ type: screenChanger.SET_DASHBOARD });
     else if (name === "Portfolio")
       dispatch({ type: screenChanger.SET_PORTFOLIO });
@@ -74,7 +72,7 @@ function NavBar() {
     return (
       <StyledMenuItemLi key={name}>
         {icon}
-        <a>{name}</a>
+        <a style={{ margin: "5px" }}>{name}</a>
       </StyledMenuItemLi>
     );
   };

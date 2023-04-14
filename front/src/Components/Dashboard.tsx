@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Profile from "./Profile";
 import Dashboard_PfRetLinBox from "./Dashboard_PfRetLinBox";
 import Dashboard_PfPieBox from "./Dashboard_PfPieBox";
+
 import {
   Chart as ChartJS,
   ArcElement,
@@ -50,10 +51,17 @@ function Dashboard() {
           letterSpacing: "0.2rem",
         }}
       >
-        <h1>
+        <label
+          style={{
+            fontSize: "3rem",
+            fontWeight: "bold",
+            lineHeight: "2.5rem",
+            margin: "1rem 0",
+          }}
+        >
           Manage your <br />
           Portfolio
-        </h1>
+        </label>
       </div>
     );
   };

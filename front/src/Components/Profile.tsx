@@ -34,6 +34,7 @@ function Profile() {
           fontSize: "1rem",
           margin: "5px",
           color: "#3F3035",
+          fontWeight: "bold",
         }}
       >
         {userName} 님 반갑습니다

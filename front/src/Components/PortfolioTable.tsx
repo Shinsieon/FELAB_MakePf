@@ -1,10 +1,12 @@
 //import "bootstrap/dist/css/bootstrap.min.css";
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { Iasset } from "./Dashboard";
 import { assetChanger } from "../Store";
-
+import { AiFillDelete } from "react-icons/ai";
+import "bootstrap/dist/css/bootstrap.min.css";
 function Portfolio_Table() {
   const assets = useSelector((state: any) => state.assetReducer);
   const dispatch = useDispatch();
@@ -25,39 +27,25 @@ function Portfolio_Table() {
         left: "30vw",
         backgroundColor: "white",
         borderRadius: "1rem",
+        fontSize: "1rem",
+        padding: "10px",
+        overflowY: "auto",
       }}
     >
-      <Table
-        striped
-        size="sm"
-        responsive="sm"
-        style={{
-          fontSize: "1rem",
-          width: "95%",
-          margin: "1rem",
-          border: "none",
-          borderCollapse: "collapse",
-        }}
-      >
+      <Table striped size="sm" responsive="sm">
         <thead>
           <tr>
-            <th>종목명</th>
-            <th>비중</th>
-            <th>금액</th>
-            <th>투자기간</th>
+            <th style={{ width: "30%" }}>종목명</th>
+            <th style={{ width: "20%" }}>비중</th>
+            <th style={{ width: "30%" }}>금액</th>
+            <th style={{ width: "20%" }}>투자기간</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
           {assets.length > 0 ? (
             assets.map((item: Iasset) => (
-              <tr
-                key={item.code.toString()}
-                style={{
-                  backgroundColor: "rgba(0, 0, 0, 0.05)",
-                  height: "2rem",
-                }}
-              >
+              <tr key={item.code.toString()}>
                 <td>{item.stock}</td>
                 <td>
                   <Form.Range
@@ -67,37 +55,32 @@ function Portfolio_Table() {
                   ></Form.Range>
                 </td>
                 <th>
-                  <Form.Control type="number"></Form.Control>
+                  <Form.Control type="number" size="sm"></Form.Control>
                 </th>
                 <th>
                   <Form.Control
                     placeholder="개월수로 입력해주세요"
                     type="number"
+                    size="sm"
                   ></Form.Control>
                 </th>
                 <th>
-                  <button
+                  <AiFillDelete
                     onClick={() => {
                       deleteAsset(item.code);
                     }}
                   >
                     x
-                  </button>
+                  </AiFillDelete>
                 </th>
               </tr>
             ))
           ) : (
-            <tr
-              style={{
-                height: "2rem",
-              }}
-            >
-              {noData()}
-            </tr>
+            <tr>{noData()}</tr>
           )}
         </tbody>
       </Table>
-      <button>저장하기</button>
+      <Button variant="dark">저장</Button>
     </div>
   );
 }

@@ -8,7 +8,7 @@ const logoutFunc = () => {
 };
 function Logout() {
   return (
-    <div style={{ margin: 5, cursor: "pointer" }}>
+    <div style={{ margin: -2, cursor: "pointer" }}>
       <RiLogoutBoxLine
         onClick={logoutFunc}
         size="20"
