@@ -33,6 +33,7 @@ function Portfolio_Table() {
           borderRadius: "1rem",
           fontSize: "1rem",
           padding: "10px",
+          height: "35vh",
           overflowY: "auto",
         }}
       >
@@ -73,9 +74,7 @@ function Portfolio_Table() {
                       onClick={() => {
                         deleteAsset(item.code);
                       }}
-                    >
-                      x
-                    </AiFillDelete>
+                    ></AiFillDelete>
                   </th>
                 </tr>
               ))
@@ -85,7 +84,10 @@ function Portfolio_Table() {
           </tbody>
         </Table>
       </div>
-      <Button variant="dark" style={{ position: "relative" }}>
+      <Button
+        variant="dark"
+        style={{ position: "absolute", bottom: "10px", left: "10px" }}
+      >
         저장
       </Button>
     </div>
