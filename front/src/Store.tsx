@@ -22,13 +22,21 @@ const scrReducer = (state = <Dashboard />, action: any) => {
 
 const ADD_ASSET = "assetReducer/ADD_ASSET";
 const DELETE_ASSET = "assetReducer/DELETE_ASSET";
+const MODIFY_AMOUNT_ASSET = "assetReducer/MODIFY_AMOUNT_ASSET";
+const MODIFY_WEIGHT_ASSET = "assetReducer/MODIFY_WEIGHT_ASSET";
+const MODIFY_INVESTMENTPERIOD_ASSET =
+  "assetReducer/MODIFY_INVESTMENTPERIOD_ASSET";
 
 export const assetChanger = {
   ADD_ASSET,
   DELETE_ASSET,
+  MODIFY_AMOUNT_ASSET,
+  MODIFY_WEIGHT_ASSET,
+  MODIFY_INVESTMENTPERIOD_ASSET,
 };
 
-const assetReducer = (state: Iasset[] = [], payload: any) => {
+export const assetReducer = (state: Iasset[] = [], payload: any) => {
+  var newState = [...state];
   switch (payload.type) {
     case ADD_ASSET:
       if (state.filter((item) => item.code === payload.code).length === 0) {
@@ -45,6 +53,18 @@ const assetReducer = (state: Iasset[] = [], payload: any) => {
       } else return state;
     case DELETE_ASSET:
       return state.filter((item) => item.code !== payload.code);
+    case MODIFY_AMOUNT_ASSET:
+      var index = newState.findIndex((item) => item.code === payload.code);
+      newState[index].amount = payload.amount;
+      return newState;
+    case MODIFY_WEIGHT_ASSET:
+      var index = newState.findIndex((item) => item.code === payload.code);
+      newState[index].weight = payload.weight;
+      return newState;
+    case MODIFY_INVESTMENTPERIOD_ASSET:
+      var index = newState.findIndex((item) => item.code === payload.code);
+      newState[index].investmentPeriod = payload.investmentPeriod;
+      return newState;
     default:
       return state;
   }

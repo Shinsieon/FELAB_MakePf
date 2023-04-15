@@ -46,9 +46,9 @@ function SearchTF() {
       type: assetChanger.ADD_ASSET,
       code: code,
       stock: stock,
-      weight: 0,
+      weight: 50,
       amount: 0,
-      investmentPeriod: 0,
+      investmentPeriod: 12,
     });
   };
   useEffect(() => {
