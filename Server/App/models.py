@@ -11,10 +11,13 @@ class Usertbl(models.Model):
         db_table = 'UserTBL'
 
 class UserStocks(models.Model):
-    email = models.CharField(max_length=20, primary_key=True)
-    stock = models.CharField(max_length=20)
+    no = models.AutoField(primary_key=True)
+    email = models.CharField(max_length=20)
+    code = models.CharField(max_length=10)
+    name = models.CharField(max_length=20)
     weight = models.FloatField()
     amount = models.FloatField()
+    investmentperiod = models.IntegerField()
     class Meta:
         managed = False
         db_table = 'UserStocks'

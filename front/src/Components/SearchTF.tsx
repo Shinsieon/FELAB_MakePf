@@ -80,7 +80,7 @@ function SearchTF() {
           left: "1.8rem",
           width: "80%",
           height: "3rem",
-          fontSize: "1rem",
+          fontSize: "0.8rem",
           padding: "1rem 1.5rem",
           borderRadius: "1rem",
           border: "none",

@@ -6,4 +6,5 @@ urlpatterns = [
     path('kakaoLoginDone', views.kakaoLoginDone, name='kakaoLoginDone'),
     path('getMyStocks',views.getMyStocks, name='getMyStocks'),
     path('getAllStocks',views.getAllStocks, name='getAllStocks'),
+    path('saveUserAsset',views.saveUserAsset, name='saveUserAsset'),
 ]

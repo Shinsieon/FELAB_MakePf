@@ -8,16 +8,17 @@ import { assetChanger } from "../Store";
 import { AiFillDelete } from "react-icons/ai";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useEffect, useState } from "react";
-import { store } from "../Store";
+import axios from "axios";
 function Portfolio_Table() {
   const assets = useSelector((state: any) => state.assetReducer);
   const [amountSum, setAmountSum] = useState(0);
+  const [period, setPeriod] = useState(0);
 
   const dispatch = useDispatch();
   const deleteAsset = (code: string) => {
     dispatch({ type: assetChanger.DELETE_ASSET, code: code });
   };
-  const amountChanged = (code: string, e: any) => {
+  const inputChanged = (code: string, e: any) => {
     switch (e.target.id) {
       case "amountField":
         dispatch({
@@ -28,19 +29,30 @@ function Portfolio_Table() {
         break;
       case "weightField":
         dispatch({
-          type: assetChanger.MODIFY_AMOUNT_ASSET,
+          type: assetChanger.MODIFY_WEIGHT_ASSET,
           code: code,
           weight: e.target.value,
         });
         break;
       case "investmentPeriodField":
         dispatch({
-          type: assetChanger.MODIFY_AMOUNT_ASSET,
+          type: assetChanger.MODIFY_INVESTMENTPERIOD_ASSET,
           code: code,
           investmentPeriod: e.target.value,
         });
         break;
     }
+  };
+  const saveBtnClicked = () => {
+    if (assets.length === 0) return;
+    axios
+      .post("http://localhost:8000/saveUserAsset", {
+        email: localStorage.getItem("userMail"),
+        assets: assets,
+      })
+      .then((response) => {
+        console.log(response);
+      });
   };
   const noData = (): JSX.Element => {
     return <td colSpan={6}>자산 정보가 없습니다</td>;
@@ -48,11 +60,17 @@ function Portfolio_Table() {
   useEffect(() => {
     if (assets.length > 0) {
       var total = 0;
+      var period = 0;
       for (var i = 0; i < assets.length; i++) {
         total += parseInt(assets[i].amount);
+        if (assets[i].investmentPeriod > period)
+          period = assets[i].investmentPeriod;
       }
       setAmountSum(total ? total : 0);
-      console.log(amountSum);
+      setPeriod(period);
+    } else {
+      setAmountSum(0);
+      setPeriod(0);
     }
   }, [assets, amountSum]);
   return (
@@ -79,8 +97,7 @@ function Portfolio_Table() {
           <thead>
             <tr>
               <th style={{ width: "30%" }}>종목명</th>
-              <th style={{ width: "20%" }}>비중</th>
-              <th style={{ width: "30%" }}>금액(원)</th>
+              <th style={{ width: "50%" }}>금액(원)</th>
               <th style={{ width: "20%" }}>투자기간(개월)</th>
               <th></th>
             </tr>
@@ -90,13 +107,6 @@ function Portfolio_Table() {
               assets.map((item: Iasset) => (
                 <tr key={item.code.toString()}>
                   <td>{item.stock}</td>
-                  <td>
-                    <Form.Range
-                      onChange={(e) => console.log(e)}
-                      min="1"
-                      max="100"
-                    ></Form.Range>
-                  </td>
                   <th>
                     <div>
                       <Form.Control
@@ -104,20 +114,22 @@ function Portfolio_Table() {
                         size="sm"
                         placeholder={item.amount.toString()}
                         id="amountField"
+                        defaultValue={0}
                         onChange={(e: any) => {
-                          amountChanged(item.code, e);
+                          inputChanged(item.code, e);
                         }}
                       ></Form.Control>
                     </div>
                   </th>
                   <th>
                     <Form.Control
-                      placeholder="개월수로 입력해주세요"
                       type="number"
                       size="sm"
-                      value={item.investmentPeriod}
-                      id="periodField"
-                      onChange={() => {}}
+                      placeholder={item.investmentPeriod.toString()}
+                      id="investmentPeriodField"
+                      onChange={(e: any) => {
+                        inputChanged(item.code, e);
+                      }}
                     ></Form.Control>
                   </th>
                   <th>
@@ -135,12 +147,6 @@ function Portfolio_Table() {
           </tbody>
         </Table>
       </div>
-      <Button
-        variant="dark"
-        style={{ position: "absolute", bottom: "10px", left: "10px" }}
-      >
-        저장
-      </Button>
       <div
         style={{
           backgroundColor: "rgba(53, 162, 235, 0.8)",
@@ -151,10 +157,21 @@ function Portfolio_Table() {
           margin: "10px 0",
           color: "white",
           display: "flex",
-          flexDirection: "revert",
+          justifyContent: "space-evenly",
         }}
       >
-        <h5>총 투자금액 {amountSum} 원</h5>
+        <p>종목 수 {assets.length}</p>
+        <p>투자금액 {amountSum} 원</p>
+        <p>투자기간 {period} 개월</p>
+        <Button
+          size="sm"
+          variant="dark"
+          onClick={() => {
+            saveBtnClicked();
+          }}
+        >
+          저장
+        </Button>
       </div>
     </div>
   );
