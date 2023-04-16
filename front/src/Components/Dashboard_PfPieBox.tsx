@@ -6,6 +6,7 @@ import { Pie } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 import { screenChanger } from "../Store";
 import { getRandomColor } from "../RandomColorGenerator";
+import axios from "axios";
 
 type pieDataType = {
   labels: string[];
@@ -26,10 +27,7 @@ const Dashboard_PfPieBox = () => {
   const changeScreenToPf = () => {
     dispatch({ type: screenChanger.SET_PORTFOLIO });
   };
-  const showModal = () => {
-    console.log("modal open");
-    setAssetModelOpen(true);
-  };
+
   useEffect(() => {
     var labels = [];
     var data = [];
@@ -79,11 +77,7 @@ const Dashboard_PfPieBox = () => {
             marginTop: "7rem",
           }}
         >
-          <AiOutlinePlusCircle
-            size={"5rem"}
-            color={"white"}
-            onClick={showModal}
-          />
+          <AiOutlinePlusCircle size={"5rem"} color={"white"} />
           <p style={{ color: "white", fontSize: "1rem" }}>
             보유한 자산이 없습니다. 추가해주세요
           </p>
