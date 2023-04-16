@@ -5,6 +5,7 @@ from pykrx import stock
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.core import serializers
 from .models import Usertbl
 from .models import UserStocks
 # Create your views here.
@@ -34,9 +35,12 @@ def kakaoLoginDone(request):
 
 @method_decorator(csrf_exempt, name='dispatch')
 def getMyStocks(req): 
+    response = {}
     dataFromView = json.loads(req.body)
     myStocks = UserStocks.objects.filter(email=dataFromView['email'])
-    return HttpResponse(myStocks.values())
+    response['result'] = serializers.serialize("json", myStocks)
+
+    return HttpResponse(response['result'], content_type="application/json")
 
 def getAllStocks(req):
     today = datetime.today().strftime("%Y%m%d")    # YYYYmmddHHMMSS 형태의 시간 출력

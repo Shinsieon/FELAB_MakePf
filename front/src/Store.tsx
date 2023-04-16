@@ -19,7 +19,7 @@ const scrReducer = (state = <Dashboard />, action: any) => {
       return state;
   }
 };
-
+const SET_ASSET = "assetReducer/SET_ASSET";
 const ADD_ASSET = "assetReducer/ADD_ASSET";
 const DELETE_ASSET = "assetReducer/DELETE_ASSET";
 const MODIFY_AMOUNT_ASSET = "assetReducer/MODIFY_AMOUNT_ASSET";
@@ -28,6 +28,7 @@ const MODIFY_INVESTMENTPERIOD_ASSET =
   "assetReducer/MODIFY_INVESTMENTPERIOD_ASSET";
 
 export const assetChanger = {
+  SET_ASSET,
   ADD_ASSET,
   DELETE_ASSET,
   MODIFY_AMOUNT_ASSET,
@@ -38,6 +39,8 @@ export const assetChanger = {
 export const assetReducer = (state: Iasset[] = [], payload: any) => {
   var newState = [...state];
   switch (payload.type) {
+    case SET_ASSET:
+      return [...payload];
     case ADD_ASSET:
       if (state.filter((item) => item.code === payload.code).length === 0) {
         return [

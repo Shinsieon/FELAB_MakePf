@@ -106,7 +106,7 @@ function Portfolio_Table() {
             {assets.length > 0 ? (
               assets.map((item: Iasset) => (
                 <tr key={item.code.toString()}>
-                  <td>{item.stock}</td>
+                  <td>{item.name}</td>
                   <th>
                     <div>
                       <Form.Control

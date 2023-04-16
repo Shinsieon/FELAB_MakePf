@@ -16,6 +16,8 @@ import {
   LineElement,
   Title,
 } from "chart.js";
+import { useDispatch } from "react-redux";
+import { assetChanger } from "../Store";
 
 ChartJS.register(
   ArcElement,
@@ -30,7 +32,7 @@ ChartJS.register(
 
 export interface Iasset {
   code: string;
-  stock: string;
+  name: string;
   weight: number;
   amount: number;
   investmentPeriod: number;
@@ -38,6 +40,7 @@ export interface Iasset {
 
 function Dashboard() {
   const [assets, setAssets] = useState<Iasset[] | null>([]);
+  const dispatch = useDispatch();
 
   const Dashboard_ment = () => {
     return (
@@ -72,14 +75,23 @@ function Dashboard() {
         email: localStorage.getItem("userMail"),
       })
       .then((response) => {
+        console.log(response);
         const result: Iasset[] = [];
-        if (response.data.length == 0) {
+        if (response.data.length === 0) {
         } else {
-          response.data.map((item: Iasset, idx: number) => {
-            result.push(item);
-          });
+          for (var i = 0; i < response.data.length; i++) {
+            var item = response.data[i];
+            result.push({
+              code: item.fields.code,
+              name: item.fields.name,
+              weight: item.fields.weight,
+              amount: item.fields.amount,
+              investmentPeriod: item.fields.investmentperiod,
+            });
+          }
         }
         setAssets(result);
+        //dispatch(assetChanger.)
       });
   }, []);
   return (
