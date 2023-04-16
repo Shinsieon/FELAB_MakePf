@@ -8,6 +8,8 @@ from django.utils.decorators import method_decorator
 from django.core import serializers
 from .models import Usertbl
 from .models import UserStocks
+import datetime as dt
+from dateutil.relativedelta import relativedelta
 # Create your views here.
 NO_USER_ERROR = 0
 INSERT_ERROR = 1
@@ -53,11 +55,9 @@ def getAllStocks(req):
     
 @method_decorator(csrf_exempt, name='dispatch')
 def saveUserAsset(req) :
-    #assets : Iasset Array가 수신된다.
-    #email 값이 있는지부터 체크 없으면 fail
-    print(req.body)
     dataFromView = json.loads(req.body)
     assets = dataFromView['assets']
+    #email 값이 있는지부터 체크 없으면 fail
     if dataFromView['email'] == "": 
         return HttpResponse(NO_USER_ERROR)
     else:
@@ -78,4 +78,15 @@ def saveUserAsset(req) :
                 userStocks.investmentperiod = asset['investmentPeriod']
                 userStocks.save()
     
-    return HttpResponse("asd")
+    return HttpResponse("saved successfully")
+
+def getUserAssetReturn(req) :
+    nowTime = dt.datetime.now()
+    returnObj = {}
+    for asset in UserStocks.objects.all():
+        invStartDate = nowTime - relativedelta(months = asset.investmentperiod)
+        df = stock.get_market_ohlcv(invStartDate, nowTime.strftime("%Y%m%d"), asset.code, adjusted=True, freq="m")
+        print(df)
+        returnObj['name'] = df['등락율']
+    print(returnObj)
+    return HttpResponse("fuck successfully")

@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { screenChanger } from "../Store";
 import { getRandomColor } from "../RandomColorGenerator";
+import axios from "axios";
 export const options = {
   responsive: true,
   plugins: {
@@ -13,7 +14,7 @@ export const options = {
     },
     title: {
       display: true,
-      text: "Chart.js Line Chart",
+      text: "자산별 수익률 변동 그래프",
     },
   },
 };
@@ -38,10 +39,18 @@ export const data2 = {
 function Dashboard_PfRetLinBox() {
   const assets: Iasset[] = useSelector((state: any) => state.assetReducer);
   const [mouseOn, setMouseOn] = useState(false);
+  const getUserAssetReturn = () => {
+    axios.get("http://localhost:8000/getUserAssetReturn").then((response) => {
+      console.log(response);
+    });
+  };
   const dispatch = useDispatch();
   const changeScreenToPf = () => {
     dispatch({ type: screenChanger.SET_PORTFOLIO });
   };
+  useEffect(() => {
+    getUserAssetReturn();
+  }, []);
   if (assets.length === 0) {
     return (
       <div
