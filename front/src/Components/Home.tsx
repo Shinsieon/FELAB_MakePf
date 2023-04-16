@@ -25,7 +25,6 @@ export const Pc = ({
   return <>{isPc && children}</>;
 };
 function Home({ currentScr }: { currentScr: JSX.Element }) {
-  console.log(currentScr);
   return (
     <div>
       <Pc>

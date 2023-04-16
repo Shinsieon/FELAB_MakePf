@@ -2,8 +2,9 @@ import { Line } from "react-chartjs-2";
 import { Iasset } from "./Dashboard";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { screenChanger } from "../Store";
+import { getRandomColor } from "../RandomColorGenerator";
 export const options = {
   responsive: true,
   plugins: {
@@ -34,7 +35,8 @@ export const data2 = {
     },
   ],
 };
-function Dashboard_PfRetLinBox({ assets }: { assets: Iasset[] }) {
+function Dashboard_PfRetLinBox() {
+  const assets: Iasset[] = useSelector((state: any) => state.assetReducer);
   const [mouseOn, setMouseOn] = useState(false);
   const dispatch = useDispatch();
   const changeScreenToPf = () => {

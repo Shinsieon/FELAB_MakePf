@@ -16,7 +16,7 @@ import {
   LineElement,
   Title,
 } from "chart.js";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { assetChanger } from "../Store";
 
 ChartJS.register(
@@ -39,7 +39,6 @@ export interface Iasset {
 }
 
 function Dashboard() {
-  const [assets, setAssets] = useState<Iasset[] | null>([]);
   const dispatch = useDispatch();
 
   const Dashboard_ment = () => {
@@ -75,7 +74,6 @@ function Dashboard() {
         email: localStorage.getItem("userMail"),
       })
       .then((response) => {
-        console.log(response);
         const result: Iasset[] = [];
         if (response.data.length === 0) {
         } else {
@@ -90,8 +88,7 @@ function Dashboard() {
             });
           }
         }
-        setAssets(result);
-        //dispatch(assetChanger.)
+        dispatch({ type: assetChanger.SET_ASSET, asset: result });
       });
   }, []);
   return (
@@ -101,10 +98,8 @@ function Dashboard() {
         Dashboard
       </TitleLabel> */}
       <Dashboard_ment></Dashboard_ment>
-      <Dashboard_PfPieBox assets={assets ? assets : []}></Dashboard_PfPieBox>
-      <Dashboard_PfRetLinBox
-        assets={assets ? assets : []}
-      ></Dashboard_PfRetLinBox>
+      <Dashboard_PfPieBox></Dashboard_PfPieBox>
+      <Dashboard_PfRetLinBox></Dashboard_PfRetLinBox>
       <Profile></Profile>
     </div>
   );

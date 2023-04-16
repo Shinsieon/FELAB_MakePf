@@ -2,6 +2,7 @@ import { configureStore, createAction, createReducer } from "@reduxjs/toolkit";
 import Dashboard, { Iasset } from "./Components/Dashboard";
 import Portfolio from "./Components/Portfolio";
 import { createStore, combineReducers } from "redux";
+import { composeWithDevTools } from "redux-devtools-extension";
 
 const SET_DASHBOARD = "screenReducer/DASHBOARD";
 const SET_PORTFOLIO = "screenReducer/PORTFOLIO";
@@ -40,7 +41,7 @@ export const assetReducer = (state: Iasset[] = [], payload: any) => {
   var newState = [...state];
   switch (payload.type) {
     case SET_ASSET:
-      return [...payload];
+      return [...payload.asset];
     case ADD_ASSET:
       if (state.filter((item) => item.code === payload.code).length === 0) {
         return [
@@ -77,7 +78,7 @@ const rootReducer = combineReducers({
   assetReducer,
   scrReducer,
 });
-export const store = createStore(rootReducer);
+export const store = createStore(rootReducer, composeWithDevTools());
 
 export type scrState = ReturnType<typeof scrReducer>;
 export type assetState = ReturnType<typeof assetReducer>;

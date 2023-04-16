@@ -1,11 +1,25 @@
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import Modal from "./Modal";
 import { Iasset } from "./Dashboard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { screenChanger } from "../Store";
-const Dashboard_PfPieBox = ({ assets }: { assets: Iasset[] }) => {
+import { getRandomColor } from "../RandomColorGenerator";
+
+type pieDataType = {
+  labels: string[];
+  data: string[];
+  colors: string[];
+};
+
+const Dashboard_PfPieBox = () => {
+  const assets = useSelector((state: any) => state.assetReducer);
+  const [pieData, setPieData] = useState<pieDataType>({
+    labels: [],
+    data: [],
+    colors: [],
+  });
   const [assetModalOpen, setAssetModelOpen] = useState(false);
   const [mouseOn, setMouseOn] = useState(false);
   const dispatch = useDispatch();
@@ -16,34 +30,35 @@ const Dashboard_PfPieBox = ({ assets }: { assets: Iasset[] }) => {
     console.log("modal open");
     setAssetModelOpen(true);
   };
+  useEffect(() => {
+    var labels = [];
+    var data = [];
+    var colors = [];
+    for (var i = 0; i < assets.length; i++) {
+      labels.push(assets[i].name);
+      data.push(assets[i].weight);
+      colors.push(getRandomColor());
+    }
+    setPieData({
+      labels: labels,
+      data: data,
+      colors: colors,
+    });
+  }, []);
 
   const data = {
-    labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+    labels: pieData["labels"],
     datasets: [
       {
         label: "# of Votes",
-        data: [12, 19, 3, 5, 2, 3],
-        backgroundColor: [
-          "rgba(255, 99, 132, 0.2)",
-          "rgba(54, 162, 235, 0.2)",
-          "rgba(255, 206, 86, 0.2)",
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(153, 102, 255, 0.2)",
-          "rgba(255, 159, 64, 0.2)",
-        ],
-        borderColor: [
-          "rgba(255, 99, 132, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(75, 192, 192, 1)",
-          "rgba(153, 102, 255, 1)",
-          "rgba(255, 159, 64, 1)",
-        ],
+        data: pieData.data,
+        backgroundColor: pieData.colors,
+        borderColor: pieData.colors,
         borderWidth: 1,
       },
     ],
   };
-  if (assets.length == 0) {
+  if (assets.length === 0) {
     return (
       <div
         onMouseEnter={() => setMouseOn(true)}

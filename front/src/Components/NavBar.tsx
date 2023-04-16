@@ -8,7 +8,7 @@ const StyledMenuItemLi = styled.div`
   width: 100%;
   text-align: center;
   cursor: default;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 `;
 const StyledMenuItemLiOnHover = styled.div`
   width: 80px;
