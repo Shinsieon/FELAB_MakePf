@@ -85,8 +85,8 @@ def getUserAssetReturn(req) :
     returnObj = {}
     for asset in UserStocks.objects.all():
         invStartDate = nowTime - relativedelta(months = asset.investmentperiod)
-        df = stock.get_market_ohlcv(invStartDate, nowTime.strftime("%Y%m%d"), asset.code, adjusted=True, freq="m")
-        print(df)
-        returnObj['name'] = df['등락율']
+        df = stock.get_market_ohlcv(invStartDate, nowTime.strftime("%Y%m%d"), asset.code, freq="m")
+        value = df['종가'].pct_change().fillna(0).values
+        returnObj[asset.code] = value
     print(returnObj)
     return HttpResponse("fuck successfully")
