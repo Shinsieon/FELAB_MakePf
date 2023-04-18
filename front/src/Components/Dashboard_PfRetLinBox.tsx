@@ -6,42 +6,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { screenChanger } from "../Store";
 import { getRandomColor } from "../RandomColorGenerator";
 import axios from "axios";
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: "top" as const,
-    },
-    title: {
-      display: true,
-      text: "자산별 수익률 변동 그래프",
-    },
-  },
-};
-const labels = ["January", "February"];
-export const data2 = {
-  labels,
-  datasets: [
-    {
-      label: "Dataset 1",
-      data: labels.map(() => 4),
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-    },
-    {
-      label: "Dataset 2",
-      data: labels.map(() => 3),
-      borderColor: "rgb(53, 162, 235)",
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-    },
-  ],
-};
+
 function Dashboard_PfRetLinBox() {
   const assets: Iasset[] = useSelector((state: any) => state.assetReducer);
+  const [labels, setLabels] = useState<string[]>([]);
+  const [retMean, setRetMean] = useState<string[]>([]);
   const [mouseOn, setMouseOn] = useState(false);
-  const getUserAssetReturn = () => {
-    axios.get("http://localhost:8000/getUserAssetReturn").then((response) => {
-      console.log(response);
+  const getUserAssetRetArray = () => {
+    axios.get("http://localhost:8000/getUserAssetRetArray").then((response) => {
+      setLabels(response.data.date);
+      setRetMean(response.data.mean);
     });
   };
   const dispatch = useDispatch();
@@ -49,8 +23,20 @@ function Dashboard_PfRetLinBox() {
     dispatch({ type: screenChanger.SET_PORTFOLIO });
   };
   useEffect(() => {
-    getUserAssetReturn();
+    getUserAssetRetArray();
   }, []);
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top" as const,
+      },
+      title: {
+        display: true,
+        text: "자산별 수익률 변동 그래프",
+      },
+    },
+  };
   if (assets.length === 0) {
     return (
       <div
@@ -96,7 +82,20 @@ function Dashboard_PfRetLinBox() {
           borderRadius: "1rem",
         }}
       >
-        <Line options={options} data={data2}></Line>
+        <Line
+          options={options}
+          data={{
+            labels,
+            datasets: [
+              {
+                label: "포트폴리오 평균 수익률",
+                data: retMean,
+                borderColor: "rgb(255, 99, 132)",
+                backgroundColor: "rgba(255, 99, 132, 0.5)",
+              },
+            ],
+          }}
+        ></Line>
       </div>
     );
   }
