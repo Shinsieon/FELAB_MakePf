@@ -47,7 +47,7 @@ export const assetReducer = (state: Iasset[] = [], payload: any) => {
         return [
           {
             code: payload.code,
-            stock: payload.stock,
+            name: payload.name,
             weight: payload.weight,
             amount: payload.amount,
             investmentPeriod: payload.investmentPeriod,
@@ -57,13 +57,10 @@ export const assetReducer = (state: Iasset[] = [], payload: any) => {
       } else return state;
     case DELETE_ASSET:
       return state.filter((item) => item.code !== payload.code);
-    case MODIFY_AMOUNT_ASSET:
+    case MODIFY_AMOUNT_ASSET: //모든 자산의 weight을 다시 계산해서 보내야 한다.
       var index = newState.findIndex((item) => item.code === payload.code);
       newState[index].amount = payload.amount;
-      return newState;
-    case MODIFY_WEIGHT_ASSET:
-      var index = newState.findIndex((item) => item.code === payload.code);
-      newState[index].weight = payload.weight;
+      newState[index].weight = 0;
       return newState;
     case MODIFY_INVESTMENTPERIOD_ASSET:
       var index = newState.findIndex((item) => item.code === payload.code);

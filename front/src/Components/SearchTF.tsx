@@ -7,7 +7,7 @@ import { assetChanger } from "../Store";
 
 type stockType = {
   code: string;
-  stock: string;
+  name: string;
 };
 const StyledUl = styled.ul`
   position: absolute;
@@ -36,16 +36,16 @@ function SearchTF() {
     setFindedStocks(
       allStocks.filter(
         (item) =>
-          item.stock.includes(e.target.value) ||
+          item.name.includes(e.target.value) ||
           item.code.includes(e.target.value)
       )
     );
   };
-  const addToAsset = (code: string, stock: string) => {
+  const addToAsset = (code: string, name: string) => {
     dispatch({
       type: assetChanger.ADD_ASSET,
       code: code,
-      stock: stock,
+      name: name,
       weight: 50,
       amount: 0,
       investmentPeriod: 12,
@@ -56,7 +56,7 @@ function SearchTF() {
       if (response.status === 200) {
         const dataToArr: stockType[] = [];
         Object.keys(response.data).map((item, idx) => {
-          dataToArr.push({ code: item, stock: response.data[item] });
+          dataToArr.push({ code: item, name: response.data[item] });
         });
         setAllStocks(dataToArr);
       }
@@ -106,7 +106,7 @@ function SearchTF() {
                   overflow: "hidden",
                 }}
               >
-                {item.code + "  " + item.stock}
+                {item.code + "  " + item.name}
               </li>
               <button
                 style={{
@@ -120,7 +120,7 @@ function SearchTF() {
                   color: "white",
                 }}
                 onClick={() => {
-                  addToAsset(item.code.toString(), item.stock.toString());
+                  addToAsset(item.code.toString(), item.name.toString());
                 }}
               >
                 담기

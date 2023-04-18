@@ -10,7 +10,7 @@ import axios from "axios";
 
 type pieDataType = {
   labels: string[];
-  data: string[];
+  data: number[];
   colors: string[];
 };
 
@@ -27,22 +27,22 @@ const Dashboard_PfPieBox = () => {
   const changeScreenToPf = () => {
     dispatch({ type: screenChanger.SET_PORTFOLIO });
   };
-
   useEffect(() => {
+    console.log("called");
     var labels = [];
-    var data = [];
+    var data_ = [];
     var colors = [];
     for (var i = 0; i < assets.length; i++) {
       labels.push(assets[i].name);
-      data.push(assets[i].weight);
+      data_.push(assets[i].amount);
       colors.push(getRandomColor());
     }
     setPieData({
       labels: labels,
-      data: data,
+      data: data_,
       colors: colors,
     });
-  }, []);
+  }, [assets]);
 
   const data = {
     labels: pieData["labels"],

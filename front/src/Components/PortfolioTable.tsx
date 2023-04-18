@@ -19,6 +19,7 @@ function Portfolio_Table() {
     dispatch({ type: assetChanger.DELETE_ASSET, code: code });
   };
   const inputChanged = (code: string, e: any) => {
+    e.target.value = e.target.value === "" ? 0 : parseInt(e.target.value);
     switch (e.target.id) {
       case "amountField":
         dispatch({
@@ -27,13 +28,7 @@ function Portfolio_Table() {
           amount: e.target.value,
         });
         break;
-      case "weightField":
-        dispatch({
-          type: assetChanger.MODIFY_WEIGHT_ASSET,
-          code: code,
-          weight: e.target.value,
-        });
-        break;
+
       case "investmentPeriodField":
         dispatch({
           type: assetChanger.MODIFY_INVESTMENTPERIOD_ASSET,
@@ -114,7 +109,7 @@ function Portfolio_Table() {
                         size="sm"
                         placeholder={item.amount.toString()}
                         id="amountField"
-                        defaultValue={0}
+                        defaultValue={item.amount}
                         onChange={(e: any) => {
                           inputChanged(item.code, e);
                         }}

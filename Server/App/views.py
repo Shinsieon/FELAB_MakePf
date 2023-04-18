@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from datetime import datetime
 from pykrx import stock 
+import pandas as pd
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -63,7 +64,7 @@ def saveUserAsset(req) :
     else:
         for asset in assets:
             userStocks = UserStocks()
-            if len(UserStocks.objects.filter(email = dataFromView['email'], code = asset['stock']))>0 : 
+            if len(UserStocks.objects.filter(email = dataFromView['email'], code = asset['code']))>0 : 
                 item = UserStocks.objects.get(email = dataFromView['email'],code = asset['code'])
                 item.weight = asset['weight']
                 item.amount = asset['amount']
@@ -72,7 +73,7 @@ def saveUserAsset(req) :
             else :
                 userStocks.email = dataFromView['email']
                 userStocks.code = asset['code']
-                userStocks.name = asset['stock']
+                userStocks.name = asset['name']
                 userStocks.weight = asset['weight']
                 userStocks.amount = asset['amount']
                 userStocks.investmentperiod = asset['investmentPeriod']
@@ -80,13 +81,21 @@ def saveUserAsset(req) :
     
     return HttpResponse("saved successfully")
 
-def getUserAssetReturn(req) :
+def getUserAssetRetArray(req) :
     nowTime = dt.datetime.now()
-    returnObj = {}
+    returnDF = pd.DataFrame({})
     for asset in UserStocks.objects.all():
-        invStartDate = nowTime - relativedelta(months = asset.investmentperiod)
-        df = stock.get_market_ohlcv(invStartDate, nowTime.strftime("%Y%m%d"), asset.code, freq="m")
-        value = df['종가'].pct_change().fillna(0).values
-        returnObj[asset.code] = value
+        invStartDate = nowTime - relativedelta(months = asset.investmentperiod) #format = 20220101 
+        stockDF =  stock.get_market_ohlcv(invStartDate, nowTime.strftime("%Y%m%d"), asset.code, freq="m")
+        returnDF = pd.concat([returnDF, stockDF['종가'].pct_change().rename(asset.code)],axis=1).fillna(0)
+
+    returnObj = {}
+    returnObj['mean'] =  returnDF.mean(axis=1).tolist()
+
+    newIndex = []
+    for ts in returnDF.index.tolist(): #timestamp index 를 string으로 변환
+        dt_ = datetime.strftime(ts, '%Y%m%d')  # convert string to datetime object
+        newIndex.append(dt_)
+    returnObj['date'] = newIndex
     print(returnObj)
-    return HttpResponse("fuck successfully")
+    return HttpResponse(json.dumps(returnObj))
