@@ -8,4 +8,5 @@ urlpatterns = [
     path('getAllStocks',views.getAllStocks, name='getAllStocks'),
     path('saveUserAsset',views.saveUserAsset, name='saveUserAsset'),
     path('getUserAssetRetArray',views.getUserAssetRetArray, name='getUserAssetRetArray'),
+    path('getUserAssetPerformance',views.getUserAssetPerformance, name='getUserAssetPerformance'),
 ]

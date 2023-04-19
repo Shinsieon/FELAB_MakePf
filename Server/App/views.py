@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from datetime import datetime
 from pykrx import stock 
 import pandas as pd
+import numpy as np
+import math as math
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -81,10 +83,15 @@ def saveUserAsset(req) :
     
     return HttpResponse("saved successfully")
 
+@method_decorator(csrf_exempt, name='dispatch')
 def getUserAssetRetArray(req) :
+    dataFromView = json.loads(req.body)
+    if dataFromView['email'] == "": 
+        return HttpResponse(NO_USER_ERROR)
+    
     nowTime = dt.datetime.now()
     returnDF = pd.DataFrame({})
-    for asset in UserStocks.objects.all():
+    for asset in UserStocks.objects.filter(email=dataFromView['email']):
         invStartDate = nowTime - relativedelta(months = asset.investmentperiod) #format = 20220101 
         stockDF =  stock.get_market_ohlcv(invStartDate, nowTime.strftime("%Y%m%d"), asset.code, freq="m")
         returnDF = pd.concat([returnDF, stockDF['종가'].pct_change().rename(asset.code)],axis=1).fillna(0)
@@ -98,4 +105,26 @@ def getUserAssetRetArray(req) :
         newIndex.append(dt_)
     returnObj['date'] = newIndex
     print(returnObj)
+    return HttpResponse(json.dumps(returnObj))
+
+@method_decorator(csrf_exempt, name='dispatch')
+def getUserAssetPerformance(req):
+    dataFromView = json.loads(req.body)
+    if dataFromView['email'] == "": 
+        return HttpResponse(NO_USER_ERROR)
+    
+    interest = 0.03 #기준금리(무위험 수익률)
+    nowTime = dt.datetime.now()
+    returnDF = pd.DataFrame({})
+    for asset in UserStocks.objects.filter(email=dataFromView['email']):
+        invStartDate = nowTime - relativedelta(months = asset.investmentperiod) #format = 20220101 
+        stockDF =  stock.get_market_ohlcv(invStartDate, nowTime.strftime("%Y%m%d"), asset.code, freq="m")
+        returnDF = pd.concat([returnDF, stockDF['종가'].pct_change().rename(asset.code)],axis=1).fillna(0)
+
+    meanArr = returnDF.mean(axis=1)
+    returnObj = {}
+    returnObj['retMean'] =  meanArr.mean()
+    returnObj['std'] = math.sqrt(np.var(meanArr.tolist()))
+    returnObj['sharpe'] = (returnObj['retMean']- interest)/returnObj['std']
+    returnObj['mdd'] = abs(min(meanArr.tolist())/max(meanArr.tolist())-1)*100
     return HttpResponse(json.dumps(returnObj))

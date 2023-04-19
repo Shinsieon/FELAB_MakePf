@@ -1,12 +1,10 @@
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import Modal from "./Modal";
-import { Iasset } from "./Dashboard";
 import { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 import { screenChanger } from "../Store";
 import { getRandomColor } from "../RandomColorGenerator";
-import axios from "axios";
 
 type pieDataType = {
   labels: string[];
@@ -96,6 +94,8 @@ const Dashboard_PfPieBox = () => {
         width: "30vw",
         left: "3rem",
         borderRadius: "1rem",
+        display: "flex",
+        justifyContent: "center",
       }}
     >
       <Pie data={data}></Pie>

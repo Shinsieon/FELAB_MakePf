@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { screenChanger } from "../Store";
 import { getRandomColor } from "../RandomColorGenerator";
 import axios from "axios";
+import { FaAlignJustify } from "react-icons/fa";
 
 function Dashboard_PfRetLinBox() {
   const assets: Iasset[] = useSelector((state: any) => state.assetReducer);
@@ -13,10 +14,15 @@ function Dashboard_PfRetLinBox() {
   const [retMean, setRetMean] = useState<string[]>([]);
   const [mouseOn, setMouseOn] = useState(false);
   const getUserAssetRetArray = () => {
-    axios.get("http://localhost:8000/getUserAssetRetArray").then((response) => {
-      setLabels(response.data.date);
-      setRetMean(response.data.mean);
-    });
+    console.log("clasd");
+    axios
+      .post("http://localhost:8000/getUserAssetRetArray", {
+        email: localStorage.getItem("userMail"),
+      })
+      .then((response) => {
+        setLabels(response.data.date);
+        setRetMean(response.data.mean);
+      });
   };
   const dispatch = useDispatch();
   const changeScreenToPf = () => {
@@ -80,6 +86,8 @@ function Dashboard_PfRetLinBox() {
           width: "55vw",
           left: "40vw",
           borderRadius: "1rem",
+          display: "flex",
+          justifyContent: "center",
         }}
       >
         <Line
