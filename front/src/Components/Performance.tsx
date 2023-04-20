@@ -78,7 +78,7 @@ function Performance() {
           borderRadius: "1rem",
         }}
       >
-        <h4 style={{ textAlign: "left", margin: "10px" }}>개별주식 성과</h4>
+        <h5 style={{ textAlign: "left", margin: "10px" }}>개별주식 성과</h5>
       </div>
     </div>
   );
