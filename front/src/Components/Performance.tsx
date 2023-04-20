@@ -47,8 +47,8 @@ function Performance() {
     <div
       style={{
         position: "absolute",
-        top: "27rem",
-        height: "25vh",
+        top: "59vh",
+        height: "30vh",
         width: "60vw",
         left: "32vw",
         display: "flex",
@@ -87,7 +87,21 @@ function Performance() {
 
 function RadarChart({ userPortData }: { userPortData: string[] }) {
   console.log(userPortData);
-  const labels = ["평균 수익률", "샤프비율", "표준편차", "mdd"];
+  const labels = ["샤프비율", "표준편차", "mdd"];
+  const options = {
+    responsive: false,
+    plugins: {
+      colors: {
+        forceOverride: true,
+      },
+    },
+    legend: {
+      labels: {
+        fontColor: "white",
+        fontSize: 18,
+      },
+    },
+  };
   const data = {
     labels: labels,
     datasets: [
@@ -104,7 +118,7 @@ function RadarChart({ userPortData }: { userPortData: string[] }) {
       },
     ],
   };
-  return <Radar data={data}></Radar>;
+  return <Radar data={data} options={options}></Radar>;
 }
 
 export default Performance;
