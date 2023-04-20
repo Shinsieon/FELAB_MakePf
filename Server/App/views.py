@@ -17,6 +17,16 @@ from dateutil.relativedelta import relativedelta
 NO_USER_ERROR = 0
 INSERT_ERROR = 1
 UPDATE_ERROR = 2
+USER_MISMATCH_ERROR = 3
+
+def userCheck(dataFromView): #usercheck 가 있는지 없는지 혹은 token이 맞는지
+    if dataFromView['email'] == "" or dataFromView['userToken']=="" or len(dataFromView['email'])==0 or len(dataFromView['userToken'])==0: 
+        return NO_USER_ERROR
+    elif Usertbl.objects.get(k_email = dataFromView['email']).k_token != dataFromView['userToken'] : 
+        return USER_MISMATCH_ERROR
+    else :
+        return -1
+
 def apiHome(request):
     print("hello apiHome is called")
     return HttpResponse("DJANGO API")
@@ -30,6 +40,7 @@ def kakaoLoginDone(request):
     usertbl.k_image = data['userInfo']['properties']['profile_image']
     usertbl.k_gender = data['userInfo']['kakao_account']['gender']
     usertbl.k_age_range = data['userInfo']['kakao_account']['age_range']
+    usertbl.k_token = data['userToken']
     print(data)
     if(len(Usertbl.objects.filter(k_email = (data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else "")))==0):
         usertbl.save()
@@ -42,6 +53,9 @@ def kakaoLoginDone(request):
 def getMyStocks(req): 
     response = {}
     dataFromView = json.loads(req.body)
+    userCheckRes = userCheck(dataFromView)
+    if userCheckRes >= 0:
+        return HttpResponse(userCheck(dataFromView))
     myStocks = UserStocks.objects.filter(email=dataFromView['email'])
     response['result'] = serializers.serialize("json", myStocks)
 
@@ -60,14 +74,16 @@ def getAllStocks(req):
 def saveUserAsset(req) :
     dataFromView = json.loads(req.body)
     assets = dataFromView['assets']
-    #email 값이 있는지부터 체크 없으면 fail
-    if dataFromView['email'] == "": 
-        return HttpResponse(NO_USER_ERROR)
+
+    userCheckRes = userCheck(dataFromView)
+    if userCheckRes >= 0:
+        return HttpResponse(userCheck(dataFromView))
+    
     else:
         for asset in assets:
             userStocks = UserStocks()
-            if len(UserStocks.objects.filter(email = dataFromView['email'], code = asset['code']))>0 : 
-                item = UserStocks.objects.get(email = dataFromView['email'],code = asset['code'])
+            if len(UserStocks.objects.filter(email = dataFromView['email'],code = asset['code']))>0 : 
+                item = UserStocks.objects.get(email = dataFromView['email'], code = asset['code'])
                 item.weight = asset['weight']
                 item.amount = asset['amount']
                 item.investmentperiod = asset['investmentPeriod']
@@ -86,8 +102,10 @@ def saveUserAsset(req) :
 @method_decorator(csrf_exempt, name='dispatch')
 def getUserAssetRetArray(req) :
     dataFromView = json.loads(req.body)
-    if dataFromView['email'] == "": 
-        return HttpResponse(NO_USER_ERROR)
+    
+    userCheckRes = userCheck(dataFromView)
+    if userCheckRes >= 0:
+        return HttpResponse(userCheck(dataFromView))
     
     nowTime = dt.datetime.now()
     returnDF = pd.DataFrame({})
@@ -110,9 +128,9 @@ def getUserAssetRetArray(req) :
 @method_decorator(csrf_exempt, name='dispatch')
 def getUserAssetPerformance(req):
     dataFromView = json.loads(req.body)
-    if dataFromView['email'] == "": 
-        return HttpResponse(NO_USER_ERROR)
-    
+    userCheckRes = userCheck(dataFromView)
+    if userCheckRes >= 0:
+        return HttpResponse(userCheck(dataFromView))
     interest = 0.03 #기준금리(무위험 수익률)
     nowTime = dt.datetime.now()
     returnDF = pd.DataFrame({})

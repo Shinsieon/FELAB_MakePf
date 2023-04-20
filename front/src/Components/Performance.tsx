@@ -30,6 +30,7 @@ function Performance() {
     axios
       .post("http://localhost:8000/getUserAssetPerformance", {
         email: localStorage.getItem("userMail"),
+        userToken: localStorage.getItem("access_token"),
       })
       .then((response) => {
         console.log(response);

@@ -72,6 +72,7 @@ function Dashboard() {
     axios
       .post("http://localhost:8000/getMyStocks", {
         email: localStorage.getItem("userMail"),
+        userToken: localStorage.getItem("access_token"),
       })
       .then((response) => {
         const result: Iasset[] = [];

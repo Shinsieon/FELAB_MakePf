@@ -6,6 +6,7 @@ class Usertbl(models.Model):
     k_image = models.TextField()
     k_gender = models.CharField(max_length=10)
     k_age_range = models.CharField(max_length=20)
+    k_token = models.CharField(max_length=100)
     class Meta:
         managed = False
         db_table = 'UserTBL'

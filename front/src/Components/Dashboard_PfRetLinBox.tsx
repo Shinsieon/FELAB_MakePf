@@ -18,6 +18,7 @@ function Dashboard_PfRetLinBox() {
     axios
       .post("http://localhost:8000/getUserAssetRetArray", {
         email: localStorage.getItem("userMail"),
+        userToken: localStorage.getItem("access_token"),
       })
       .then((response) => {
         setLabels(response.data.date);

@@ -43,6 +43,7 @@ function Portfolio_Table() {
     axios
       .post("http://localhost:8000/saveUserAsset", {
         email: localStorage.getItem("userMail"),
+        userToken: localStorage.getItem("access_token"),
         assets: assets,
       })
       .then((response) => {
