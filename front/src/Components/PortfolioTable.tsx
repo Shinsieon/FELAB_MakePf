@@ -74,7 +74,7 @@ function Portfolio_Table() {
       style={{
         position: "absolute",
         width: "60vw",
-        height: "35vh",
+        height: "30vh",
         top: "8rem",
         left: "32vw",
       }}
@@ -85,7 +85,7 @@ function Portfolio_Table() {
           borderRadius: "1rem",
           fontSize: "1rem",
           padding: "10px",
-          height: "35vh",
+          height: "30vh",
           overflowY: "auto",
         }}
       >
