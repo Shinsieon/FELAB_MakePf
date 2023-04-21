@@ -11,9 +11,6 @@ import {
 import { Radar } from "react-chartjs-2";
 import axios from "axios";
 
-// [
-//   const labels = ["평균 수익률", "샤프비율", "표준편차", "mdd"];
-// ]
 ChartJS.register(
   RadialLinearScale,
   PointElement,
@@ -25,6 +22,7 @@ ChartJS.register(
 function Performance() {
   const [userPortData, setUserPortData] = useState<string[]>([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const labels = ["평균 수익률", "샤프비율", "표준편차", "mdd"];
   useEffect(() => {
     //user의 포트폴리오 성과 with benchmark
     axios
@@ -47,8 +45,8 @@ function Performance() {
     <div
       style={{
         position: "absolute",
-        top: "59vh",
-        height: "30vh",
+        top: "55vh",
+        height: "28.5vh",
         width: "60vw",
         left: "32vw",
         display: "flex",
@@ -61,13 +59,19 @@ function Performance() {
           width: "35vw",
           borderRadius: "1rem",
           color: "white",
+          padding: "10px",
         }}
       >
-        <h4 style={{ textAlign: "left", margin: "10px" }}>포트폴리오 성과</h4>
+        <h4 style={{ textAlign: "left" }}>포트폴리오 성과</h4>
         {isDataLoaded ? (
-          <RadarChart userPortData={userPortData}></RadarChart>
+          userPortData.map((item, idx) => (
+            <PerformanceBar
+              label={labels[idx]}
+              value={userPortData[0]}
+            ></PerformanceBar>
+          ))
         ) : (
-          <h1>asd</h1>
+          <h1>데이터를 불러오는 중입니다.</h1>
         )}
       </div>
       <div
@@ -81,6 +85,27 @@ function Performance() {
       >
         <h5 style={{ textAlign: "left", margin: "10px" }}>개별주식 성과</h5>
       </div>
+    </div>
+  );
+}
+
+function PerformanceBar({ label, value }: { label: string; value: string }) {
+  console.log(label);
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: "2.5rem",
+        backgroundColor: "rgba(255,255,255,0.7)",
+        borderRadius: "0.5rem",
+        display: "flex",
+        justifyContent: "center",
+        color: "black",
+        margin: "10px 0",
+      }}
+    >
+      <p>{label}</p>
+      <p>{parseFloat(value).toFixed(2)}</p>
     </div>
   );
 }

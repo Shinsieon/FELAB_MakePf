@@ -44,7 +44,12 @@ def kakaoLoginDone(request):
     print(data)
     if(len(Usertbl.objects.filter(k_email = (data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else "")))==0):
         usertbl.save()
-
+    else:
+        item = Usertbl.objects.get(k_email = (data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else ""))
+        item.k_image = data['userInfo']['properties']['profile_image']
+        item.k_token = data['userToken']
+        item.save()
+        
     # if(len(UserStocks.objects.filter(email = (data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else "")))==0):
     #     userStocks.save()
     return HttpResponse("Login Done!")
@@ -104,9 +109,10 @@ def getUserAssetRetArray(req) :
     dataFromView = json.loads(req.body)
     
     userCheckRes = userCheck(dataFromView)
+    print(userCheckRes)
+
     if userCheckRes >= 0:
         return HttpResponse(userCheck(dataFromView))
-    
     nowTime = dt.datetime.now()
     returnDF = pd.DataFrame({})
     for asset in UserStocks.objects.filter(email=dataFromView['email']):

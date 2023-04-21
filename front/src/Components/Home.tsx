@@ -1,7 +1,5 @@
 import { useMediaQuery } from "react-responsive";
 import NavBar from "./NavBar";
-import Dashboard from "./Dashboard";
-import { useState } from "react";
 import { connect } from "react-redux";
 export const Mobile = ({
   children,
