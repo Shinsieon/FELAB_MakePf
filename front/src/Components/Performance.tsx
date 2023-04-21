@@ -90,15 +90,16 @@ function RadarChart({ userPortData }: { userPortData: string[] }) {
   const labels = ["샤프비율", "표준편차", "mdd"];
   const options = {
     responsive: false,
-    plugins: {
-      colors: {
-        forceOverride: true,
-      },
-    },
+
     legend: {
       labels: {
         fontColor: "white",
         fontSize: 18,
+      },
+    },
+    scale: {
+      pointLabels: {
+        fontColor: labels.map((lbl) => "white"),
       },
     },
   };
