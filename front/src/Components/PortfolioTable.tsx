@@ -6,15 +6,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { Iasset } from "./Dashboard";
 import { assetChanger } from "../Store";
 import { AiFillDelete } from "react-icons/ai";
+import { AiFillPlusCircle } from "react-icons/ai";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
+
+import SearchTF from "./SearchTF";
 function Portfolio_Table() {
   const assets = useSelector((state: any) => state.assetReducer);
+  const [isAddBtnClicked, setIsAddBtnClicked] = useState(false);
   const [amountSum, setAmountSum] = useState(0);
   const [period, setPeriod] = useState(0);
 
   const dispatch = useDispatch();
+  const addBtnToggle = () => {
+    setIsAddBtnClicked((prev) => !prev);
+  };
   const deleteAsset = (code: string) => {
     dispatch({ type: assetChanger.DELETE_ASSET, code: code });
   };
@@ -73,10 +80,10 @@ function Portfolio_Table() {
     <div
       style={{
         position: "absolute",
-        width: "60vw",
-        height: "30vh",
-        top: "8rem",
-        left: "32vw",
+        width: "40vw",
+        height: "70vh",
+        top: "7rem",
+        left: "3rem",
       }}
     >
       <div
@@ -85,16 +92,29 @@ function Portfolio_Table() {
           borderRadius: "1rem",
           fontSize: "1rem",
           padding: "10px",
-          height: "30vh",
+          height: "65vh",
           overflowY: "auto",
         }}
       >
+        {isAddBtnClicked ? <SearchTF></SearchTF> : ""}
+        <AiFillPlusCircle
+          size="40"
+          style={{
+            cursor: "pointer",
+            position: "absolute",
+            right: "0",
+            top: "0",
+          }}
+          onClick={() => {
+            addBtnToggle();
+          }}
+        ></AiFillPlusCircle>
         <Table striped size="sm" responsive="sm">
           <thead>
             <tr>
               <th style={{ width: "30%" }}>종목명</th>
-              <th style={{ width: "50%" }}>금액(원)</th>
-              <th style={{ width: "20%" }}>투자기간(개월)</th>
+              <th style={{ width: "40%" }}>금액(원)</th>
+              <th style={{ width: "30%" }}>투자기간(m)</th>
               <th></th>
             </tr>
           </thead>

@@ -7,7 +7,6 @@ function Portfolio() {
   return (
     <div>
       <Profile></Profile>
-      <MyAssetList></MyAssetList>
       <PortfolioTable></PortfolioTable>
       <Performance></Performance>
       <Visitor></Visitor>

@@ -22,14 +22,6 @@ function LoginButton() {
     </div>
   );
 }
-function LogoutButton() {
-  return (
-    <div>
-      <button value="logout"></button>
-    </div>
-  );
-}
-
 function Login() {
   return (
     <div>
@@ -51,7 +43,7 @@ function Login() {
         <h1>Manage your Portfolio</h1>
         <LoginButton></LoginButton>
 
-        <p style={{ fontSize: "0.7rem" }}>
+        <p style={{ fontSize: "0.7rem", margin: "10px" }}>
           최초 회원가입 시 이용약관, 개인정보처리방침에 동의하게 됩니다.
         </p>
       </div>

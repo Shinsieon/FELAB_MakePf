@@ -1,4 +1,3 @@
-import { AiOutlineSearch } from "react-icons/ai";
 import { useState, useEffect } from "react";
 import axios, { all } from "axios";
 import styled from "styled-components";
@@ -11,12 +10,15 @@ type stockType = {
 };
 const StyledUl = styled.ul`
   position: absolute;
-  top: 5rem;
-  height: 55vh;
-  width: 95%;
+  top: 1rem;
+  right: 1rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  height: 40vh;
+  width: 20vw;
   list-style: none;
   text-align: left;
   font-size: 1rem;
+  color: white;
   overflow-y: auto;
   overflow-x: hidden;
   border-radius: 1rem;
@@ -63,23 +65,21 @@ function SearchTF() {
     });
   }, []);
   return (
-    <div>
-      <AiOutlineSearch
-        style={{
-          position: "absolute",
-          top: "2.4rem",
-          left: "2rem",
-          zIndex: 2,
-        }}
-      />
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "2rem",
+        marginBottom: "10px",
+      }}
+    >
       <input
         placeholder="찾으시는 종목을 검색해주세요"
         style={{
           position: "absolute",
-          top: "1.5rem",
-          left: "1.8rem",
-          width: "80%",
-          height: "3rem",
+          right: "1.8rem",
+          width: "20vw",
+          height: "2rem",
           fontSize: "0.8rem",
           padding: "1rem 1.5rem",
           borderRadius: "1rem",
@@ -90,7 +90,6 @@ function SearchTF() {
         }}
         onChange={changeText}
       ></input>
-
       {searchTxt !== "" ? (
         <StyledUl>
           {findedStocks.map((item) => (
@@ -104,27 +103,15 @@ function SearchTF() {
                   height: "1.5rem",
                   width: "70%",
                   overflow: "hidden",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  addToAsset(item.code.toString(), item.name.toString());
+                  setSearchTxt("");
                 }}
               >
                 {item.code + "  " + item.name}
               </li>
-              <button
-                style={{
-                  width: "3rem",
-                  height: "1.5rem",
-                  margin: 0,
-                  overflow: "hidden",
-                  backgroundColor: "rgba(255, 83, 73, 0.7)",
-                  border: "none",
-                  borderRadius: "0.5rem",
-                  color: "white",
-                }}
-                onClick={() => {
-                  addToAsset(item.code.toString(), item.name.toString());
-                }}
-              >
-                담기
-              </button>
             </div>
           ))}
         </StyledUl>
