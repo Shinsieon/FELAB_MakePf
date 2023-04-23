@@ -34,7 +34,7 @@ function Login() {
           padding: "40px",
           marginTop: "2rem",
           width: "30vw",
-          height: "30vh",
+          height: "35vh",
           borderRadius: "1rem",
           backgroundColor: "rgba(255,255,255,0.4)",
           zIndex: 3,
