@@ -1,4 +1,8 @@
 import { useEffect, useState } from "react";
+import cashFlow from "../assets/images/cash-flow.png";
+import cost from "../assets/images/cost.png";
+import std from "../assets/images/std.png";
+import mdd from "../assets/images/mdd.png";
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -10,6 +14,19 @@ import {
 } from "chart.js";
 import { Radar } from "react-chartjs-2";
 import axios from "axios";
+import styled from "styled-components";
+import SimpleSlider from "./car";
+
+const H5Style = styled.h5`
+  font-size: 1rem;
+  text-align: left;
+  margin: 0;
+`;
+const PStyle = styled.p`
+  font-size: 0.8rem;
+  text-align: left;
+  margin: 0;
+`;
 
 ChartJS.register(
   RadialLinearScale,
@@ -19,10 +36,39 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+
 function Performance() {
+  const slideItems: JSX.Element[] = [
+    <PortfolioPerformance key={0}></PortfolioPerformance>,
+    <PortfolioPerformance key={0}></PortfolioPerformance>,
+  ];
+  return (
+    <div
+      style={{
+        position: "absolute",
+        top: "7rem",
+        height: "65vh",
+        width: "50vw",
+        left: "47vw",
+        display: "flex",
+      }}
+    >
+      <SimpleSlider children={slideItems}></SimpleSlider>
+    </div>
+  );
+}
+
+function PortfolioPerformance() {
   const [userPortData, setUserPortData] = useState<number[]>([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
-  const labels = ["평균 수익률", "샤프비율", "표준편차", "mdd"];
+  const contents = {
+    평균수익률: "투자기간 동안의 수익률 평균입니다.",
+    샤프비율:
+      "샤프 비율은 투자자가 부담하는 위험을 자산 수익률이 얼마나 잘 보상하는지를 규정합니다",
+    표준편차: "표준편차는 포트폴리오의 수익률의 변동성을 의미합니다",
+    Mdd: "MDD는 전 고점 대비 최대 하락비율을 의미합니다.",
+  };
+  const icons = [cashFlow, cost, std, mdd];
 
   useEffect(() => {
     //user의 포트폴리오 성과 with benchmark
@@ -46,37 +92,36 @@ function Performance() {
   return (
     <div
       style={{
-        position: "absolute",
-        top: "7rem",
-        height: "65vh",
-        width: "50vw",
-        left: "47vw",
-        display: "flex",
+        backgroundColor: "#251342",
+        height: "100%",
+        width: "100%",
+        borderRadius: "1rem",
+        color: "white",
+        padding: "12px",
+        position: "relative",
       }}
     >
-      <div
-        style={{
-          backgroundColor: "#251342",
-          height: "100%",
-          width: "100%",
-          borderRadius: "1rem",
-          color: "white",
-          padding: "10px",
-        }}
-      >
-        <h4 style={{ textAlign: "left" }}>포트폴리오 성과</h4>
-        {isDataLoaded ? (
-          userPortData.map((item, idx) => (
+      <h5 style={{ textAlign: "left" }}>포트폴리오 성과</h5>
+      <PStyle>
+        {localStorage.getItem("userName")}님의 자산 데이터를 바탕으로 성과를
+        도출했습니다.
+      </PStyle>
+      {isDataLoaded ? (
+        userPortData.map((item, idx) => (
+          <div key={idx}>
             <PerformanceBar
-              label={labels[idx]}
+              label={Object.keys(contents)[idx]}
+              content={Object.values(contents)[idx]}
               value={userPortData[idx]}
+              icon={icons[idx]}
+              key={idx}
             ></PerformanceBar>
-          ))
-        ) : (
-          //<RadarChart userPortData={userPortData}></RadarChart>
-          <h1>데이터를 불러오는 중입니다.</h1>
-        )}
-      </div>
+          </div>
+        ))
+      ) : (
+        //<RadarChart userPortData={userPortData}></RadarChart>
+        <h1>데이터를 불러오는 중입니다.</h1>
+      )}
       <div
         style={{
           backgroundColor: "white",
@@ -85,15 +130,22 @@ function Performance() {
           width: "23vw",
           borderRadius: "1rem",
         }}
-      >
-        <h5 style={{ textAlign: "left", margin: "10px" }}>개별주식 성과</h5>
-      </div>
+      ></div>
     </div>
   );
 }
 
-function PerformanceBar({ label, value }: { label: string; value: number }) {
-  console.log(label);
+function PerformanceBar({
+  label,
+  content,
+  value,
+  icon,
+}: {
+  label: string;
+  content: string;
+  value: number;
+  icon: any;
+}) {
   return (
     <div
       style={{
@@ -108,12 +160,17 @@ function PerformanceBar({ label, value }: { label: string; value: number }) {
         style={{
           width: "5rem",
           height: "5rem",
-          backgroundColor: "rgba(255, 255, 255, 0.5)",
         }}
-      ></div>
-      <div className="detailLayer" style={{ color: "white" }}>
-        <p>{label}</p>
-        <p>{value.toFixed(2)}</p>
+      >
+        <img src={icon} style={{ width: "3rem" }}></img>
+      </div>
+      <div
+        className="detailLayer"
+        style={{ color: "white", marginLeft: "1rem", width: "20vw" }}
+      >
+        <H5Style>{label}</H5Style>
+        <PStyle>{content}</PStyle>
+        <PStyle style={{ fontWeight: "bold" }}>{value.toFixed(2)}</PStyle>
       </div>
     </div>
   );
