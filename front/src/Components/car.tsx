@@ -33,7 +33,7 @@ export default function SimpleSlider({
       speed: speed,
       slidesToShow: 1,
       autoplay: Boolean(autoplay),
-      autoplaySpeed: typeof autoplay === "boolean" ? 3000 : autoplay,
+      autoplaySpeed: typeof autoplay === "boolean" ? 2000 : autoplay,
     }),
     [autoplay, loop, speed]
   );
