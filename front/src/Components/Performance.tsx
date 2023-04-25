@@ -120,7 +120,7 @@ function PortfolioPerformance() {
         ))
       ) : (
         //<RadarChart userPortData={userPortData}></RadarChart>
-        <h1>데이터를 불러오는 중입니다.</h1>
+        <LoadingIcon>데이터를 불러오는 중입니다.</LoadingIcon>
       )}
       <div
         style={{
