@@ -1,5 +1,6 @@
 import Slider, { Settings } from "react-slick";
 import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import styled from "styled-components";
 import { useMemo } from "react";
 const SlideWrapper = styled.section`
@@ -23,7 +24,7 @@ interface sliderProps {
 export default function SimpleSlider({
   children,
   className,
-  autoplay = true,
+  autoplay = false,
   speed = 300,
   loop = true,
 }: sliderProps) {
@@ -32,8 +33,10 @@ export default function SimpleSlider({
       infinite: loop,
       speed: speed,
       slidesToShow: 1,
+      arrows: false,
+      dots: true,
       autoplay: Boolean(autoplay),
-      autoplaySpeed: typeof autoplay === "boolean" ? 2000 : autoplay,
+      autoplaySpeed: typeof autoplay === "boolean" ? 5000 : autoplay,
     }),
     [autoplay, loop, speed]
   );

@@ -38,22 +38,24 @@ ChartJS.register(
 );
 
 function Performance() {
-  const slideItems: JSX.Element[] = [
-    <PortfolioPerformance key={0}></PortfolioPerformance>,
-    <PortfolioPerformance key={0}></PortfolioPerformance>,
-  ];
+  console.log("hi");
   return (
     <div
       style={{
         position: "absolute",
         top: "7rem",
         height: "65vh",
-        width: "50vw",
+        width: "30vw",
         left: "47vw",
         display: "flex",
       }}
     >
-      <SimpleSlider children={slideItems}></SimpleSlider>
+      <SimpleSlider
+        children={[
+          <PortfolioPerformance key={0}></PortfolioPerformance>,
+          <IndivisualPerformance key={1}></IndivisualPerformance>,
+        ]}
+      ></SimpleSlider>
     </div>
   );
 }
@@ -132,6 +134,38 @@ function PortfolioPerformance() {
         }}
       ></div>
     </div>
+  );
+}
+
+function IndivisualPerformance() {
+  type TassetFundamental = {
+    PER: number;
+    EPS: number;
+    RET: number;
+  };
+  const [assetFund, setAssetFund] = useState<TassetFundamental[]>([]);
+  useEffect(() => {
+    axios
+      .post("http://localhost:8000/getIndivisualPerformance", {
+        email: localStorage.getItem("userMail"),
+        userToken: localStorage.getItem("access_token"),
+      })
+      .then((response) => {
+        console.log(response);
+      });
+  }, []);
+  return (
+    <div
+      style={{
+        backgroundColor: "white",
+        height: "100%",
+        width: "100%",
+        borderRadius: "1rem",
+        color: "white",
+        padding: "12px",
+        position: "relative",
+      }}
+    ></div>
   );
 }
 
