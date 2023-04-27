@@ -11,7 +11,7 @@ const SlideWrapper = styled.section`
 
 interface sliderProps {
   /** 슬라이더 아이템 요소 */
-  children: JSX.Element[];
+  children: Function[];
   /** 커스텀 클래스 */
   className?: string;
   /** 자동재생 (속도 설정시 number 타입으로) */
@@ -44,7 +44,7 @@ export default function SimpleSlider({
     <SlideWrapper>
       <Slider {...settings}>
         {children.map((item, idx) => (
-          <div key={idx}>{item}</div>
+          <div key={idx}>{item()}</div>
         ))}
       </Slider>
     </SlideWrapper>

@@ -2,10 +2,11 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { KAKAO_APIKEY } from "../src/config";
+import configData from "./config.json";
 
 const { Kakao } = window;
 const api = axios.create({
-  baseURL: "http://localhost:8000",
+  baseURL: configData.LOCAL_IP + ":8000",
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -20,7 +21,7 @@ const KakaoRedirectHandler = () => {
     let code = params.get("code");
     let grant_type = "authorization_code";
     let client_id = KAKAO_APIKEY;
-    let redirectUri = "http://localhost:3000/login/oauth";
+    let redirectUri = configData.LOCAL_IP + "/login/oauth";
     axios
       .post(
         `https://kauth.kakao.com/oauth/token?grant_type=${grant_type}&client_id=${client_id}&redirect_uri=${redirectUri}&code=${code}`,
@@ -41,6 +42,7 @@ const KakaoRedirectHandler = () => {
               response.properties.profile_image
             );
             localStorage.setItem("userMail", response.kakao_account.email);
+            console.log("kakao success");
             api
               .post("/kakaoLoginDone", {
                 userInfo: response,

@@ -1,11 +1,12 @@
 import React from "react";
 import kakaoLoginIcon from "./assets/images/kakao_login_medium_narrow.png";
+import configData from "./config.json";
 const { Kakao } = window;
 
 const loginWithKakao = () => {
   console.log("kakao button pressed");
   Kakao.Auth.authorize({
-    redirectUri: "http://localhost:3000/login/oauth",
+    redirectUri: configData.LOCAL_IP + ":3000/login/oauth",
     scope: "profile_nickname, account_email, profile_image, gender, age_range",
   });
 };

@@ -38,23 +38,19 @@ ChartJS.register(
 );
 
 function Performance() {
-  console.log("hi");
   return (
     <div
       style={{
         position: "absolute",
         top: "7rem",
         height: "65vh",
-        width: "30vw",
+        width: "35vw",
         left: "47vw",
         display: "flex",
       }}
     >
       <SimpleSlider
-        children={[
-          <PortfolioPerformance key={0}></PortfolioPerformance>,
-          <IndivisualPerformance key={1}></IndivisualPerformance>,
-        ]}
+        children={[PortfolioPerformance, IndivisualPerformance]}
       ></SimpleSlider>
     </div>
   );
@@ -95,7 +91,7 @@ function PortfolioPerformance() {
     <div
       style={{
         backgroundColor: "#251342",
-        height: "100%",
+        height: "65vh",
         width: "100%",
         borderRadius: "1rem",
         color: "white",
@@ -111,39 +107,30 @@ function PortfolioPerformance() {
       {isDataLoaded ? (
         userPortData.map((item, idx) => (
           <div key={idx}>
-            <PerformanceBar
+            <PortfolioPerformanceBar
               label={Object.keys(contents)[idx]}
               content={Object.values(contents)[idx]}
               value={userPortData[idx]}
               icon={icons[idx]}
               key={idx}
-            ></PerformanceBar>
+            ></PortfolioPerformanceBar>
           </div>
         ))
       ) : (
         //<RadarChart userPortData={userPortData}></RadarChart>
         <h3>데이터를 불러오는 중입니다.</h3>
       )}
-      <div
-        style={{
-          backgroundColor: "white",
-          height: "100%",
-          marginLeft: "2vw",
-          width: "23vw",
-          borderRadius: "1rem",
-        }}
-      ></div>
     </div>
   );
 }
-
+type TassetFundamental = {
+  CODE: string;
+  PER: number;
+  EPS: number;
+  RETURN: number;
+};
 function IndivisualPerformance() {
-  type TassetFundamental = {
-    PER: number;
-    EPS: number;
-    RET: number;
-  };
-  const [assetFund, setAssetFund] = useState<TassetFundamental[]>([]);
+  const [assetFundArr, setAssetFund] = useState<TassetFundamental[]>([]);
   useEffect(() => {
     axios
       .post("http://localhost:8000/getIndivisualPerformance", {
@@ -151,25 +138,51 @@ function IndivisualPerformance() {
         userToken: localStorage.getItem("access_token"),
       })
       .then((response) => {
-        console.log(response);
+        var dataObj = response.data;
+        var tempArr: TassetFundamental[] = [];
+        console.log(dataObj);
+        Object.keys(dataObj).forEach((item) => {
+          var tempObj: TassetFundamental = {
+            CODE: "",
+            PER: 0,
+            EPS: 0,
+            RETURN: 0,
+          };
+          tempObj["CODE"] = item;
+          tempObj["PER"] = dataObj[item].PER;
+          tempObj["EPS"] = dataObj[item].EPS;
+          tempObj["RETURN"] = dataObj[item].RETURN;
+          tempArr.push(tempObj);
+        });
+        tempArr.sort((a, b) => b.RETURN - a.RETURN);
+        setAssetFund(tempArr);
       });
   }, []);
   return (
     <div
       style={{
         backgroundColor: "white",
-        height: "100%",
+        height: "65vh",
         width: "100%",
         borderRadius: "1rem",
         color: "white",
         padding: "12px",
         position: "relative",
       }}
-    ></div>
+    >
+      <h5 style={{ textAlign: "left", color: "black" }}>개별종목 성과</h5>
+      {assetFundArr.map((item, idx) => {
+        return (
+          <div key={idx}>
+            <IndividualPerformanceBar item={item}></IndividualPerformanceBar>
+          </div>
+        );
+      })}
+    </div>
   );
 }
 
-function PerformanceBar({
+function PortfolioPerformanceBar({
   label,
   content,
   value,
@@ -209,7 +222,35 @@ function PerformanceBar({
     </div>
   );
 }
-
+function IndividualPerformanceBar({ item }: { item: TassetFundamental }) {
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: "4rem",
+        backgroundColor: "#f5f5f5",
+        borderRadius: "1rem",
+        marginBottom: "5px",
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        padding: "15px",
+        color: "rgba(35,35,35)",
+      }}
+    >
+      <div style={{ textAlign: "left" }}>
+        <H5Style>{item.CODE}</H5Style>
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <PStyle>월평균수익률 {item.RETURN.toFixed(2)}</PStyle>
+        <PStyle>PER {item.PER.toFixed(2)}</PStyle>
+        <PStyle>EPS {item.EPS.toFixed(2)}</PStyle>
+        <PStyle></PStyle>
+        <PStyle></PStyle>
+      </div>
+    </div>
+  );
+}
 function RadarChart({ userPortData }: { userPortData: number[] }) {
   console.log(userPortData);
   const labels = ["평균수익률", "샤프비율", "표준편차", "mdd"];

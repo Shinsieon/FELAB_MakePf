@@ -151,7 +151,6 @@ def getUserAssetPerformance(req):
     returnObj['std'] = math.sqrt(np.var(meanArr.tolist()))
     returnObj['sharpe'] = (returnObj['retMean']- interest)/returnObj['std']
     returnObj['mdd'] = abs(min(meanArr.tolist())/max(meanArr.tolist())-1)*100
-    returnObj['meanArr'] = meanArr.tolist()
     return HttpResponse(json.dumps(returnObj))
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -163,12 +162,13 @@ def getIndivisualPerformance(req):
     
     nowTime = dt.datetime.now()
     returnObj = {}
-
+    returnDF = pd.DataFrame({})
     for asset in UserStocks.objects.filter(email=dataFromView['email']):
         invStartDate = nowTime - relativedelta(months = asset.investmentperiod) #format = 20220101 
         fundDF =  stock.get_market_fundamental(invStartDate, nowTime.strftime("%Y%m%d"), asset.code, freq="m")
-        print(fundDF)
-        returnObj[asset.code] = {'EPS' :  fundDF['EPS'].tolist(), 'PER' : fundDF['PER'].tolist()}
+        stockDF =  stock.get_market_ohlcv(invStartDate, nowTime.strftime("%Y%m%d"), asset.code, freq="m")
+        mean = stockDF['종가'].pct_change().mean()
+        returnObj[asset.name] = {'EPS' :  fundDF['EPS'].mean(), 'PER' : fundDF['PER'].mean(), 'RETURN' : mean}
 
     return HttpResponse(json.dumps(returnObj))
     
