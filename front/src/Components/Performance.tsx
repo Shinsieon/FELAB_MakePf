@@ -15,7 +15,8 @@ import {
 import { Radar } from "react-chartjs-2";
 import axios from "axios";
 import styled from "styled-components";
-import SimpleSlider from "./car";
+import SimpleSlider from "./Carousel";
+import { useSelector } from "react-redux";
 
 const H5Style = styled.h5`
   font-size: 1rem;
@@ -38,6 +39,10 @@ ChartJS.register(
 );
 
 function Performance() {
+  const assets = useSelector((state: any) => state.assetReducer);
+  useEffect(() => {
+    console.log("render again!");
+  }, [assets]);
   return (
     <div
       style={{
@@ -228,7 +233,8 @@ function IndividualPerformanceBar({ item }: { item: TassetFundamental }) {
       style={{
         width: "100%",
         height: "4rem",
-        backgroundColor: "#f5f5f5",
+        backgroundColor:
+          item.RETURN > 0 ? "rgba(219,0,0,0.15)" : "rgba(70,102,255,0.15)",
         borderRadius: "1rem",
         marginBottom: "5px",
         textAlign: "center",

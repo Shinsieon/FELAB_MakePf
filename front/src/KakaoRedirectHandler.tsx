@@ -21,7 +21,8 @@ const KakaoRedirectHandler = () => {
     let code = params.get("code");
     let grant_type = "authorization_code";
     let client_id = KAKAO_APIKEY;
-    let redirectUri = configData.LOCAL_IP + "/login/oauth";
+    let redirectUri = configData.LOCAL_IP + ":3000/login/oauth";
+    console.log("heer");
     axios
       .post(
         `https://kauth.kakao.com/oauth/token?grant_type=${grant_type}&client_id=${client_id}&redirect_uri=${redirectUri}&code=${code}`,
@@ -32,6 +33,7 @@ const KakaoRedirectHandler = () => {
         }
       )
       .then((res) => {
+        console.log("here i am");
         Kakao.Auth.setAccessToken(res.data.access_token);
         Kakao.API.request({
           url: "/v2/user/me",
@@ -44,7 +46,7 @@ const KakaoRedirectHandler = () => {
             localStorage.setItem("userMail", response.kakao_account.email);
             console.log("kakao success");
             api
-              .post("/kakaoLoginDone", {
+              .post(configData.LOCAL_IP + ":8000/kakaoLoginDone", {
                 userInfo: response,
                 userToken: res.data.access_token,
                 //accessToken: res.data.access_token,

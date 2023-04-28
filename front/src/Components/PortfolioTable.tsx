@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { Iasset } from "./Dashboard";
+import { getMyStocks } from "./Dashboard";
 import { assetChanger } from "../Store";
 import { AiFillDelete } from "react-icons/ai";
 import { AiFillPlusCircle } from "react-icons/ai";
@@ -54,7 +55,7 @@ function Portfolio_Table() {
         assets: assets,
       })
       .then((response) => {
-        console.log(response);
+        getMyStocks(dispatch);
       });
   };
   const noData = (): JSX.Element => {

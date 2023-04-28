@@ -69,28 +69,7 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    axios
-      .post("http://localhost:8000/getMyStocks", {
-        email: localStorage.getItem("userMail"),
-        userToken: localStorage.getItem("access_token"),
-      })
-      .then((response) => {
-        const result: Iasset[] = [];
-        if (response.data.length === 0) {
-        } else {
-          for (var i = 0; i < response.data.length; i++) {
-            var item = response.data[i];
-            result.push({
-              code: item.fields.code,
-              name: item.fields.name,
-              weight: item.fields.weight,
-              amount: item.fields.amount,
-              investmentPeriod: item.fields.investmentperiod,
-            });
-          }
-        }
-        dispatch({ type: assetChanger.SET_ASSET, asset: result });
-      });
+    getMyStocks(dispatch);
   }, []);
   return (
     <div>
@@ -106,4 +85,28 @@ function Dashboard() {
   );
 }
 
+export const getMyStocks = (dispatch: any) => {
+  axios
+    .post("http://localhost:8000/getMyStocks", {
+      email: localStorage.getItem("userMail"),
+      userToken: localStorage.getItem("access_token"),
+    })
+    .then((response) => {
+      const result: Iasset[] = [];
+      if (response.data.length === 0) {
+      } else {
+        for (var i = 0; i < response.data.length; i++) {
+          var item = response.data[i];
+          result.push({
+            code: item.fields.code,
+            name: item.fields.name,
+            weight: item.fields.weight,
+            amount: item.fields.amount,
+            investmentPeriod: item.fields.investmentperiod,
+          });
+        }
+      }
+      dispatch({ type: assetChanger.SET_ASSET, asset: result });
+    });
+};
 export default Dashboard;
