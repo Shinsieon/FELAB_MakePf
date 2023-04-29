@@ -195,15 +195,14 @@ function Portfolio_Table() {
         {isSaved ? (
           <AiFillCheckSquare size={25} color="black"></AiFillCheckSquare>
         ) : (
-          <Button
-            size="sm"
-            variant="dark"
+          <button
+            className="transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 ..."
             onClick={() => {
               saveBtnClicked();
             }}
           >
-            저장
-          </Button>
+            Save Changes
+          </button>
         )}
       </div>
     </div>

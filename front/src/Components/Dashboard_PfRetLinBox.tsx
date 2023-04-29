@@ -10,7 +10,6 @@ function Dashboard_PfRetLinBox() {
   const assets: Iasset[] = useSelector((state: any) => state.assetReducer);
   const [labels, setLabels] = useState<string[]>([]);
   const [retMean, setRetMean] = useState<string[]>([]);
-  const [mouseOn, setMouseOn] = useState(false);
   const getUserAssetRetArray = () => {
     console.log("clasd");
     axios
@@ -45,50 +44,20 @@ function Dashboard_PfRetLinBox() {
   if (assets.length === 0) {
     return (
       <div
-        onMouseEnter={() => setMouseOn(true)}
-        onMouseLeave={() => setMouseOn(false)}
+        className="absolute top-60 bg-gray-400 h-50 w-1/2 right-10 rounded-lg md:flex place-items-center hover:bg-gray-300 text-white flex-col justify-center"
         onClick={changeScreenToPf}
-        style={{
-          position: "absolute",
-          top: "15rem",
-          backgroundColor: mouseOn ? "rgba(0,0,0,0.2)" : "rgba(0,0,0,0.3)",
-          height: "50vh",
-          width: "55vw",
-          left: "40vw",
-          borderRadius: "1rem",
-        }}
       >
-        <div
-          style={{
-            marginTop: "7rem",
-          }}
-        >
-          <AiOutlinePlusCircle
-            size={"5rem"}
-            color={"white"}
-            onClick={() => console.log("click")}
-          />
-          <p style={{ color: "white", fontSize: "1rem" }}>
-            보유한 자산이 없습니다. 추가해주세요
-          </p>
-        </div>
+        <AiOutlinePlusCircle
+          size={"5rem"}
+          color={"white"}
+          onClick={() => console.log("click")}
+        />
+        <p>보유한 자산이 없습니다. 추가해주세요</p>
       </div>
     );
   } else {
     return (
-      <div
-        style={{
-          position: "absolute",
-          top: "15rem",
-          backgroundColor: "white",
-          height: "50vh",
-          width: "55vw",
-          left: "40vw",
-          borderRadius: "1rem",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
+      <div className="absolute top-60 bg-white h-50 w-1/2 right-10 rounded-lg md:flex">
         <Line
           options={options}
           data={{

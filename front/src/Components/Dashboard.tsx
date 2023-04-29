@@ -40,46 +40,29 @@ export interface Iasset {
 function Dashboard() {
   const dispatch = useDispatch();
 
-  const Dashboard_ment = () => {
-    return (
-      <div
-        style={{
-          position: "absolute",
-          top: "5rem",
-          left: "3rem",
-          fontSize: "rem",
-          textAlign: "left",
-          letterSpacing: "0.2rem",
-        }}
-      >
-        <label
-          style={{
-            fontSize: "3rem",
-            fontWeight: "bold",
-            lineHeight: "2.5rem",
-            margin: "1rem 0",
-          }}
-        >
-          Manage your <br />
-          Portfolio
-        </label>
-      </div>
-    );
-  };
-
   useEffect(() => {
     getMyStocks(dispatch);
-  }, []);
+  });
   return (
     <div>
       {/* <TitleLabel>
         <FaDiceD6 />
         Dashboard
       </TitleLabel> */}
-      <Dashboard_ment></Dashboard_ment>
+      <DashboardMent></DashboardMent>
       <Dashboard_PfPieBox></Dashboard_PfPieBox>
       <Dashboard_PfRetLinBox></Dashboard_PfRetLinBox>
       <Profile></Profile>
+    </div>
+  );
+}
+function DashboardMent() {
+  return (
+    <div className="absolute font-bold top-20 left-12 text-left">
+      <label className="text-5xl leading-10 font-bold my-10">
+        Manage your <br />
+        Portfolio
+      </label>
     </div>
   );
 }
@@ -105,7 +88,6 @@ export const getMyStocks = (dispatch: any) => {
           });
         }
       }
-      dispatch({ type: assetChanger.SET_ASSET, asset: result });
       dispatch({ type: assetChanger.SET_ASSET, asset: result });
     });
 };

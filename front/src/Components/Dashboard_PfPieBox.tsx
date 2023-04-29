@@ -1,5 +1,4 @@
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import Modal from "./Modal";
 import { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,14 +18,11 @@ const Dashboard_PfPieBox = () => {
     data: [],
     colors: [],
   });
-  const [assetModalOpen, setAssetModelOpen] = useState(false);
-  const [mouseOn, setMouseOn] = useState(false);
   const dispatch = useDispatch();
   const changeScreenToPf = () => {
     dispatch({ type: screenChanger.SET_PORTFOLIO });
   };
   useEffect(() => {
-    console.log("called");
     var labels = [];
     var data_ = [];
     var colors = [];
@@ -57,47 +53,16 @@ const Dashboard_PfPieBox = () => {
   if (assets.length === 0) {
     return (
       <div
-        onMouseEnter={() => setMouseOn(true)}
-        onMouseLeave={() => setMouseOn(false)}
+        className="absolute top-60 bg-gray-600 h-50 w-1/3 left-12 rounded-lg md:flex place-items-center hover:bg-gray-500 text-white flex-col justify-center"
         onClick={changeScreenToPf}
-        style={{
-          position: "absolute",
-          top: "15rem",
-          backgroundColor: mouseOn ? "rgba(0,0,0,0.2)" : "rgba(0,0,0,0.3)",
-          height: "50vh",
-          width: "30vw",
-          left: "3rem",
-          borderRadius: "1rem",
-        }}
       >
-        <div
-          style={{
-            marginTop: "7rem",
-          }}
-        >
-          <AiOutlinePlusCircle size={"5rem"} color={"white"} />
-          <p style={{ color: "white", fontSize: "1rem" }}>
-            보유한 자산이 없습니다. 추가해주세요
-          </p>
-          {assetModalOpen && <Modal setAssetModalOpen={setAssetModelOpen} />}
-        </div>
+        <AiOutlinePlusCircle size={"5rem"} color={"white"} />
+        <p>보유한 자산이 없습니다. 추가해주세요</p>
       </div>
     );
   }
   return (
-    <div
-      style={{
-        position: "absolute",
-        top: "15rem",
-        backgroundColor: "white",
-        height: "50vh",
-        width: "30vw",
-        left: "3rem",
-        borderRadius: "1rem",
-        display: "flex",
-        justifyContent: "center",
-      }}
-    >
+    <div className="absolute top-60 bg-white h-50 w-1/3 left-12 rounded-lg md:flex">
       <Pie data={data}></Pie>
     </div>
   );
