@@ -5,18 +5,22 @@ import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { Iasset } from "./Dashboard";
 import { getMyStocks } from "./Dashboard";
-import { assetChanger } from "../Store";
-import { AiFillDelete } from "react-icons/ai";
-import { AiFillPlusCircle } from "react-icons/ai";
+import {
+  AiFillDelete,
+  AiFillCheckSquare,
+  AiFillPlusCircle,
+} from "react-icons/ai";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
 import SearchTF from "./SearchTF";
 function Portfolio_Table() {
-  const assets = useSelector((state: any) => state.assetReducer);
+  const assets: Iasset[] = useSelector((state: any) => state.assetReducer);
+  const [tempAssets, setTempAssets] = useState<Iasset[]>([...assets]);
   const [isAddBtnClicked, setIsAddBtnClicked] = useState(false);
   const [amountSum, setAmountSum] = useState(0);
+  const [isSaved, setIsSaved] = useState(false);
   const [period, setPeriod] = useState(0);
 
   const dispatch = useDispatch();
@@ -24,51 +28,51 @@ function Portfolio_Table() {
     setIsAddBtnClicked((prev) => !prev);
   };
   const deleteAsset = (code: string) => {
-    dispatch({ type: assetChanger.DELETE_ASSET, code: code });
+    setTempAssets(tempAssets.filter((item) => item.code !== code));
+    //dispatch({ type: assetChanger.DELETE_ASSET, code: code });
   };
   const inputChanged = (code: string, e: any) => {
     e.target.value = e.target.value === "" ? 0 : parseInt(e.target.value);
-    switch (e.target.id) {
-      case "amountField":
-        dispatch({
-          type: assetChanger.MODIFY_AMOUNT_ASSET,
-          code: code,
-          amount: e.target.value,
-        });
-        break;
-
-      case "investmentPeriodField":
-        dispatch({
-          type: assetChanger.MODIFY_INVESTMENTPERIOD_ASSET,
-          code: code,
-          investmentPeriod: e.target.value,
-        });
-        break;
+    var inputValue = parseInt(e.target.value);
+    var tempArr = [...tempAssets];
+    var obj = tempArr.find((item) => item.code === code);
+    if (obj) {
+      if (e.target.id === "amountField") obj.amount = inputValue;
+      else obj.investmentPeriod = inputValue;
+      setTempAssets(tempArr);
     }
   };
   const saveBtnClicked = () => {
-    if (assets.length === 0) return;
+    if (tempAssets.length === 0) return;
+    if (tempAssets.filter((item) => item.amount <= 0).length > 0)
+      alert("투자금액이 0원인 자산이 있습니다.");
     axios
       .post("http://localhost:8000/saveUserAsset", {
         email: localStorage.getItem("userMail"),
         userToken: localStorage.getItem("access_token"),
-        assets: assets,
+        assets: tempAssets,
       })
       .then((response) => {
-        getMyStocks(dispatch);
+        if (response.status === 200) {
+          getMyStocks(dispatch);
+          setIsSaved(true);
+          setTimeout(() => {
+            setIsSaved(false);
+          }, 1000);
+        } else setIsSaved(false);
       });
   };
   const noData = (): JSX.Element => {
     return <td colSpan={6}>자산 정보가 없습니다</td>;
   };
   useEffect(() => {
-    if (assets.length > 0) {
+    if (tempAssets.length > 0) {
       var total = 0;
       var period = 0;
-      for (var i = 0; i < assets.length; i++) {
-        total += parseInt(assets[i].amount);
-        if (assets[i].investmentPeriod > period)
-          period = assets[i].investmentPeriod;
+      for (var i = 0; i < tempAssets.length; i++) {
+        total += tempAssets[i].amount;
+        if (tempAssets[i].investmentPeriod > period)
+          period = tempAssets[i].investmentPeriod;
       }
       setAmountSum(total ? total : 0);
       setPeriod(period);
@@ -76,7 +80,7 @@ function Portfolio_Table() {
       setAmountSum(0);
       setPeriod(0);
     }
-  }, [assets, amountSum]);
+  }, [tempAssets]);
   return (
     <div
       style={{
@@ -97,7 +101,14 @@ function Portfolio_Table() {
           overflowY: "auto",
         }}
       >
-        {isAddBtnClicked ? <SearchTF></SearchTF> : ""}
+        {isAddBtnClicked ? (
+          <SearchTF
+            tempAssets={tempAssets}
+            setTempAssets={setTempAssets}
+          ></SearchTF>
+        ) : (
+          ""
+        )}
         <AiFillPlusCircle
           size="40"
           style={{
@@ -120,9 +131,9 @@ function Portfolio_Table() {
             </tr>
           </thead>
           <tbody style={{ overflowY: "scroll" }}>
-            {assets.length > 0 ? (
-              assets.map((item: Iasset) => (
-                <tr key={item.code.toString()}>
+            {tempAssets.length > 0 ? (
+              tempAssets.map((item: Iasset, idx) => (
+                <tr key={idx}>
                   <td>{item.name}</td>
                   <th>
                     <div>
@@ -178,18 +189,22 @@ function Portfolio_Table() {
           justifyContent: "space-evenly",
         }}
       >
-        <p>종목 수 {assets.length}</p>
+        <p>종목 수 {tempAssets.length}</p>
         <p>투자금액 {amountSum} 원</p>
         <p>투자기간 {period} 개월</p>
-        <Button
-          size="sm"
-          variant="dark"
-          onClick={() => {
-            saveBtnClicked();
-          }}
-        >
-          저장
-        </Button>
+        {isSaved ? (
+          <AiFillCheckSquare size={25} color="black"></AiFillCheckSquare>
+        ) : (
+          <Button
+            size="sm"
+            variant="dark"
+            onClick={() => {
+              saveBtnClicked();
+            }}
+          >
+            저장
+          </Button>
+        )}
       </div>
     </div>
   );

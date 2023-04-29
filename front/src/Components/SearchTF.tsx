@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
-import axios, { all } from "axios";
+import axios from "axios";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
-import { assetChanger } from "../Store";
+import { Iasset } from "./Dashboard";
 
 type stockType = {
   code: string;
@@ -28,11 +27,10 @@ const StyledUl = styled.ul`
     display: none;
   }
 `;
-function SearchTF() {
+function SearchTF(props: any) {
   const [searchTxt, setSearchTxt] = useState("");
   const [allStocks, setAllStocks] = useState<stockType[]>([]);
   const [findedStocks, setFindedStocks] = useState<stockType[]>([]);
-  const dispatch = useDispatch();
   const changeText = (e: any) => {
     setSearchTxt(e.target.value);
     setFindedStocks(
@@ -44,14 +42,16 @@ function SearchTF() {
     );
   };
   const addToAsset = (code: string, name: string) => {
-    dispatch({
-      type: assetChanger.ADD_ASSET,
-      code: code,
-      name: name,
-      weight: 50,
-      amount: 0,
-      investmentPeriod: 12,
-    });
+    if (
+      props.tempAssets.filter((item: Iasset) => item.code === code).length > 0
+    )
+      return;
+    var nAssets: Iasset[] = [
+      ...props.tempAssets,
+      { code: code, name: name, amount: 0, weight: 0, investmentPeriod: 12 },
+    ];
+
+    props.setTempAssets(nAssets);
   };
   useEffect(() => {
     axios.get("http://localhost:8000/getAllStocks").then((response) => {
@@ -92,10 +92,10 @@ function SearchTF() {
       ></input>
       {searchTxt !== "" ? (
         <StyledUl>
-          {findedStocks.map((item) => (
+          {findedStocks.map((item, idx) => (
             <div
               style={{ display: "flex", margin: "10px", width: "100%" }}
-              key={item.code.toString()}
+              key={idx}
             >
               <li
                 style={{

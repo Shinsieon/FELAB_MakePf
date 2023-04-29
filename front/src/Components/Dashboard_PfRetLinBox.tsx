@@ -4,9 +4,7 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { screenChanger } from "../Store";
-import { getRandomColor } from "../RandomColorGenerator";
 import axios from "axios";
-import { FaAlignJustify } from "react-icons/fa";
 
 function Dashboard_PfRetLinBox() {
   const assets: Iasset[] = useSelector((state: any) => state.assetReducer);

@@ -1,6 +1,5 @@
-import styled from "styled-components";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import Profile from "./Profile";
 import Dashboard_PfRetLinBox from "./Dashboard_PfRetLinBox";
 import Dashboard_PfPieBox from "./Dashboard_PfPieBox";
@@ -16,7 +15,7 @@ import {
   LineElement,
   Title,
 } from "chart.js";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { assetChanger } from "../Store";
 
 ChartJS.register(
@@ -106,6 +105,7 @@ export const getMyStocks = (dispatch: any) => {
           });
         }
       }
+      dispatch({ type: assetChanger.SET_ASSET, asset: result });
       dispatch({ type: assetChanger.SET_ASSET, asset: result });
     });
 };

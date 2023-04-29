@@ -80,20 +80,32 @@ def saveUserAsset(req) :
     dataFromView = json.loads(req.body)
     assets = dataFromView['assets']
 
+    dbAssets = UserStocks.objects.filter(email=dataFromView['email'])
     userCheckRes = userCheck(dataFromView)
     if userCheckRes >= 0:
         return HttpResponse(userCheck(dataFromView))
     
+    codeList = []
+    for asset in assets:
+        codeList.append(asset['code'])
+
+    if len(assets) < len(dbAssets): #제거
+        #db에서 제거
+        for asset in dbAssets:
+            if(asset.code not in codeList):
+                asset.delete()
     else:
         for asset in assets:
             userStocks = UserStocks()
-            if len(UserStocks.objects.filter(email = dataFromView['email'],code = asset['code']))>0 : 
+            if len(UserStocks.objects.filter(email = dataFromView['email'],code = asset['code']))>0 :  #이미 있으면 수정
                 item = UserStocks.objects.get(email = dataFromView['email'], code = asset['code'])
                 item.weight = asset['weight']
                 item.amount = asset['amount']
                 item.investmentperiod = asset['investmentPeriod']
                 item.save()
-            else :
+
+            
+            else : #없으면 삽입
                 userStocks.email = dataFromView['email']
                 userStocks.code = asset['code']
                 userStocks.name = asset['name']

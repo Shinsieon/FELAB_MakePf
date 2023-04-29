@@ -46,7 +46,7 @@ const Dashboard_PfPieBox = () => {
     labels: pieData["labels"],
     datasets: [
       {
-        label: "# of Votes",
+        label: "투자금액",
         data: pieData.data,
         backgroundColor: pieData.colors,
         borderColor: pieData.colors,

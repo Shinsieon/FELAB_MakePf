@@ -39,10 +39,6 @@ ChartJS.register(
 );
 
 function Performance() {
-  const assets = useSelector((state: any) => state.assetReducer);
-  useEffect(() => {
-    console.log("render again!");
-  }, [assets]);
   return (
     <div
       style={{
@@ -62,6 +58,7 @@ function Performance() {
 }
 
 function PortfolioPerformance() {
+  const assets = useSelector((state: any) => state.assetReducer);
   const [userPortData, setUserPortData] = useState<number[]>([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const contents = {
@@ -74,6 +71,7 @@ function PortfolioPerformance() {
   const icons = [cashFlow, cost, std, mdd];
 
   useEffect(() => {
+    console.log("render here");
     //user의 포트폴리오 성과 with benchmark
     axios
       .post("http://localhost:8000/getUserAssetPerformance", {
@@ -91,7 +89,7 @@ function PortfolioPerformance() {
         setUserPortData([...arr]);
         setIsDataLoaded(true);
       });
-  }, []);
+  }, [assets]);
   return (
     <div
       style={{
@@ -135,6 +133,7 @@ type TassetFundamental = {
   RETURN: number;
 };
 function IndivisualPerformance() {
+  const assets = useSelector((state: any) => state.assetReducer);
   const [assetFundArr, setAssetFund] = useState<TassetFundamental[]>([]);
   useEffect(() => {
     axios
@@ -162,7 +161,7 @@ function IndivisualPerformance() {
         tempArr.sort((a, b) => b.RETURN - a.RETURN);
         setAssetFund(tempArr);
       });
-  }, []);
+  }, [assets]);
   return (
     <div
       style={{
