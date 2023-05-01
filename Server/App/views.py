@@ -22,37 +22,56 @@ USER_MISMATCH_ERROR = 3
 def userCheck(dataFromView): #usercheck 가 있는지 없는지 혹은 token이 맞는지
     if dataFromView['email'] == "" or dataFromView['userToken']=="" or len(dataFromView['email'])==0 or len(dataFromView['userToken'])==0: 
         return NO_USER_ERROR
-    elif Usertbl.objects.get(k_email = dataFromView['email']).k_token != dataFromView['userToken'] : 
+    elif Usertbl.objects.get(email = dataFromView['email']).token != dataFromView['userToken'] : 
         return USER_MISMATCH_ERROR
     else :
         return -1
+@method_decorator(csrf_exempt, name='dispatch')
+def registerUser(request):
+    print()
 
-def apiHome(request):
-    print("hello apiHome is called")
-    return HttpResponse("DJANGO API")
 
 @method_decorator(csrf_exempt, name='dispatch')
-def kakaoLoginDone(request):
+def loginWithKakao(request):
     data = json.loads(request.body)
     usertbl = Usertbl()
-    usertbl.k_name = data['userInfo']['properties']['nickname']
-    usertbl.k_email = data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else ""
-    usertbl.k_image = data['userInfo']['properties']['profile_image']
-    usertbl.k_gender = data['userInfo']['kakao_account']['gender']
-    usertbl.k_age_range = data['userInfo']['kakao_account']['age_range']
-    usertbl.k_token = data['userToken']
+    usertbl.name = data['userInfo']['properties']['nickname']
+    usertbl.email = data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else ""
+    usertbl.image = data['userInfo']['properties']['profile_image']
+    usertbl.gender = data['userInfo']['kakao_account']['gender']
+    usertbl.age_range = data['userInfo']['kakao_account']['age_range']
+    usertbl.token = data['userToken']
     print(data)
-    if(len(Usertbl.objects.filter(k_email = (data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else "")))==0):
+    if(len(Usertbl.objects.filter(email = (data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else "")))==0):
         usertbl.save()
     else:
-        item = Usertbl.objects.get(k_email = (data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else ""))
-        item.k_image = data['userInfo']['properties']['profile_image']
-        item.k_token = data['userToken']
+        item = Usertbl.objects.get(email = (data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else ""))
+        item.image = data['userInfo']['properties']['profile_image']
+        item.token = data['userToken']
         item.save()
         
     # if(len(UserStocks.objects.filter(email = (data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else "")))==0):
     #     userStocks.save()
     return HttpResponse("Login Done!")
+
+@method_decorator(csrf_exempt, name='dispatch')
+def loginWithEmail(request):
+    data = json.loads(request.body)
+    usertbl = Usertbl()
+    usertbl.name = data['userInfo']['properties']['nickname']
+    usertbl.email = data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else ""
+    usertbl.image = data['userInfo']['properties']['profile_image']
+    usertbl.gender = data['userInfo']['kakao_account']['gender']
+    usertbl.age_range = data['userInfo']['kakao_account']['age_range']
+    usertbl.token = data['userToken']
+    print(data)
+    if(len(Usertbl.objects.filter(email = (data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else "")))==0):
+        usertbl.save()
+    else:
+        item = Usertbl.objects.get(email = (data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else ""))
+        item.image = data['userInfo']['properties']['profile_image']
+        item.token = data['userToken']
+        item.save()
 
 @method_decorator(csrf_exempt, name='dispatch')
 def getMyStocks(req): 

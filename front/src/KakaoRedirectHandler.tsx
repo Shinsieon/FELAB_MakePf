@@ -46,7 +46,7 @@ const KakaoRedirectHandler = () => {
             localStorage.setItem("userMail", response.kakao_account.email);
             console.log("kakao success");
             api
-              .post(configData.LOCAL_IP + ":8000/kakaoLoginDone", {
+              .post(configData.LOCAL_IP + ":8000/loginWithKakao", {
                 userInfo: response,
                 userToken: res.data.access_token,
                 //accessToken: res.data.access_token,

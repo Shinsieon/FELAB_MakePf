@@ -19,52 +19,43 @@ const scrReducer = (state = <Dashboard />, action: any) => {
       return state;
   }
 };
-const SET_ASSET = "assetReducer/SET_ASSET";
-const ADD_ASSET = "assetReducer/ADD_ASSET";
-const DELETE_ASSET = "assetReducer/DELETE_ASSET";
-const MODIFY_AMOUNT_ASSET = "assetReducer/MODIFY_AMOUNT_ASSET";
-const MODIFY_WEIGHT_ASSET = "assetReducer/MODIFY_WEIGHT_ASSET";
-const MODIFY_INVESTMENTPERIOD_ASSET =
-  "assetReducer/MODIFY_INVESTMENTPERIOD_ASSET";
 
-export const assetChanger = {
-  SET_ASSET,
-  ADD_ASSET,
-  DELETE_ASSET,
-  MODIFY_AMOUNT_ASSET,
-  MODIFY_WEIGHT_ASSET,
-  MODIFY_INVESTMENTPERIOD_ASSET,
+const SET_TOKEN = "authReducer/SET_TOKEN";
+const DELETE_TOKEN = "authReducer/DELETE_TOKEN";
+export const tokenChanger = {
+  SET_TOKEN,
+  DELETE_TOKEN,
+};
+const authInitialState = {
+  authenticated: false,
+  accessToken: null,
+  expireTime: null,
+};
+const TOKEN_TIME_OUT = 600 * 1000;
+
+const authReducer = (state: any = authInitialState, payload: any) => {
+  var nState = { ...state };
+  switch (payload.type) {
+    case SET_TOKEN:
+      nState.authenticated = true;
+      nState.accessToken = payload.token;
+      nState.expireTime = new Date().getTime() + TOKEN_TIME_OUT;
+      return nState;
+    case DELETE_TOKEN:
+      return authInitialState;
+    default:
+      return state;
+  }
 };
 
+const SET_ASSET = "assetReducer/SET_ASSET";
+export const assetChanger = {
+  SET_ASSET,
+};
 export const assetReducer = (state: Iasset[] = [], payload: any) => {
-  var newState = [...state];
   switch (payload.type) {
     case SET_ASSET:
       return [...payload.asset];
-    case ADD_ASSET:
-      if (state.filter((item) => item.code === payload.code).length === 0) {
-        return [
-          {
-            code: payload.code,
-            name: payload.name,
-            weight: payload.weight,
-            amount: payload.amount,
-            investmentPeriod: payload.investmentPeriod,
-          },
-          ...state,
-        ];
-      } else return state;
-    case DELETE_ASSET:
-      return state.filter((item) => item.code !== payload.code);
-    case MODIFY_AMOUNT_ASSET: //모든 자산의 weight을 다시 계산해서 보내야 한다.
-      var index = newState.findIndex((item) => item.code === payload.code);
-      newState[index].amount = payload.amount;
-      newState[index].weight = 0;
-      return newState;
-    case MODIFY_INVESTMENTPERIOD_ASSET:
-      var index = newState.findIndex((item) => item.code === payload.code);
-      newState[index].investmentPeriod = payload.investmentPeriod;
-      return newState;
     default:
       return state;
   }
@@ -72,8 +63,10 @@ export const assetReducer = (state: Iasset[] = [], payload: any) => {
 
 const rootReducer = combineReducers({
   assetReducer,
+  authReducer,
   scrReducer,
 });
+
 export const store = createStore(rootReducer, composeWithDevTools());
 
 export type scrState = ReturnType<typeof scrReducer>;
