@@ -200,15 +200,15 @@ function userRegister(setIsRegister: any) {
           </div>
         </div>
         <div className="flex items-center w-full h-10 mb-2">
-          {radioComp("genderRadio_M", "genderRadio", "남성")}
-          {radioComp("genderRadio_F", "genderRadio", "여성")}
+          {radioComp("genderRadio_M", "genderRadio", "남성", true)}
+          {radioComp("genderRadio_F", "genderRadio", "여성", false)}
         </div>
         <div className="flex items-center w-full h-10">
-          {radioComp("ageRadio_10", "ageRadio", "10대")}
-          {radioComp("ageRadio_20", "ageRadio", "20대")}
-          {radioComp("ageRadio_30", "ageRadio", "30대")}
-          {radioComp("ageRadio_40", "ageRadio", "40대")}
-          {radioComp("ageRadio_50", "ageRadio", "50대")}
+          {radioComp("ageRadio_10", "ageRadio", "10대", true)}
+          {radioComp("ageRadio_20", "ageRadio", "20대", false)}
+          {radioComp("ageRadio_30", "ageRadio", "30대", false)}
+          {radioComp("ageRadio_40", "ageRadio", "40대", false)}
+          {radioComp("ageRadio_50", "ageRadio", "50대", false)}
         </div>
         <a
           className="text-right cursor-pointer text-sm"
@@ -225,20 +225,28 @@ function userRegister(setIsRegister: any) {
   );
 }
 
-function radioComp(id: string, name: string, label: string) {
+function radioComp(id: string, name: string, label: string, checked: boolean) {
+  var compStyle = "";
+  if (checked)
+    compStyle =
+      "flex items-center pl-4 bg-green-700 rounded w-full h-full mx-1 peer-checked:text-red-400 ";
+  else
+    compStyle =
+      "flex items-center pl-4 bg-gray-800 rounded w-full h-full mx-1 peer-checked:text-red-400 ";
+
   return (
-    <div className="flex items-center pl-4 bg-gray-500 rounded w-full h-full mx-1">
+    <div className={compStyle}>
       <input
         checked
         id={id}
         type="radio"
         value=""
         name={name}
-        className="w-4 h-4 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+        className="peer text-white appearance-none"
       />
       <label
         htmlFor={id}
-        className="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+        className="w-auto py-4 ml-2 text-sm font-medium text-white"
       >
         {label}
       </label>
