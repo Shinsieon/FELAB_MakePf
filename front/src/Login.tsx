@@ -56,7 +56,7 @@ function Login() {
         <div className="bg-white z-40 opacity-20 rounded-xl md:w-full md:h-96"></div>
         <div className="absolute text-left md:w-full md:h-96 z-50 flex flex-column my-20">
           {isRegister ? (
-            userRegister(setIsRegister)
+            UserRegister(setIsRegister)
           ) : (
             <div>
               <h4 className="font-bold px-6">Sign in to your account</h4>
@@ -151,7 +151,7 @@ function Login() {
   );
 }
 
-function userRegister(setIsRegister: any) {
+function UserRegister(setIsRegister: any) {
   return (
     <div className="w-full">
       <h4 className="font-bold px-6">Create and account</h4>
@@ -200,15 +200,50 @@ function userRegister(setIsRegister: any) {
           </div>
         </div>
         <div className="flex items-center w-full h-10 mb-2">
-          {radioComp("genderRadio_M", "genderRadio", "남성", true)}
-          {radioComp("genderRadio_F", "genderRadio", "여성", false)}
+          <RadioComp
+            id="genderRadio_M"
+            name="genderRadio"
+            label="남성"
+            checked={true}
+          ></RadioComp>
+          <RadioComp
+            id="genderRadio_F"
+            name="genderRadio"
+            label="여성"
+            checked={false}
+          ></RadioComp>
         </div>
         <div className="flex items-center w-full h-10">
-          {radioComp("ageRadio_10", "ageRadio", "10대", true)}
-          {radioComp("ageRadio_20", "ageRadio", "20대", false)}
-          {radioComp("ageRadio_30", "ageRadio", "30대", false)}
-          {radioComp("ageRadio_40", "ageRadio", "40대", false)}
-          {radioComp("ageRadio_50", "ageRadio", "50대", false)}
+          <RadioComp
+            id="ageRadio_10"
+            name="ageRadio"
+            label="10대"
+            checked={false}
+          ></RadioComp>
+          <RadioComp
+            id="ageRadio_20"
+            name="ageRadio"
+            label="20대"
+            checked={false}
+          ></RadioComp>
+          <RadioComp
+            id="ageRadio_30"
+            name="ageRadio"
+            label="30대"
+            checked={false}
+          ></RadioComp>
+          <RadioComp
+            id="ageRadio_40"
+            name="ageRadio"
+            label="40대"
+            checked={false}
+          ></RadioComp>
+          <RadioComp
+            id="ageRadio_50"
+            name="ageRadio"
+            label="50대"
+            checked={false}
+          ></RadioComp>
         </div>
         <a
           className="text-right cursor-pointer text-sm"
@@ -225,24 +260,30 @@ function userRegister(setIsRegister: any) {
   );
 }
 
-function radioComp(id: string, name: string, label: string, checked: boolean) {
-  var compStyle = "";
-  if (checked)
-    compStyle =
-      "flex items-center pl-4 bg-green-700 rounded w-full h-full mx-1 peer-checked:text-red-400 ";
-  else
-    compStyle =
-      "flex items-center pl-4 bg-gray-800 rounded w-full h-full mx-1 peer-checked:text-red-400 ";
-
+function RadioComp({
+  id,
+  name,
+  label,
+  checked,
+}: {
+  id: string;
+  name: string;
+  label: string;
+  checked: boolean;
+}) {
+  const handleChange = (e: any) => {
+    console.log(e.target.checked);
+  };
   return (
-    <div className={compStyle}>
+    <div className="flex items-center pl-4 bg-gray-800 rounded w-full h-full mx-1">
       <input
-        checked
+        checked={checked}
         id={id}
         type="radio"
-        value=""
+        value={id}
         name={name}
-        className="peer text-white appearance-none"
+        className="peer text-white"
+        onChange={handleChange}
       />
       <label
         htmlFor={id}
