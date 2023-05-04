@@ -15,6 +15,33 @@ const loginWithKakao = () => {
   });
 };
 
+const registerWithEmail = ({
+  name,
+  email,
+  password,
+  age,
+  gender,
+}: {
+  name: string;
+  email: string;
+  password: string;
+  age: string;
+  gender: string;
+}) => {
+  axios
+    .post("http://localhost:8000/registerWithEmail", {
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+      },
+      body: JSON.stringify({ name, email, password, age, gender }),
+    })
+    .then((response) => {
+      console.log(response);
+      //setRefreshToken(response.json.refresh_token);
+      //dispatchEvent(response.json.access_token);
+    });
+};
+
 const loginWithEmail = ({
   email,
   password,
@@ -26,10 +53,8 @@ const loginWithEmail = ({
 }) => {
   axios
     .post("http://localhost:8000/loginWithEmail", {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-      },
-      body: JSON.stringify({ email, password }),
+      email: email,
+      password: password,
     })
     .then((response) => {
       console.log(response);
@@ -39,43 +64,18 @@ const loginWithEmail = ({
 
 function Login() {
   const dispatch = useDispatch();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+
   const [isRegister, setIsRegister] = useState(false);
-  const [age, setAge] = useState("10");
-  const [gender, setGender] = useState("M");
-  const handleEmailChange = (email: string) => {
-    setEmail(email);
-  };
-  const handlePwChange = (pw: string) => {
-    setPassword(pw);
-  };
-  const handleAgeChange = (value: string) => {
-    setAge(value);
-  };
-  const handleGenderChange = (value: string) => {
-    setGender(value);
-  };
 
   return (
     <div className="absolute bottom-0 left-0 right-0 top-0 grid place-items-center">
-      <div className="absolute flex flex-column w-1/3 h-auto z-30">
+      <div className="absolute flex flex-column md:w-1/3 h-auto z-30">
         <h1 className="z-50">Foliogram</h1>
-
-        <div className="bg-white z-40 opacity-20 rounded-xl md:w-full md:h-96"></div>
-        <div className="absolute text-left md:w-full md:h-96 z-50 flex flex-column my-20">
+        <div className="bg-white z-40 bg-opacity-50 rounded-xl text-left md:w-full h-full flex flex-column pt-10">
           {isRegister ? (
-            <UserRegister
-              setIsRegister={setIsRegister}
-              handleAgeChange={handleAgeChange}
-              handleGenderChange={handleGenderChange}
-            ></UserRegister>
+            <UserRegister setIsRegister={setIsRegister}></UserRegister>
           ) : (
-            <UserLogin
-              setIsRegister={setIsRegister}
-              onEmailChange={handleEmailChange}
-              onPwChange={handlePwChange}
-            ></UserLogin>
+            <UserLogin setIsRegister={setIsRegister}></UserLogin>
           )}
         </div>
       </div>
@@ -92,15 +92,24 @@ function Login() {
   );
 }
 
-function UserRegister({
-  setIsRegister,
-  handleAgeChange,
-  handleGenderChange,
-}: {
-  setIsRegister: Function;
-  handleAgeChange: Function;
-  handleGenderChange: Function;
-}) {
+function UserRegister({ setIsRegister }: { setIsRegister: Function }) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, onPwChange] = useState("");
+  const [age, setAge] = useState("10");
+  const [gender, setGender] = useState("M");
+
+  const handleAgeChange = (value: string) => {
+    setAge(value);
+  };
+  const handleGenderChange = (value: string) => {
+    setGender(value);
+  };
+  const handleInputChange = (e: any) => {
+    if (e.target.id === "userEmail") setEmail(e.target.value);
+    else if (e.target.id === "userName") setName(e.target.value);
+    else onPwChange(e.target.value);
+  };
   const radioChange = (value: string, name: string) => {
     if (name === "ageRadio") {
       handleAgeChange(value);
@@ -119,10 +128,11 @@ function UserRegister({
             Name
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2 text-lg"
             id="userName"
             type="text"
             placeholder="이름"
+            onChange={handleInputChange}
           />
           <div className="mb-2">
             <label
@@ -132,11 +142,12 @@ function UserRegister({
               Email
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline md-2"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline md-2 text-lg"
               id="userEmail"
               type="email"
               placeholder="user email"
               required
+              onChange={handleInputChange}
             />
           </div>
           <div className="mb-2">
@@ -147,10 +158,12 @@ function UserRegister({
               Password
             </label>
             <input
-              className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-lg"
               id="password"
               type="password"
               placeholder="******************"
+              required
+              onChange={handleInputChange}
             />
           </div>
         </div>
@@ -207,6 +220,23 @@ function UserRegister({
             onChange={radioChange}
           ></RadioComp>
         </div>
+        <div className="flex items-center justify-between h-12">
+          <button
+            className="bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full h-full"
+            type="button"
+            onClick={() => {
+              registerWithEmail({
+                name: name,
+                email: email,
+                password: password,
+                age: age,
+                gender: gender,
+              });
+            }}
+          >
+            회원가입
+          </button>
+        </div>
         <a
           className="text-right cursor-pointer text-sm"
           onClick={() => {
@@ -222,30 +252,32 @@ function UserRegister({
   );
 }
 
-function UserLogin({
-  setIsRegister,
-  onEmailChange,
-  onPwChange,
-}: {
-  setIsRegister: Function;
-  onEmailChange: Function;
-  onPwChange: Function;
-}) {
-  var email = "";
-  var password = "";
-  const [a, setA] = useState("");
+function UserLogin({ setIsRegister }: { setIsRegister: Function }) {
+  const [email, setEmail] = useState("");
+  const [password, setPw] = useState("");
   const handleInputChange = (e: any) => {
-    console.log("asd");
-
-    if (e.target.id === "userEmail") onEmailChange(e.target.value);
-    else onPwChange(e.target.value);
-    setA("asd");
+    if (e.target.id === "userEmail") setEmail(e.target.value);
+    else setPw(e.target.value);
   };
   return (
     <div>
       <h4 className="font-bold px-6">Sign in to your account</h4>
       <div className="w-full">
-        <form className="px-6 pt-6 pb-8 w-full">
+        <form
+          className="px-6 pt-6 pb-8 w-full"
+          onSubmit={(e: any) => {
+            e.preventDefault();
+            loginWithEmail({
+              email: email,
+              password: password,
+
+              callback: (response: any) => {
+                //setRefreshToken(response.json.refresh_token);
+                //dispatchEvent(response.json.access_token);
+              },
+            });
+          }}
+        >
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
@@ -254,9 +286,10 @@ function UserLogin({
               Email
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-lg"
               id="userEmail"
               type="text"
+              required
               placeholder="user email"
               onChange={handleInputChange}
             />
@@ -269,9 +302,10 @@ function UserLogin({
               Password
             </label>
             <input
-              className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-600 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-600 mb-3 leading-tight focus:outline-none focus:shadow-outline text-lg"
               id="password"
               type="password"
+              required
               placeholder="******************"
               onChange={handleInputChange}
             />
@@ -279,18 +313,7 @@ function UserLogin({
           <div className="flex items-center justify-between h-12">
             <button
               className="bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-64 h-full"
-              type="button"
-              onClick={() => {
-                loginWithEmail({
-                  email: email,
-                  password: password,
-
-                  callback: (response: any) => {
-                    //setRefreshToken(response.json.refresh_token);
-                    //dispatchEvent(response.json.access_token);
-                  },
-                });
-              }}
+              type="submit"
             >
               로그인
             </button>

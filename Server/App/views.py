@@ -27,8 +27,8 @@ def userCheck(dataFromView): #usercheck 가 있는지 없는지 혹은 token이 
     else :
         return -1
 @method_decorator(csrf_exempt, name='dispatch')
-def registerUser(request):
-    print()
+def registerWithEmail(request):
+    print(request)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -57,21 +57,10 @@ def loginWithKakao(request):
 @method_decorator(csrf_exempt, name='dispatch')
 def loginWithEmail(request):
     data = json.loads(request.body)
-    usertbl = Usertbl()
-    usertbl.name = data['userInfo']['properties']['nickname']
-    usertbl.email = data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else ""
-    usertbl.image = data['userInfo']['properties']['profile_image']
-    usertbl.gender = data['userInfo']['kakao_account']['gender']
-    usertbl.age_range = data['userInfo']['kakao_account']['age_range']
-    usertbl.token = data['userToken']
+    email = data['email']
+    password = data['password']
     print(data)
-    if(len(Usertbl.objects.filter(email = (data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else "")))==0):
-        usertbl.save()
-    else:
-        item = Usertbl.objects.get(email = (data['userInfo']['kakao_account']['email'] if 'has_email' in data['userInfo']['kakao_account'] else ""))
-        item.image = data['userInfo']['properties']['profile_image']
-        item.token = data['userToken']
-        item.save()
+    return HttpResponse("Login Done!")
 
 @method_decorator(csrf_exempt, name='dispatch')
 def getMyStocks(req): 

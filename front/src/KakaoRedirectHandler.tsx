@@ -33,7 +33,6 @@ const KakaoRedirectHandler = () => {
         }
       )
       .then((res) => {
-        console.log("here i am");
         Kakao.Auth.setAccessToken(res.data.access_token);
         Kakao.API.request({
           url: "/v2/user/me",
