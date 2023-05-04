@@ -42,12 +42,21 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isRegister, setIsRegister] = useState(false);
-  const handleEmailChange = (event: any) => {
-    setEmail(event.target.value);
+  const [age, setAge] = useState("10");
+  const [gender, setGender] = useState("M");
+  const handleEmailChange = (email: string) => {
+    setEmail(email);
   };
-  const handlePwChange = (event: any) => {
-    setPassword(event.target.value);
+  const handlePwChange = (pw: string) => {
+    setPassword(pw);
   };
+  const handleAgeChange = (value: string) => {
+    setAge(value);
+  };
+  const handleGenderChange = (value: string) => {
+    setGender(value);
+  };
+
   return (
     <div className="absolute bottom-0 left-0 right-0 top-0 grid place-items-center">
       <div className="absolute flex flex-column w-1/3 h-auto z-30">
@@ -56,85 +65,17 @@ function Login() {
         <div className="bg-white z-40 opacity-20 rounded-xl md:w-full md:h-96"></div>
         <div className="absolute text-left md:w-full md:h-96 z-50 flex flex-column my-20">
           {isRegister ? (
-            UserRegister(setIsRegister)
+            <UserRegister
+              setIsRegister={setIsRegister}
+              handleAgeChange={handleAgeChange}
+              handleGenderChange={handleGenderChange}
+            ></UserRegister>
           ) : (
-            <div>
-              <h4 className="font-bold px-6">Sign in to your account</h4>
-              <div className="w-full">
-                <form className="px-6 pt-6 pb-8 w-full">
-                  <div className="mb-4">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="userEmail"
-                    >
-                      Email
-                    </label>
-                    <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      id="userEmail"
-                      type="text"
-                      placeholder="user email"
-                      onChange={handleEmailChange}
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="password"
-                    >
-                      Password
-                    </label>
-                    <input
-                      className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-600 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                      id="password"
-                      type="password"
-                      placeholder="******************"
-                      onChange={handlePwChange}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between h-12">
-                    <button
-                      className="bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-64 h-full"
-                      type="button"
-                      onClick={() => {
-                        loginWithEmail({
-                          email: email,
-                          password: password,
-                          callback: (response: any) => {
-                            //setRefreshToken(response.json.refresh_token);
-                            //dispatchEvent(response.json.access_token);
-                          },
-                        });
-                      }}
-                    >
-                      로그인
-                    </button>
-                    <img
-                      src={kakaoLoginIcon}
-                      onClick={loginWithKakao}
-                      className="my-2 cursor-pointer w-32 h-full mx-1"
-                      alt="kakao login"
-                    />
-                  </div>
-                  <a
-                    className="text-right cursor-pointer text-sm"
-                    onClick={() => {
-                      setIsRegister(true);
-                    }}
-                  >
-                    {" "}
-                    회원가입
-                  </a>
-                  <div className="my-2">
-                    <p className="text-xs my-2">
-                      최초 회원가입 시 이용약관, 개인정보처리방침에 동의하게
-                      됩니다.
-                    </p>
-                  </div>
-                </form>
-                <p className="text-center text-gray-500 text-xs"></p>
-              </div>
-            </div>
+            <UserLogin
+              setIsRegister={setIsRegister}
+              onEmailChange={handleEmailChange}
+              onPwChange={handlePwChange}
+            ></UserLogin>
           )}
         </div>
       </div>
@@ -151,7 +92,20 @@ function Login() {
   );
 }
 
-function UserRegister(setIsRegister: any) {
+function UserRegister({
+  setIsRegister,
+  handleAgeChange,
+  handleGenderChange,
+}: {
+  setIsRegister: Function;
+  handleAgeChange: Function;
+  handleGenderChange: Function;
+}) {
+  const radioChange = (value: string, name: string) => {
+    if (name === "ageRadio") {
+      handleAgeChange(value);
+    } else handleGenderChange(value);
+  };
   return (
     <div className="w-full">
       <h4 className="font-bold px-6">Create and account</h4>
@@ -182,6 +136,7 @@ function UserRegister(setIsRegister: any) {
               id="userEmail"
               type="email"
               placeholder="user email"
+              required
             />
           </div>
           <div className="mb-2">
@@ -205,44 +160,51 @@ function UserRegister(setIsRegister: any) {
             name="genderRadio"
             label="남성"
             checked={true}
+            onChange={radioChange}
           ></RadioComp>
           <RadioComp
             id="genderRadio_F"
             name="genderRadio"
             label="여성"
             checked={false}
+            onChange={radioChange}
           ></RadioComp>
         </div>
         <div className="flex items-center w-full h-10">
           <RadioComp
-            id="ageRadio_10"
+            id="10"
             name="ageRadio"
             label="10대"
             checked={false}
+            onChange={radioChange}
           ></RadioComp>
           <RadioComp
-            id="ageRadio_20"
+            id="20"
             name="ageRadio"
             label="20대"
             checked={false}
+            onChange={radioChange}
           ></RadioComp>
           <RadioComp
-            id="ageRadio_30"
+            id="30"
             name="ageRadio"
             label="30대"
             checked={false}
+            onChange={radioChange}
           ></RadioComp>
           <RadioComp
-            id="ageRadio_40"
+            id="40"
             name="ageRadio"
             label="40대"
             checked={false}
+            onChange={radioChange}
           ></RadioComp>
           <RadioComp
-            id="ageRadio_50"
+            id="50"
             name="ageRadio"
             label="50대"
             checked={false}
+            onChange={radioChange}
           ></RadioComp>
         </div>
         <a
@@ -260,24 +222,126 @@ function UserRegister(setIsRegister: any) {
   );
 }
 
+function UserLogin({
+  setIsRegister,
+  onEmailChange,
+  onPwChange,
+}: {
+  setIsRegister: Function;
+  onEmailChange: Function;
+  onPwChange: Function;
+}) {
+  var email = "";
+  var password = "";
+  const [a, setA] = useState("");
+  const handleInputChange = (e: any) => {
+    console.log("asd");
+
+    if (e.target.id === "userEmail") onEmailChange(e.target.value);
+    else onPwChange(e.target.value);
+    setA("asd");
+  };
+  return (
+    <div>
+      <h4 className="font-bold px-6">Sign in to your account</h4>
+      <div className="w-full">
+        <form className="px-6 pt-6 pb-8 w-full">
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="userEmail"
+            >
+              Email
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="userEmail"
+              type="text"
+              placeholder="user email"
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="password"
+            >
+              Password
+            </label>
+            <input
+              className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-600 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              id="password"
+              type="password"
+              placeholder="******************"
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="flex items-center justify-between h-12">
+            <button
+              className="bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-64 h-full"
+              type="button"
+              onClick={() => {
+                loginWithEmail({
+                  email: email,
+                  password: password,
+
+                  callback: (response: any) => {
+                    //setRefreshToken(response.json.refresh_token);
+                    //dispatchEvent(response.json.access_token);
+                  },
+                });
+              }}
+            >
+              로그인
+            </button>
+            <img
+              src={kakaoLoginIcon}
+              onClick={loginWithKakao}
+              className="my-2 cursor-pointer w-32 h-full mx-1"
+              alt="kakao login"
+            />
+          </div>
+          <a
+            className="text-right cursor-pointer text-sm"
+            onClick={() => {
+              setIsRegister(true);
+            }}
+          >
+            {" "}
+            회원가입
+          </a>
+          <div className="my-2">
+            <p className="text-xs my-2">
+              최초 회원가입 시 이용약관, 개인정보처리방침에 동의하게 됩니다.
+            </p>
+          </div>
+        </form>
+        <p className="text-center text-gray-500 text-xs"></p>
+      </div>
+    </div>
+  );
+}
+
 function RadioComp({
   id,
   name,
   label,
   checked,
+  onChange,
 }: {
   id: string;
   name: string;
   label: string;
   checked: boolean;
+  onChange: Function;
 }) {
   const handleChange = (e: any) => {
-    console.log(e.target.checked);
+    onChange(e.target.value, e.target.name);
   };
   return (
     <div className="flex items-center pl-4 bg-gray-800 rounded w-full h-full mx-1">
       <input
-        checked={checked}
+        defaultChecked={checked}
         id={id}
         type="radio"
         value={id}
