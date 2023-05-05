@@ -1,5 +1,5 @@
 import axios from "axios";
-import kakaoLoginIcon from "./assets/images/kakao_login_medium_narrow.png";
+import kakaoLoginIcon from "./assets/images/kakao_login_large.png";
 import configData from "./config.json";
 import { setRefreshToken } from "./Cookie";
 import { useDispatch } from "react-redux";
