@@ -32,7 +32,7 @@ const registerWithEmail = ({
   callback: Function;
 }) => {
   axios
-    .post("http://localhost:8000/registerWithEmail", {
+    .post(configData.LOCAL_IP + ":8000/registerWithEmail", {
       name: name,
       email: email,
       password: password,
@@ -63,7 +63,7 @@ const loginWithEmail = ({
   callback: Function;
 }) => {
   axios
-    .post("http://localhost:8000/loginWithEmail", {
+    .post(configData.LOCAL_IP + ":8000/loginWithEmail", {
       email: email,
       password: password,
     })

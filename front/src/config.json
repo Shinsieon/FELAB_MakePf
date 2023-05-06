@@ -1,3 +1,4 @@
 {
-  "LOCAL_IP": "http://localhost"
+  "LOCAL_IP": "http://localhost",
+  "KAKAO_APIKEY": "4cc073baa183f6e453d406cf9000409e"
 }

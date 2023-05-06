@@ -5,7 +5,7 @@ import Login from "./Login";
 import KakaoRedirectHandler from "./KakaoRedirectHandler";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import * as config from "../src/config.js";
+import configData from "../src/config.json";
 import { getCookieToken } from "./Cookie";
 import { setRefreshToken } from "./Cookie";
 import { useDispatch } from "react-redux";
@@ -16,7 +16,8 @@ function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
-    if (!window.Kakao.isInitialized()) window.Kakao.init(config.KAKAO_APIKEY);
+    if (!window.Kakao.isInitialized())
+      window.Kakao.init(configData.KAKAO_APIKEY);
     const userToken = getCookieToken();
     if (!userToken) {
       navigate("/login");
@@ -31,7 +32,7 @@ function App() {
         },
         fail: (error: any) => {
           axios
-            .post("http://localhost:8000/getRefreshToken", {
+            .post(configData.LOCAL_IP + ":8000/getRefreshToken", {
               email: localStorage.getItem("userEmail"),
               refreshToken: userToken,
             })

@@ -16,10 +16,10 @@ import { Radar } from "react-chartjs-2";
 import axios from "axios";
 import styled from "styled-components";
 import SimpleSlider from "./Carousel";
+import configData from "../config.json";
 import { useSelector } from "react-redux";
 import { getCookieToken } from "../Cookie";
 
-const H5Style = styled.h5``;
 const PStyle = styled.p`
   font-size: 0.8rem;
   text-align: left;
@@ -62,7 +62,7 @@ function PortfolioPerformance() {
     console.log("render here");
     //user의 포트폴리오 성과 with benchmark
     axios
-      .post("http://localhost:8000/getUserAssetPerformance", {
+      .post(configData.LOCAL_IP + ":8000/getUserAssetPerformance", {
         email: localStorage.getItem("userEmail"),
         refreshToken: getCookieToken(),
       })
@@ -126,7 +126,7 @@ function IndivisualPerformance() {
   const [assetFundArr, setAssetFund] = useState<TassetFundamental[]>([]);
   useEffect(() => {
     axios
-      .post("http://localhost:8000/getIndivisualPerformance", {
+      .post(configData.LOCAL_IP + ":8000/getIndivisualPerformance", {
         email: localStorage.getItem("userEmail"),
         userToken: getCookieToken(),
       })
@@ -212,7 +212,7 @@ function PortfolioPerformanceBar({
         className="detailLayer"
         style={{ color: "white", marginLeft: "1rem", width: "20vw" }}
       >
-        <H5Style>{label}</H5Style>
+        <h5>{label}</h5>
         <PStyle>{content}</PStyle>
         <PStyle style={{ fontWeight: "bold" }}>{value.toFixed(2)}</PStyle>
       </div>
@@ -237,7 +237,7 @@ function IndividualPerformanceBar({ item }: { item: TassetFundamental }) {
       }}
     >
       <div style={{ textAlign: "left" }}>
-        <H5Style>{item.CODE}</H5Style>
+        <h5>{item.CODE}</h5>
       </div>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <PStyle>월평균수익률 {item.RETURN.toFixed(2)}</PStyle>

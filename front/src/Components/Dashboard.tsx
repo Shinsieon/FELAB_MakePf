@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect } from "react";
 import Profile from "./Profile";
+import configData from "../config.json";
 import Dashboard_PfRetLinBox from "./Dashboard_PfRetLinBox";
 import Dashboard_PfPieBox from "./Dashboard_PfPieBox";
 
@@ -69,8 +70,8 @@ function DashboardMent() {
 
 export const getMyStocks = (dispatch: any) => {
   axios
-    .post("http://localhost:8000/getMyStocks", {
-      email: localStorage.getItem("userMail"),
+    .post(configData.LOCAL_IP + ":8000/getMyStocks", {
+      email: localStorage.getItem("userEmail"),
       userToken: localStorage.getItem("access_token"),
     })
     .then((response) => {

@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { KAKAO_APIKEY } from "../src/config";
 import configData from "./config.json";
 import { useDispatch } from "react-redux";
 import { authChanger } from "./Store";
@@ -24,7 +23,7 @@ const KakaoRedirectHandler = () => {
     let params = new URL(document.location.toString()).searchParams;
     let code = params.get("code");
     let grant_type = "authorization_code";
-    let client_id = KAKAO_APIKEY;
+    let client_id = configData.KAKAO_APIKEY;
     let redirectUri = configData.LOCAL_IP + ":3000/login/oauth";
     axios
       .post(

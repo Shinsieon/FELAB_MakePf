@@ -147,6 +147,8 @@ def getAllStocks(req):
 @method_decorator(csrf_exempt, name='dispatch')
 def saveUserAsset(req) :
     dataFromView = json.loads(req.body)
+    if dataFromView['email'] == "": 
+        return HttpResponse(INSERT_ERROR)
     assets = dataFromView['assets']
 
     dbAssets = USERASSET.objects.filter(email=dataFromView['email'])
@@ -161,7 +163,7 @@ def saveUserAsset(req) :
                 asset.delete()
     else:
         for asset in assets:
-            USERASSET = USERASSET()
+            userAsset = USERASSET()
             if len(USERASSET.objects.filter(email = dataFromView['email'],code = asset['code']))>0 :  #이미 있으면 수정
                 item = USERASSET.objects.get(email = dataFromView['email'], code = asset['code'])
                 item.weight = asset['weight']
@@ -171,13 +173,13 @@ def saveUserAsset(req) :
 
             
             else : #없으면 삽입
-                USERASSET.email = dataFromView['email']
-                USERASSET.code = asset['code']
-                USERASSET.name = asset['name']
-                USERASSET.weight = asset['weight']
-                USERASSET.amount = asset['amount']
-                USERASSET.investmentperiod = asset['investmentPeriod']
-                USERASSET.save()
+                userAsset.email = dataFromView['email']
+                userAsset.code = asset['code']
+                userAsset.name = asset['name']
+                userAsset.weight = asset['weight']
+                userAsset.amount = asset['amount']
+                userAsset.investmentperiod = asset['investmentPeriod']
+                userAsset.save()
     
     return HttpResponse("saved successfully")
 

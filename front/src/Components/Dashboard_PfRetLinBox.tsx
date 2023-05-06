@@ -4,6 +4,7 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { screenChanger } from "../Store";
+import configData from "../config.json";
 import axios from "axios";
 
 function Dashboard_PfRetLinBox() {
@@ -11,10 +12,9 @@ function Dashboard_PfRetLinBox() {
   const [labels, setLabels] = useState<string[]>([]);
   const [retMean, setRetMean] = useState<string[]>([]);
   const getUserAssetRetArray = () => {
-    console.log("clasd");
     axios
-      .post("http://localhost:8000/getUserAssetRetArray", {
-        email: localStorage.getItem("userMail"),
+      .post(configData.LOCAL_IP + ":8000/getUserAssetRetArray", {
+        email: localStorage.getItem("userEmail"),
         userToken: localStorage.getItem("access_token"),
       })
       .then((response) => {

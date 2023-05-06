@@ -1,7 +1,6 @@
 //import "bootstrap/dist/css/bootstrap.min.css";
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { Iasset } from "./Dashboard";
 import { getMyStocks } from "./Dashboard";
@@ -13,6 +12,7 @@ import {
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import configData from "../config.json";
 
 import SearchTF from "./SearchTF";
 function Portfolio_Table() {
@@ -43,12 +43,15 @@ function Portfolio_Table() {
     }
   };
   const saveBtnClicked = () => {
-    if (tempAssets.length === 0) return;
+    if (tempAssets.length === 0) {
+      alert("자산 정보가 없습니다");
+      return;
+    }
     if (tempAssets.filter((item) => item.amount <= 0).length > 0)
       alert("투자금액이 0원인 자산이 있습니다.");
     axios
-      .post("http://localhost:8000/saveUserAsset", {
-        email: localStorage.getItem("userMail"),
+      .post(configData.LOCAL_IP + ":8000/saveUserAsset", {
+        email: localStorage.getItem("userEmail"),
         userToken: localStorage.getItem("access_token"),
         assets: tempAssets,
       })
@@ -63,7 +66,11 @@ function Portfolio_Table() {
       });
   };
   const noData = (): JSX.Element => {
-    return <td colSpan={6}>자산 정보가 없습니다</td>;
+    return (
+      <td colSpan={6} className="text-center">
+        자산 정보가 없습니다
+      </td>
+    );
   };
   useEffect(() => {
     if (tempAssets.length > 0) {
@@ -82,25 +89,8 @@ function Portfolio_Table() {
     }
   }, [tempAssets]);
   return (
-    <div
-      style={{
-        position: "absolute",
-        width: "40vw",
-        height: "70vh",
-        top: "7rem",
-        left: "3rem",
-      }}
-    >
-      <div
-        style={{
-          backgroundColor: "white",
-          borderRadius: "1rem",
-          fontSize: "1rem",
-          padding: "10px",
-          height: "65vh",
-          overflowY: "auto",
-        }}
-      >
+    <div className="absolute w-[40vw] h-[60vh] top-28 left-16">
+      <div className="bg-white rounded-xl p-3 md:h-full overflow-auto">
         {isAddBtnClicked ? (
           <SearchTF
             tempAssets={tempAssets}
@@ -162,6 +152,7 @@ function Portfolio_Table() {
                   </th>
                   <th>
                     <AiFillDelete
+                      size="25"
                       onClick={() => {
                         deleteAsset(item.code);
                       }}
@@ -175,20 +166,7 @@ function Portfolio_Table() {
           </tbody>
         </Table>
       </div>
-      <div
-        style={{
-          backgroundColor: "rgba(53, 162, 235, 0.8)",
-          borderRadius: "0.5rem",
-          fontSize: "1rem",
-          padding: "10px",
-          height: "3rem",
-          maxHeight: "3rem",
-          margin: "10px 0",
-          color: "white",
-          display: "flex",
-          justifyContent: "space-evenly",
-        }}
-      >
+      <div className="bg-sky-500 opacity-90 rounded-xl p-3 h-14 flex justify-evenly text-white mt-3">
         <p>종목 수 {tempAssets.length}</p>
         <p>투자금액 {amountSum} 원</p>
         <p>투자기간 {period} 개월</p>
@@ -196,12 +174,12 @@ function Portfolio_Table() {
           <AiFillCheckSquare size={25} color="black"></AiFillCheckSquare>
         ) : (
           <button
-            className="transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 ..."
+            className="bg-white hover:bg-gray-100 text-gray-800 font-bold px-4 border border-gray-400 rounded shadow"
             onClick={() => {
               saveBtnClicked();
             }}
           >
-            Save Changes
+            Save!
           </button>
         )}
       </div>

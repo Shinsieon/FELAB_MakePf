@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { Iasset } from "./Dashboard";
+import configData from "../config.json";
 
 type stockType = {
   code: string;
@@ -54,7 +55,7 @@ function SearchTF(props: any) {
     props.setTempAssets(nAssets);
   };
   useEffect(() => {
-    axios.get("http://localhost:8000/getAllStocks").then((response) => {
+    axios.get(configData.LOCAL_IP + ":8000/getAllStocks").then((response) => {
       if (response.status === 200) {
         const dataToArr: stockType[] = [];
         Object.keys(response.data).map((item, idx) => {

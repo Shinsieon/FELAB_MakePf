@@ -25,7 +25,7 @@ function NavBar() {
   };
   //w-auto duration-300 transition ease-in-out delay-150 rounded-lg bg-black z-5 delay-200
   return (
-    <div className="absolute bottom-5 h-12 w-screen flex justify-center ">
+    <div className="absolute bottom-8 h-12 w-screen flex justify-center ">
       <div
         className="flex justify-center h-full bg-black z-5 mx-3 text-white rounded-3xl"
         onMouseEnter={() => {
@@ -37,7 +37,7 @@ function NavBar() {
       >
         {showMenu.map((item, idx) => (
           <div
-            className="flex justify-center h-full place-items-center mx-3 w-30 cursor-default"
+            className="flex justify-center h-full place-items-center mx-3 w-40 cursor-default p-1"
             onClick={() => {
               changeNavBar(item.name);
             }}
