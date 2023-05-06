@@ -75,7 +75,7 @@ export const getMyStocks = (dispatch: any) => {
     })
     .then((response) => {
       const result: Iasset[] = [];
-      if (response.data.length === 0) {
+      if (response.data.length === 0 || response.data === 5) {
       } else {
         for (var i = 0; i < response.data.length; i++) {
           var item = response.data[i];

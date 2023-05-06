@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { KAKAO_APIKEY } from "../src/config";
 import configData from "./config.json";
+import { useDispatch } from "react-redux";
+import { authChanger } from "./Store";
+import { setRefreshToken } from "./Cookie";
 
 const { Kakao } = window;
 const api = axios.create({
@@ -15,6 +18,7 @@ const api = axios.create({
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "csrftoken";
 const KakaoRedirectHandler = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
     let params = new URL(document.location.toString()).searchParams;
@@ -22,7 +26,6 @@ const KakaoRedirectHandler = () => {
     let grant_type = "authorization_code";
     let client_id = KAKAO_APIKEY;
     let redirectUri = configData.LOCAL_IP + ":3000/login/oauth";
-    console.log("heer");
     axios
       .post(
         `https://kauth.kakao.com/oauth/token?grant_type=${grant_type}&client_id=${client_id}&redirect_uri=${redirectUri}&code=${code}`,
@@ -42,7 +45,9 @@ const KakaoRedirectHandler = () => {
               "userImage",
               response.properties.profile_image
             );
-            localStorage.setItem("userMail", response.kakao_account.email);
+            localStorage.setItem("userEmail", response.kakao_account.email);
+            localStorage.setItem("userGender", response.kakao_account.gender);
+            localStorage.setItem("userAge", response.kakao_account.age);
             console.log("kakao success");
             api
               .post(configData.LOCAL_IP + ":8000/loginWithKakao", {
@@ -51,6 +56,11 @@ const KakaoRedirectHandler = () => {
                 //accessToken: res.data.access_token,
               })
               .then((res) => {
+                dispatch({
+                  type: authChanger.SET_TOKEN,
+                  payload: res.data.accessToken,
+                });
+                setRefreshToken(res.data.refreshToken);
                 navigate("/home");
               });
           },

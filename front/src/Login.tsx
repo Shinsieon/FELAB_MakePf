@@ -5,6 +5,7 @@ import { setRefreshToken } from "./Cookie";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { authChanger } from "./Store";
 
 const { Kakao } = window;
 
@@ -21,12 +22,14 @@ const registerWithEmail = ({
   password,
   age,
   gender,
+  callback,
 }: {
   name: string;
   email: string;
   password: string;
   age: string;
   gender: string;
+  callback: Function;
 }) => {
   axios
     .post("http://localhost:8000/registerWithEmail", {
@@ -39,8 +42,7 @@ const registerWithEmail = ({
     .then((response) => {
       if (response && response.data) {
         if (response.data.accessToken) {
-          setRefreshToken(response.data.refreshToken);
-          dispatchEvent(response.data.accessToken);
+          callback(response.data);
         } else {
           switch (response.data) {
             case 4:
@@ -72,8 +74,6 @@ const loginWithEmail = ({
 };
 
 function Login() {
-  const dispatch = useDispatch();
-
   const [isRegister, setIsRegister] = useState(false);
 
   return (
@@ -102,11 +102,12 @@ function Login() {
 }
 
 function UserRegister({ setIsRegister }: { setIsRegister: Function }) {
+  const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, onPwChange] = useState("");
-  const [age, setAge] = useState("10");
-  const [gender, setGender] = useState("M");
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState("");
 
   const handleAgeChange = (value: string) => {
     setAge(value);
@@ -135,6 +136,9 @@ function UserRegister({ setIsRegister }: { setIsRegister: Function }) {
       <form
         className="px-6 pt-3 pb-8 w-full"
         onSubmit={(e: any) => {
+          if (!age || !gender) {
+            alert("");
+          }
           e.preventDefault();
           registerWithEmail({
             name: name,
@@ -142,6 +146,21 @@ function UserRegister({ setIsRegister }: { setIsRegister: Function }) {
             password: password,
             age: age,
             gender: gender,
+            callback: ({
+              userName,
+              accessToken,
+              refreshToken,
+            }: {
+              userName: string;
+              accessToken: string;
+              refreshToken: string;
+            }) => {
+              setRefreshToken(refreshToken);
+              dispatch({ type: authChanger.SET_TOKEN, payload: accessToken });
+              //페이지 이동
+              alert("가입 성공");
+              setIsRegister(false);
+            },
           });
         }}
       >
@@ -252,6 +271,8 @@ function UserRegister({ setIsRegister }: { setIsRegister: Function }) {
 }
 
 function UserLogin({ setIsRegister }: { setIsRegister: Function }) {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPw] = useState("");
   const handleInputChange = (e: any) => {
@@ -271,8 +292,33 @@ function UserLogin({ setIsRegister }: { setIsRegister: Function }) {
               password: password,
 
               callback: (response: any) => {
-                //setRefreshToken(response.json.refresh_token);
-                //dispatchEvent(response.json.access_token);
+                if (response.data !== undefined) {
+                  if (response.data.userName) {
+                    setRefreshToken(response.data.refreshToken);
+                    dispatch({
+                      type: authChanger.SET_TOKEN,
+                      payload: response.data.accessToken,
+                    });
+                    localStorage.setItem("userName", response.data.userName);
+                    localStorage.setItem("userImage", "");
+                    localStorage.setItem("userEmail", response.data.userEmail);
+                    localStorage.setItem(
+                      "userGender",
+                      response.data.userGender
+                    );
+                    localStorage.setItem("userAge", response.data.userAge);
+                    navigate("/home");
+                  } else {
+                    switch (response.data) {
+                      case 0:
+                        alert("가입된 정보가 없습니다");
+                        break;
+                      case 3:
+                        alert("비밀번호가 일치하지 않습니다.");
+                        break;
+                    }
+                  }
+                }
               },
             });
           }}
@@ -354,6 +400,7 @@ function RadioComp({
           name={name}
           id={id}
           onChange={handleChange}
+          required
         />
         <label
           className="w-full bg-white border p-2 border-gray-300 rounded-lg cursor-pointer focus:outline-none hover:bg-gray-50 peer-checked:ring-green-500 peer-checked:ring-2 peer-checked:border-transparent"

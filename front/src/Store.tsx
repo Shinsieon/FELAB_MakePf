@@ -22,6 +22,10 @@ const scrReducer = (state = <Dashboard />, action: any) => {
 
 const SET_TOKEN = "authReducer/SET_TOKEN";
 const DELETE_TOKEN = "authReducer/DELETE_TOKEN";
+export const authChanger = {
+  SET_TOKEN,
+  DELETE_TOKEN,
+};
 export const tokenChanger = {
   SET_TOKEN,
   DELETE_TOKEN,

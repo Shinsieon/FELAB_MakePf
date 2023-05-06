@@ -6,12 +6,13 @@ import KakaoRedirectHandler from "./KakaoRedirectHandler";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import * as config from "../src/config.js";
+import { getCookieToken } from "./Cookie";
 
 function App() {
   const navigate = useNavigate();
   useEffect(() => {
     if (!window.Kakao.isInitialized()) window.Kakao.init(config.KAKAO_APIKEY);
-    const userToken = localStorage.getItem("access_token");
+    const userToken = getCookieToken();
     if (!userToken) {
       navigate("/login");
       return;

@@ -44,7 +44,7 @@ function Dashboard_PfRetLinBox() {
   if (assets.length === 0) {
     return (
       <div
-        className="absolute top-60 bg-gray-400 h-50 w-1/2 right-10 rounded-lg md:flex place-items-center hover:bg-gray-300 text-white flex-col justify-center"
+        className="absolute top-60 bg-gray-600 h-50 w-1/2 right-10 rounded-lg md:flex place-items-center hover:bg-gray-500 text-white flex-col justify-center"
         onClick={changeScreenToPf}
       >
         <AiOutlinePlusCircle

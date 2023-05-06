@@ -35,12 +35,13 @@ function NavBar() {
           setShowMenu(nowMenu);
         }}
       >
-        {showMenu.map((item) => (
+        {showMenu.map((item, idx) => (
           <div
             className="flex justify-center h-full place-items-center mx-3 w-30 cursor-default"
             onClick={() => {
               changeNavBar(item.name);
             }}
+            key={idx}
           >
             {item.icon}
             {item.name}
