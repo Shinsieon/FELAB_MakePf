@@ -56,6 +56,7 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
     'TOKEN_USER_CLASS': 'user.User', # 자신의 User 모델 연결
+    'USER_ID_FIELD' : 'email'
 }
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -103,7 +104,7 @@ WSGI_APPLICATION = 'MakePf.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'PORTFOLIO',
+        'NAME': 'foliogram',
         'USER': 'root',
         'PASSWORD': 'su970728!',
         'HOST': 'localhost',
