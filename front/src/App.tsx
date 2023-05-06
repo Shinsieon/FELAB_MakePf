@@ -3,13 +3,18 @@ import { Route, Routes } from "react-router";
 import Home from "./Components/Home";
 import Login from "./Login";
 import KakaoRedirectHandler from "./KakaoRedirectHandler";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import * as config from "../src/config.js";
 import { getCookieToken } from "./Cookie";
+import { setRefreshToken } from "./Cookie";
+import { useDispatch } from "react-redux";
+import { authChanger } from "./Store";
+import axios from "axios";
 
 function App() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   useEffect(() => {
     if (!window.Kakao.isInitialized()) window.Kakao.init(config.KAKAO_APIKEY);
     const userToken = getCookieToken();
@@ -25,7 +30,24 @@ function App() {
           navigate("/home");
         },
         fail: (error: any) => {
-          navigate("/login");
+          axios
+            .post("http://localhost:8000/getRefreshToken", {
+              email: localStorage.getItem("userEmail"),
+              refreshToken: userToken,
+            })
+            .then((response) => {
+              console.log(response.data);
+              if (response.data) {
+                setRefreshToken(response.data.refreshToken);
+                dispatch({
+                  type: authChanger.SET_TOKEN,
+                  payload: response.data.accessToken,
+                });
+                navigate("/home");
+              } else {
+                navigate("/login");
+              }
+            });
         },
       });
     } catch (err) {
@@ -34,19 +56,7 @@ function App() {
   }, []);
 
   return (
-    <div
-      className="App"
-      style={{
-        position: "absolute",
-        left: 0,
-        backgroundSize: "cover",
-        width: "100vw",
-        height: "100vh",
-        backgroundColor: "white",
-        fontSize: "20px",
-        overflow: "hidden",
-      }}
-    >
+    <div className="absolute cover w-screen h-screen bg-white font-sm">
       <Routes>
         <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />

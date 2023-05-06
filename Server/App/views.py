@@ -52,7 +52,21 @@ def registerWithEmail(request):
         
     else:
         return HttpResponse(USER_ALREADY_EXISTS)
-
+    
+@method_decorator(csrf_exempt, name='dispatch')
+def getRefreshToken(request):
+    data = json.loads(request.body)
+    user = USERTBL.objects.filter(email = data['email']).first()
+    if user is None:
+        return HttpResponse(NO_USER_ERROR)
+    else :
+        token = TokenObtainPairSerializer.get_token(user)
+        access_token = str(token.access_token)
+        refresh_token = str(token)
+        res = {}
+        res['accessToken'] = access_token
+        res['refreshToken']= refresh_token
+        return HttpResponse(json.dumps(res))
 
 @method_decorator(csrf_exempt, name='dispatch')
 def loginWithKakao(request):
@@ -199,23 +213,26 @@ def getUserAssetPerformance(req):
     interest = 0.03 #기준금리(무위험 수익률)
     nowTime = dt.datetime.now()
     returnDF = pd.DataFrame({})
-    for asset in USERASSET.objects.filter(email=dataFromView['email']):
+    assets = USERASSET.objects.filter(email=dataFromView['email'])
+    for asset in assets:
         invStartDate = nowTime - relativedelta(months = asset.investmentperiod) #format = 20220101 
         stockDF =  stock.get_market_ohlcv(invStartDate, nowTime.strftime("%Y%m%d"), asset.code, freq="m")
         returnDF = pd.concat([returnDF, stockDF['종가'].pct_change().rename(asset.code)],axis=1).fillna(0)
 
-    meanArr = returnDF.mean(axis=1)
-    returnObj = {}
-    returnObj['retMean'] =  meanArr.mean()
-    returnObj['std'] = math.sqrt(np.var(meanArr.tolist()))
-    returnObj['sharpe'] = (returnObj['retMean']- interest)/returnObj['std']
-    returnObj['mdd'] = abs(min(meanArr.tolist())/max(meanArr.tolist())-1)*100
-    return HttpResponse(json.dumps(returnObj))
+    if len(assets)==0:
+        return HttpResponse(NO_ASSET_ERROR)
+    else:
+        meanArr = returnDF.mean(axis=1)
+        returnObj = {}
+        returnObj['retMean'] =  meanArr.mean()
+        returnObj['std'] = math.sqrt(np.var(meanArr.tolist()))
+        returnObj['sharpe'] = (returnObj['retMean']- interest)/returnObj['std']
+        returnObj['mdd'] = abs(min(meanArr.tolist())/max(meanArr.tolist())-1)*100
+        return HttpResponse(json.dumps(returnObj))
 
 @method_decorator(csrf_exempt, name='dispatch')
 def getIndivisualPerformance(req):
     dataFromView = json.loads(req.body)
-    
     nowTime = dt.datetime.now()
     returnObj = {}
     for asset in USERASSET.objects.filter(email=dataFromView['email']):
@@ -225,5 +242,8 @@ def getIndivisualPerformance(req):
         mean = stockDF['종가'].pct_change().mean()
         returnObj[asset.name] = {'EPS' :  fundDF['EPS'].mean(), 'PER' : fundDF['PER'].mean(), 'RETURN' : mean}
 
-    return HttpResponse(json.dumps(returnObj))
+    if returnObj is None:
+        return HttpResponse(NO_ASSET_ERROR)
+    else:
+        return HttpResponse(json.dumps(returnObj))
     

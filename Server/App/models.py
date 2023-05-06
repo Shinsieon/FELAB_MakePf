@@ -13,7 +13,7 @@ class USERTBL(models.Model):
         db_table = 'USERTBL'
 
 class USERASSET(models.Model):
-    email = models.CharField(max_length=20)
+    email = models.CharField(max_length=20, primary_key=True)
     code = models.CharField(max_length=10)
     name = models.CharField(max_length=20)
     weight = models.FloatField()

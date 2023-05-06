@@ -17,12 +17,9 @@ import axios from "axios";
 import styled from "styled-components";
 import SimpleSlider from "./Carousel";
 import { useSelector } from "react-redux";
+import { getCookieToken } from "../Cookie";
 
-const H5Style = styled.h5`
-  font-size: 1rem;
-  text-align: left;
-  margin: 0;
-`;
+const H5Style = styled.h5``;
 const PStyle = styled.p`
   font-size: 0.8rem;
   text-align: left;
@@ -40,16 +37,7 @@ ChartJS.register(
 
 function Performance() {
   return (
-    <div
-      style={{
-        position: "absolute",
-        top: "7rem",
-        height: "65vh",
-        width: "35vw",
-        left: "47vw",
-        display: "flex",
-      }}
-    >
+    <div className="absolute top-28 h-[70vh] left-[47vw] md:w-1/3 flex">
       <SimpleSlider
         children={[PortfolioPerformance, IndivisualPerformance]}
       ></SimpleSlider>
@@ -75,10 +63,11 @@ function PortfolioPerformance() {
     //user의 포트폴리오 성과 with benchmark
     axios
       .post("http://localhost:8000/getUserAssetPerformance", {
-        email: localStorage.getItem("userMail"),
-        userToken: localStorage.getItem("access_token"),
+        email: localStorage.getItem("userEmail"),
+        refreshToken: getCookieToken(),
       })
       .then((response) => {
+        if (response && response.data === 5) return;
         console.log(response);
         const arr: number[] = [
           response.data.retMean,
@@ -91,37 +80,37 @@ function PortfolioPerformance() {
       });
   }, [assets]);
   return (
-    <div
-      style={{
-        backgroundColor: "#251342",
-        height: "65vh",
-        width: "100%",
-        borderRadius: "1rem",
-        color: "white",
-        padding: "12px",
-        position: "relative",
-      }}
-    >
-      <h5 style={{ textAlign: "left" }}>포트폴리오 성과</h5>
-      <PStyle>
-        {localStorage.getItem("userName")}님의 자산 데이터를 바탕으로 성과를
-        도출했습니다.
-      </PStyle>
-      {isDataLoaded ? (
-        userPortData.map((item, idx) => (
-          <div key={idx}>
-            <PortfolioPerformanceBar
-              label={Object.keys(contents)[idx]}
-              content={Object.values(contents)[idx]}
-              value={userPortData[idx]}
-              icon={icons[idx]}
-              key={idx}
-            ></PortfolioPerformanceBar>
-          </div>
-        ))
+    <div className="bg-[#251342] h-full w-full rounded-xl text-white p-5">
+      <h5 className="font-bold text-white">포트폴리오 성과</h5>
+      {assets.length > 0 ? (
+        <div>
+          <PStyle>
+            {localStorage.getItem("userName")}님의 자산 데이터를 바탕으로 성과를
+            도출했습니다.
+          </PStyle>
+          {isDataLoaded ? (
+            userPortData.map((item, idx) => (
+              <div key={idx}>
+                <PortfolioPerformanceBar
+                  label={Object.keys(contents)[idx]}
+                  content={Object.values(contents)[idx]}
+                  value={userPortData[idx]}
+                  icon={icons[idx]}
+                  key={idx}
+                ></PortfolioPerformanceBar>
+              </div>
+            ))
+          ) : (
+            //<RadarChart userPortData={userPortData}></RadarChart>
+            <h3>데이터를 불러오는 중입니다.</h3>
+          )}
+        </div>
       ) : (
-        //<RadarChart userPortData={userPortData}></RadarChart>
-        <h3>데이터를 불러오는 중입니다.</h3>
+        <div className="h-[200px]">
+          <h5 className="text-sm text-left m-0">
+            아직 자산이 설정되지 않았습니다.
+          </h5>
+        </div>
       )}
     </div>
   );
@@ -138,10 +127,12 @@ function IndivisualPerformance() {
   useEffect(() => {
     axios
       .post("http://localhost:8000/getIndivisualPerformance", {
-        email: localStorage.getItem("userMail"),
-        userToken: localStorage.getItem("access_token"),
+        email: localStorage.getItem("userEmail"),
+        userToken: getCookieToken(),
       })
       .then((response) => {
+        if (response && response.data === 5) return;
+
         var dataObj = response.data;
         var tempArr: TassetFundamental[] = [];
         console.log(dataObj);
@@ -163,25 +154,27 @@ function IndivisualPerformance() {
       });
   }, [assets]);
   return (
-    <div
-      style={{
-        backgroundColor: "white",
-        height: "65vh",
-        width: "100%",
-        borderRadius: "1rem",
-        color: "white",
-        padding: "12px",
-        position: "relative",
-      }}
-    >
-      <h5 style={{ textAlign: "left", color: "black" }}>개별종목 성과</h5>
-      {assetFundArr.map((item, idx) => {
-        return (
-          <div key={idx}>
-            <IndividualPerformanceBar item={item}></IndividualPerformanceBar>
-          </div>
-        );
-      })}
+    <div className="bg-white h-full w-full rounded-xl text-white p-5">
+      <h5 className="font-bold text-black">개별종목 성과</h5>
+      {assets.length > 0 ? (
+        <div>
+          {assetFundArr.map((item, idx) => {
+            return (
+              <div key={idx}>
+                <IndividualPerformanceBar
+                  item={item}
+                ></IndividualPerformanceBar>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="h-[200px]">
+          <h5 className="text-sm text-left m-0 text-black">
+            아직 자산이 설정되지 않았습니다.
+          </h5>
+        </div>
+      )}
     </div>
   );
 }

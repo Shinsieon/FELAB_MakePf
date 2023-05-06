@@ -1,13 +1,7 @@
 import Slider, { Settings } from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import styled from "styled-components";
 import { useMemo } from "react";
-const SlideWrapper = styled.section`
-  position: relative;
-  width: 100%;
-  height: 100%;
-`;
 
 interface sliderProps {
   /** 슬라이더 아이템 요소 */
@@ -41,12 +35,12 @@ export default function SimpleSlider({
     [autoplay, loop, speed]
   );
   return (
-    <SlideWrapper>
+    <div className="relative w-full h-full">
       <Slider {...settings}>
         {children.map((item, idx) => (
           <div key={idx}>{item()}</div>
         ))}
       </Slider>
-    </SlideWrapper>
+    </div>
   );
 }
