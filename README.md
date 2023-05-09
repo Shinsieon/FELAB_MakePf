@@ -1,7 +1,13 @@
 # MakePortfolio
-Web site development : Python Django with React by Typescript 
+Web development side project : Python Django with React by Typescript 
 
-test
+ver 1.0
+1. kakao api login
+2. JWT login
+3. python django rest framework api server
+4. Dashboard
+5. Personal Portfolio
+
 
 ------------------------------------
 Original Source : 
