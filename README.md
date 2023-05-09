@@ -1,7 +1,12 @@
 # MakePortfolio
-Web site development : Python Django with React by Typescript 
+Web site development Side project: Python Django with React by Typescript 
 
-
+ver 1.0
+1. 카카오 Api 로그인 기능 구현
+2. jwt를 사용한 로그인 구현
+3. django rest api 서버 구축
+4. 개인 자산 화면 구성 (종목 검색기) 
+5. Dashboard 구현 (chartjs 를 사용한 수익률 그래프 표현)
 
 ------------------------------------
 Original Source : 
