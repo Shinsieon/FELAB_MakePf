@@ -64,8 +64,7 @@ const KakaoRedirectHandler = () => {
               });
           },
           fail: (error: any) => {
-            console.log(error);
-            console.log(error);
+            console.log("this is for test commit");
           },
         });
         localStorage.setItem("access_token", res.data.access_token);
