@@ -26,10 +26,6 @@ export const authChanger = {
   SET_TOKEN,
   DELETE_TOKEN,
 };
-export const tokenChanger = {
-  SET_TOKEN,
-  DELETE_TOKEN,
-};
 const authInitialState = {
   authenticated: false,
   accessToken: null,
