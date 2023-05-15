@@ -10,6 +10,7 @@ import { authChanger } from "./Store";
 const { Kakao } = window;
 
 const loginWithKakao = () => {
+  console.log("kakao login btn pressed");
   Kakao.Auth.authorize({
     redirectUri: configData.LOCAL_IP + ":3000/login/oauth",
     scope: "profile_nickname, account_email, profile_image, gender, age_range",

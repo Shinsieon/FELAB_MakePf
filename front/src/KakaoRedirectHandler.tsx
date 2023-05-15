@@ -17,6 +17,7 @@ const api = axios.create({
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "csrftoken";
 const KakaoRedirectHandler = () => {
+  console.log("kakaoredirecter");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
@@ -35,6 +36,7 @@ const KakaoRedirectHandler = () => {
         }
       )
       .then((res) => {
+        console.log(res);
         Kakao.Auth.setAccessToken(res.data.access_token);
         Kakao.API.request({
           url: "/v2/user/me",
