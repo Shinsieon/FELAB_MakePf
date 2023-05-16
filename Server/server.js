@@ -9,17 +9,31 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const port = process.env.port || 8000;
+
+/*cors 설정 */
+const whitelist = ["http://localhost:3000", "http://localhost:8000"];
+const corsOptions = {
+  origin: (origin, callback) => {
+    console.log("trying origin " + origin);
+    if (!origin || whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not Allowed Origin"));
+    }
+  },
+};
 var cors = require("cors");
+app.use(cors(corsOptions));
+app.use(express.json());
+/*cors 설정 */
 
 //app.use(express.static(path.join(__dirname, "front/dist")));
-app.use(express.json());
-app.use(cors());
 
 app.get("/api", (req, res) => {
   res.json({ message: "hello world" });
 });
 app.listen(port, () => {
-  console.log("app is listening");
+  console.log("app is listening " + port);
 });
 
 app.post("/registerWithEmail", (req, res) => {
@@ -36,16 +50,40 @@ nickname : string
 email : string
 profile_image : image link
 gender : M || F
-age : 10, 20, 30, 40, 50
+age : 10~19, 20~29, 30~39, 40~49, 50~59
 */
-app.get("/loginWithKakao", (req, res) => {
-  var body = req.body;
-  console.log(body);
+app.post("/loginWithKakao", (req, res) => {
+  const body = req.body;
+  const { userInfo, userToken } = body;
+  const userName = userInfo.properties.nickname;
+  const userEmail = userInfo.kakao_account.has_email
+    ? userInfo.kakao_account.email
+    : "";
+  const image = userInfo.properties.profile_image;
+  const gender = userInfo.kakao_account.gender;
+  const age = userInfo.kakao_account.age_range;
+  dbConnection.sendQuery(`SELECT * FROM USERTBL WHERE email=${userEmail}`);
+  // conn.query(
+  //   "INSERT INTO USERTBL (name, email, password, image, gender, age_range, is_super) values " +
+  //     "SELECT"
+  // );
+
+  res.json({ message: "hello world" });
 });
 
-app.get("/loginWithEmail", (req, res) => {});
+app.post("/loginWithEmail", async (req, res) => {
+  const body = req.body;
+  const { email, password } = body;
+  const rows = await dbConnection.sendQuery(
+    conn,
+    `SELECT * FROM USERTBL WHERE email='${email}'`,
+    (rows) => {
+      res.send(rows[0]);
+    }
+  );
+});
 
-app.get("/getUserAssets", async (req, res) => {
+app.post("/getUserAssets", async (req, res) => {
   conn.query("SELECT * FROM USERASSET", (err, rows, fields) => {
     if (err) console.log("query error");
     else {

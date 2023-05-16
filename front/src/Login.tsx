@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { authChanger } from "./Store";
+import fetchApi from "./httpFetch";
 
 const { Kakao } = window;
 
@@ -54,7 +55,7 @@ const registerWithEmail = ({
     });
 };
 
-const loginWithEmail = ({
+const loginWithEmail = async ({
   email,
   password,
   callback,
@@ -63,15 +64,12 @@ const loginWithEmail = ({
   password: string;
   callback: Function;
 }) => {
-  axios
-    .post(configData.LOCAL_IP + ":8000/loginWithEmail", {
-      email: email,
-      password: password,
-    })
-    .then((response) => {
-      console.log(response);
-      callback(response);
-    });
+  let result = await fetchApi("loginWithEmail", "POST", {
+    email: email,
+    password: password,
+  });
+  console.log(result);
+  callback(result);
 };
 
 function Login() {
@@ -294,7 +292,7 @@ function UserLogin({ setIsRegister }: { setIsRegister: Function }) {
 
               callback: (response: any) => {
                 if (response.data !== undefined) {
-                  if (response.data.userName) {
+                  if (response.name) {
                     setRefreshToken(response.data.refreshToken);
                     dispatch({
                       type: authChanger.SET_TOKEN,

@@ -29,9 +29,18 @@ var dbConnection = {
     con.connect((err) => {
       if (err) console.error(err);
       else {
-        console.log;
+        console.log("Db connect success");
       }
     });
+  },
+  sendQuery: async (con, query, callback) => {
+    con.query(query, (error, rows, fields) => {
+      if (error) throw error;
+      else {
+        callback(rows);
+      }
+    });
+    //con.end();
   },
 };
 module.exports = dbConnection;
@@ -48,9 +57,5 @@ module.exports = dbConnection;
 // };
 
 // export const sendQuery = (con, query) => {
-//   con.query(query, (error, rows, fields) => {
-//     if (error) throw error;
-//     console.log(rows);
-//   });
-//   con.end();
+//
 // };

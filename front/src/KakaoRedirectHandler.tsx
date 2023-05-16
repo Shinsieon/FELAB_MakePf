@@ -5,17 +5,10 @@ import configData from "./config.json";
 import { useDispatch } from "react-redux";
 import { authChanger } from "./Store";
 import { setRefreshToken } from "./Cookie";
+import fetchApi from "./httpFetch";
 
 const { Kakao } = window;
-const api = axios.create({
-  baseURL: configData.LOCAL_IP + ":8000",
-  withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-axios.defaults.xsrfCookieName = "csrftoken";
+
 const KakaoRedirectHandler = () => {
   console.log("kakaoredirecter");
   const dispatch = useDispatch();
@@ -40,7 +33,7 @@ const KakaoRedirectHandler = () => {
         Kakao.Auth.setAccessToken(res.data.access_token);
         Kakao.API.request({
           url: "/v2/user/me",
-          success: (response: any) => {
+          success: async (response: any) => {
             localStorage.setItem("userName", response.properties.nickname);
             localStorage.setItem(
               "userImage",
@@ -50,20 +43,17 @@ const KakaoRedirectHandler = () => {
             localStorage.setItem("userGender", response.kakao_account.gender);
             localStorage.setItem("userAge", response.kakao_account.age);
             console.log("kakao success");
-            api
-              .post(configData.LOCAL_IP + ":8000/loginWithKakao", {
-                userInfo: response,
-                userToken: res.data.access_token,
-                //accessToken: res.data.access_token,
-              })
-              .then((res) => {
-                dispatch({
-                  type: authChanger.SET_TOKEN,
-                  payload: res.data.accessToken,
-                });
-                setRefreshToken(res.data.refreshToken);
-                navigate("/home");
-              });
+            let result = await fetchApi("loginWithKakao", "POST", {
+              userInfo: response,
+              userToken: res.data.access_token,
+            });
+
+            await dispatch({
+              type: authChanger.SET_TOKEN,
+              payload: res.data.accessToken,
+            });
+            await setRefreshToken(res.data.refreshToken);
+            await navigate("/home");
           },
           fail: (error: any) => {
             console.log("this is for test commit");
