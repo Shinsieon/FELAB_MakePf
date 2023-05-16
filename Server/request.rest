@@ -1,0 +1,10 @@
+GET http://localhost:8000/getAllStocks
+
+###
+
+POST http://localhost:8000/loginWithEmail
+Content-Type: application.json
+
+{
+    "email" : "coolguysiun@Naver.com"
+}

@@ -45,7 +45,6 @@ const KakaoRedirectHandler = () => {
             console.log("kakao success");
             let result = await fetchApi("loginWithKakao", "POST", {
               userInfo: response,
-              userToken: res.data.access_token,
             });
 
             await dispatch({

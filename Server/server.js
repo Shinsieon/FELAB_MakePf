@@ -1,10 +1,19 @@
 //this is for node js serving for react front server api
 
+require("dotenv").config();
 /*db 커넥션 */
 const dbConnection = require(__dirname + "/dbConnection");
 const conn = dbConnection.init();
 dbConnection.connect(conn);
 /*db 커넥션 */
+
+/* 비밀번호 암호화 */
+const cryptoPassword = require("./cryptoPassword");
+
+/*jwt 인증 */
+const jwt = require("jsonwebtoken");
+const jwtAuthenticator = require("./jwtAuthenticate");
+
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -29,19 +38,26 @@ app.use(express.json());
 
 //app.use(express.static(path.join(__dirname, "front/dist")));
 
-app.get("/api", (req, res) => {
-  res.json({ message: "hello world" });
-});
 app.listen(port, () => {
   console.log("app is listening " + port);
 });
 
-app.post("/registerWithEmail", (req, res) => {
+app.post("/registerWithEmail", async (req, res) => {
   //이미 가입된 내역이 있는지 이메일로 비교
-  console.log(req);
+  console.log(req.body);
+  const { name, email, password, age, gender } = req.body;
+  await dbConnection.sendQuery(
+    conn,
+    `SELECT * FROM USERTBL WHERE email=${email}`,
+    (rows) => {
+      if (rows) {
+        res.statusMessage("USER EXISTS");
+      } else {
+        //await dbConnection.sendQuery(conn. `INSERT INTO `)
+      }
+    }
+  );
 });
-
-app.get("/getRefreshToken", (req, res) => {});
 
 /*
 카카오 로그인은 계정이 Db 에 없으면 Insert, 있으면 계정 정보 return
@@ -52,49 +68,63 @@ profile_image : image link
 gender : M || F
 age : 10~19, 20~29, 30~39, 40~49, 50~59
 */
-app.post("/loginWithKakao", (req, res) => {
-  const body = req.body;
-  const { userInfo, userToken } = body;
-  const userName = userInfo.properties.nickname;
-  const userEmail = userInfo.kakao_account.has_email
-    ? userInfo.kakao_account.email
-    : "";
-  const image = userInfo.properties.profile_image;
-  const gender = userInfo.kakao_account.gender;
-  const age = userInfo.kakao_account.age_range;
-  dbConnection.sendQuery(`SELECT * FROM USERTBL WHERE email=${userEmail}`);
-  // conn.query(
-  //   "INSERT INTO USERTBL (name, email, password, image, gender, age_range, is_super) values " +
-  //     "SELECT"
-  // );
+app.post("/loginWithKakao", async (req, res) => {
+  const { userInfo } = req.body;
+  const { nickname, image } = userInfo.properties;
+  const { email, gender, age } = userInfo.kakao_account; //카카오는 디비에 비번을 저장하지 않는다.
+  await dbConnection.sendQuery(
+    conn,
+    `SELECT * FROM USERTBL WHERE email=${email}`,
+    (rows) => {
+      if (rows.length > 0) {
+        res.json({
+          userInfo: rows[0],
+          accessToken: jwtAuthenticator.createToken(),
+        });
+      } else {
+        //디비에 계정 생성
+      }
+    }
+  );
 
   res.json({ message: "hello world" });
 });
 
 app.post("/loginWithEmail", async (req, res) => {
-  const body = req.body;
-  const { email, password } = body;
-  const rows = await dbConnection.sendQuery(
+  const { email, password } = req.body;
+  await dbConnection.sendQuery(
     conn,
     `SELECT * FROM USERTBL WHERE email='${email}'`,
     (rows) => {
-      res.send(rows[0]);
+      //회원정보가 있다는 뜻이므로 jwt토큰을 생성해 전달
+      if (rows.length > 0)
+        res.json({
+          userInfo: rows[0],
+          accessToken: jwtAuthenticator.createToken(),
+        });
+      else res.json({ message: "no user" });
     }
   );
 });
 
-app.post("/getUserAssets", async (req, res) => {
-  conn.query("SELECT * FROM USERASSET", (err, rows, fields) => {
-    if (err) console.log("query error");
-    else {
-      console.log(rows);
-    }
-  });
-  // let result = await sendQuery(getDbConnection(), "SELECT * FROM USERASSET");
-  // return result.json();
-});
+app.post(
+  "/getUserAssets",
+  jwtAuthenticator.authenticateToken,
+  async (req, res) => {
+    conn.query("SELECT * FROM USERASSET", (err, rows, fields) => {
+      if (err) console.log("query error");
+      else {
+        console.log(rows);
+      }
+    });
+    // let result = await sendQuery(getDbConnection(), "SELECT * FROM USERASSET");
+    // return result.json();
+  }
+);
 
-app.get("/getAllStocks", (req, res) => {});
+app.get("/getAllStocks", (req, res) => {
+  res.json({ msg: "hello" });
+});
 
 app.post("/saveUserAsset", (req, res) => {});
 
