@@ -1,6 +1,9 @@
 //this is for node js serving for react front server api
 
 require("dotenv").config();
+
+NO_USER_ERROR = 500;
+USER_EXISTS_ERROR = 501;
 /*db 커넥션 */
 const dbConnection = require(__dirname + "/dbConnection");
 const conn = dbConnection.init();
@@ -9,9 +12,9 @@ dbConnection.connect(conn);
 
 /* 비밀번호 암호화 */
 const cryptoPassword = require("./cryptoPassword");
+const cookies = new Cookies();
 
 /*jwt 인증 */
-const jwt = require("jsonwebtoken");
 const jwtAuthenticator = require("./jwtAuthenticate");
 
 const express = require("express");
@@ -46,14 +49,24 @@ app.post("/registerWithEmail", async (req, res) => {
   //이미 가입된 내역이 있는지 이메일로 비교
   console.log(req.body);
   const { name, email, password, age, gender } = req.body;
+  console.log(email);
   await dbConnection.sendQuery(
     conn,
-    `SELECT * FROM USERTBL WHERE email=${email}`,
-    (rows) => {
+    `SELECT * FROM USERTBL WHERE email='${email}'`,
+    async (rows) => {
+      console.log(rows);
       if (rows) {
-        res.statusMessage("USER EXISTS");
+        res.json({ success: false, message: "이미 존재하는 사용자입니다." });
       } else {
-        //await dbConnection.sendQuery(conn. `INSERT INTO `)
+        await dbConnection.sendQuery(
+          conn,
+          `INSERT INTO USERTBL values ('${name}','${email.toLoweCase()}','${cryptoPassword(
+            password
+          )}','','${gender}','${age}');`,
+          () => {
+            res.json({ success: true, message: "회원가입에 성공했습니다" });
+          }
+        );
       }
     }
   );
@@ -74,33 +87,56 @@ app.post("/loginWithKakao", async (req, res) => {
   const { email, gender, age } = userInfo.kakao_account; //카카오는 디비에 비번을 저장하지 않는다.
   await dbConnection.sendQuery(
     conn,
-    `SELECT * FROM USERTBL WHERE email=${email}`,
-    (rows) => {
+    `SELECT * FROM USERTBL WHERE email='${email}'`,
+    async (rows) => {
       if (rows.length > 0) {
         res.json({
           userInfo: rows[0],
-          accessToken: jwtAuthenticator.createToken(),
+          accessToken: jwtAuthenticator.createToken(email),
+          refreshToken: jwtAuthenticator.createRefreshToken(email),
         });
       } else {
         //디비에 계정 생성
+        await dbConnection.sendQuery(
+          conn,
+          `INSERT INTO USERTBL values ('${nickname}','${email.toLoweCase()}','${cryptoPassword(
+            password
+          )}','${image}','${gender}','${age}');`,
+          () => {
+            res.json({
+              success: true,
+              userInfo: userInfo,
+              message: "회원가입에 성공했습니다",
+            });
+          }
+        );
       }
     }
   );
-
-  res.json({ message: "hello world" });
 });
+// app.post('/token', (req, res)=>{
+//   const refreshToken = req.body.token;
+//   if(refreshToken == null) return res.sendStatus(401);
+//   if(!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
+jwt;
+// })
 
 app.post("/loginWithEmail", async (req, res) => {
   const { email, password } = req.body;
+  console.log(email);
+
   await dbConnection.sendQuery(
     conn,
-    `SELECT * FROM USERTBL WHERE email='${email}'`,
+    `SELECT * FROM USERTBL WHERE email='${email}' and password='${cryptoPassword(
+      password
+    )}'`,
     (rows) => {
       //회원정보가 있다는 뜻이므로 jwt토큰을 생성해 전달
       if (rows.length > 0)
         res.json({
           userInfo: rows[0],
           accessToken: jwtAuthenticator.createToken(),
+          refreshToken: jwtAuthenticator.createRefreshToken(email),
         });
       else res.json({ message: "no user" });
     }

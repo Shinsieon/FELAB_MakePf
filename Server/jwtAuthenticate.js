@@ -1,10 +1,21 @@
+const jwt = require("jsonwebtoken");
+
 var jwtAuthenticator = {
   createToken: (email) => {
     const accessToken = jwt.sign(
       { email: email },
-      process.env.ACCESS_TOKEN_SECRET
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "10m" }
     );
     return accessToken;
+  },
+  createRefreshToken: (email) => {
+    const refreshToken = jwt.sign(
+      { email: email },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: "14days" }
+    );
+    return refreshToken;
   },
   authenticateToken: (req, res, next) => {
     const authHeader = req.headers["authorization"];

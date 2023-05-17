@@ -42,14 +42,13 @@ const registerWithEmail = ({
       gender: gender,
     })
     .then((response) => {
+      console.log(response);
       if (response && response.data) {
-        if (response.data.accessToken) {
+        if (response.data.success) {
+          alert(response.data.message);
           callback(response.data);
         } else {
-          switch (response.data) {
-            case 4:
-              alert("이미 가입된 사용자입니다.");
-          }
+          alert("이미 존재하는 사용자입니다");
         }
       }
     });
@@ -157,7 +156,6 @@ function UserRegister({ setIsRegister }: { setIsRegister: Function }) {
               setRefreshToken(refreshToken);
               dispatch({ type: authChanger.SET_TOKEN, payload: accessToken });
               //페이지 이동
-              alert("가입 성공");
               setIsRegister(false);
             },
           });
