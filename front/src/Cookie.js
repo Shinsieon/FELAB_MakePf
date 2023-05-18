@@ -20,3 +20,17 @@ export const getCookieToken = () => {
 export const removeCookieToken = () => {
   return cookies.remove("refresh_token", { sameSite: "strict", path: "/" });
 };
+
+export const setUserInfo = (userInfo) => {
+  const today = new Date();
+  const expireDate = today.setDate(today.getDate() + 1);
+  return cookies.set("userInfo", userInfo, {
+    sameSite: "strict",
+    path: "/",
+    expires: new Date(expireDate),
+  });
+};
+
+export const getUserInfo = () => {
+  return cookies.get("userInfo");
+};

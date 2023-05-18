@@ -1,13 +1,13 @@
 import configData from "./config.json";
 
 const API_END_POINT = configData.LOCAL_IP;
-
 const request = async (url, method, body) => {
   if (method === "POST" || method === "post") {
     const res = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        //"Authorization" : `Bearer ${accessToken}`
       },
       body: JSON.stringify(body),
     });

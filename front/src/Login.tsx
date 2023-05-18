@@ -1,7 +1,7 @@
 import axios from "axios";
 import kakaoLoginIcon from "./assets/images/kakao_logo.png";
 import configData from "./config.json";
-import { setRefreshToken } from "./Cookie";
+import { setRefreshToken, setUserInfo } from "./Cookie";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -100,7 +100,6 @@ function Login() {
 }
 
 function UserRegister({ setIsRegister }: { setIsRegister: Function }) {
-  const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, onPwChange] = useState("");
@@ -153,10 +152,7 @@ function UserRegister({ setIsRegister }: { setIsRegister: Function }) {
               accessToken: string;
               refreshToken: string;
             }) => {
-              setRefreshToken(refreshToken);
-              dispatch({ type: authChanger.SET_TOKEN, payload: accessToken });
-              //페이지 이동
-              setIsRegister(false);
+              setIsRegister(false); //다시 로그인으로
             },
           });
         }}
@@ -288,33 +284,15 @@ function UserLogin({ setIsRegister }: { setIsRegister: Function }) {
               email: email,
               password: password,
 
-              callback: (response: any) => {
-                if (response.data !== undefined) {
-                  if (response.name) {
-                    setRefreshToken(response.data.refreshToken);
-                    dispatch({
-                      type: authChanger.SET_TOKEN,
-                      payload: response.data.accessToken,
-                    });
-                    localStorage.setItem("userName", response.data.userName);
-                    localStorage.setItem("userImage", "");
-                    localStorage.setItem("userEmail", response.data.userEmail);
-                    localStorage.setItem(
-                      "userGender",
-                      response.data.userGender
-                    );
-                    localStorage.setItem("userAge", response.data.userAge);
-                    navigate("/home");
-                  } else {
-                    switch (response.data) {
-                      case 0:
-                        alert("가입된 정보가 없습니다");
-                        break;
-                      case 3:
-                        alert("비밀번호가 일치하지 않습니다.");
-                        break;
-                    }
-                  }
+              callback: (data: any) => {
+                if (data.success === true) {
+                  setRefreshToken(data.refreshToken);
+                  setUserInfo(data.userInfo);
+                  dispatch({
+                    type: authChanger.SET_TOKEN,
+                    payload: data.accessToken,
+                  });
+                  navigate("/home");
                 }
               },
             });

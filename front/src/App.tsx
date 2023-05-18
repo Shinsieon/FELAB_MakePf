@@ -10,7 +10,8 @@ import { getCookieToken } from "./Cookie";
 import { setRefreshToken } from "./Cookie";
 import { useDispatch } from "react-redux";
 import { authChanger } from "./Store";
-import axios from "axios";
+import fetchApi from "./httpFetch";
+import { getUserInfo } from "./Cookie";
 
 function App() {
   const navigate = useNavigate();
@@ -31,24 +32,24 @@ function App() {
           navigate("/home");
         },
         fail: (error: any) => {
-          axios
-            .post(configData.LOCAL_IP + ":8000/getRefreshToken", {
-              email: localStorage.getItem("userEmail"),
-              refreshToken: userToken,
-            })
-            .then((response) => {
-              console.log(response.data);
-              if (response.data) {
-                setRefreshToken(response.data.refreshToken);
-                dispatch({
-                  type: authChanger.SET_TOKEN,
-                  payload: response.data.accessToken,
-                });
-                navigate("/home");
-              } else {
-                navigate("/login");
-              }
-            });
+          console.log("fail!!!!!");
+          console.log(getUserInfo());
+          fetchApi("availableCheck", "POST", {
+            email: getUserInfo().email,
+            refreshToken: userToken, //accesstoken
+          }).then((response) => {
+            console.log(response.data);
+            if (response.data) {
+              setRefreshToken(response.data.refreshToken);
+              dispatch({
+                type: authChanger.SET_TOKEN,
+                payload: response.data.accessToken,
+              });
+              navigate("/home");
+            } else {
+              navigate("/login");
+            }
+          });
         },
       });
     } catch (err) {

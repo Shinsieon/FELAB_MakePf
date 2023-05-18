@@ -33,7 +33,7 @@ const authInitialState = {
 };
 const TOKEN_TIME_OUT = 600 * 1000;
 
-const authReducer = (state: any = authInitialState, payload: any) => {
+export const authReducer = (state: any = authInitialState, payload: any) => {
   var nState = { ...state };
   switch (payload.type) {
     case SET_TOKEN:
