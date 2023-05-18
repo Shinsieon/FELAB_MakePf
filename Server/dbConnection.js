@@ -1,6 +1,8 @@
 const config = require("./config.json");
 const mysql = require("mysql");
 const os = require("os");
+const session = require("express-session");
+const MySQLStore = require("express-mysql-session")(session);
 var dbConnInfo = {
   dev: {
     host: config.HOST,
@@ -41,6 +43,23 @@ var dbConnection = {
       }
     });
     //con.end();
+  },
+  initSession: (app) => {
+    /*express-session 커넥션 */
+
+    const options =
+      os.hostname() === "sinsieon-ui-MacBookPro.local"
+        ? dbConnInfo.dev
+        : dbConnInfo.real;
+    const sessionStore = new MySQLStore(options);
+    app.use(
+      session({
+        secret: process.env.SESSION_SECRET_KEY,
+        resave: false,
+        saveUninitialized: true,
+        store: sessionStore,
+      })
+    );
   },
 };
 module.exports = dbConnection;

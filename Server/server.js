@@ -4,15 +4,9 @@ require("dotenv").config();
 
 NO_USER_ERROR = 500;
 USER_EXISTS_ERROR = 501;
-/*db 커넥션 */
-const dbConnection = require(__dirname + "/dbConnection");
-const conn = dbConnection.init();
-dbConnection.connect(conn);
-/*db 커넥션 */
 
 /* 비밀번호 암호화 */
 const cryptoPassword = require("./cryptoPassword");
-const cookies = new Cookies();
 
 /*jwt 인증 */
 const jwtAuthenticator = require("./jwtAuthenticate");
@@ -21,6 +15,13 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const port = process.env.port || 8000;
+
+/*db 커넥션 */
+const dbConnection = require(__dirname + "/dbConnection");
+const conn = dbConnection.init();
+dbConnection.initSession(app);
+dbConnection.connect(conn);
+/*db 커넥션 */
 
 /*cors 설정 */
 const whitelist = ["http://localhost:3000", "http://localhost:8000"];
@@ -55,14 +56,14 @@ app.post("/registerWithEmail", async (req, res) => {
     `SELECT * FROM USERTBL WHERE email='${email}'`,
     async (rows) => {
       console.log(rows);
-      if (rows) {
+      if (rows.length > 0) {
         res.json({ success: false, message: "이미 존재하는 사용자입니다." });
       } else {
         await dbConnection.sendQuery(
           conn,
-          `INSERT INTO USERTBL values ('${name}','${email.toLoweCase()}','${cryptoPassword(
+          `INSERT INTO USERTBL values ('${name}','${email.toLowerCase()}','${cryptoPassword(
             password
-          )}','','${gender}','${age}');`,
+          )}','','${gender}','${age}','0');`,
           () => {
             res.json({ success: true, message: "회원가입에 성공했습니다" });
           }
@@ -89,6 +90,7 @@ app.post("/loginWithKakao", async (req, res) => {
     conn,
     `SELECT * FROM USERTBL WHERE email='${email}'`,
     async (rows) => {
+      console.log(rows);
       if (rows.length > 0) {
         res.json({
           userInfo: rows[0],
@@ -99,7 +101,7 @@ app.post("/loginWithKakao", async (req, res) => {
         //디비에 계정 생성
         await dbConnection.sendQuery(
           conn,
-          `INSERT INTO USERTBL values ('${nickname}','${email.toLoweCase()}','${cryptoPassword(
+          `INSERT INTO USERTBL values ('${nickname}','${email.toLowerCase()}','${cryptoPassword(
             password
           )}','${image}','${gender}','${age}');`,
           () => {
@@ -114,12 +116,6 @@ app.post("/loginWithKakao", async (req, res) => {
     }
   );
 });
-// app.post('/token', (req, res)=>{
-//   const refreshToken = req.body.token;
-//   if(refreshToken == null) return res.sendStatus(401);
-//   if(!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
-jwt;
-// })
 
 app.post("/loginWithEmail", async (req, res) => {
   const { email, password } = req.body;
@@ -132,13 +128,15 @@ app.post("/loginWithEmail", async (req, res) => {
     )}'`,
     (rows) => {
       //회원정보가 있다는 뜻이므로 jwt토큰을 생성해 전달
-      if (rows.length > 0)
+      if (rows.length > 0) {
+        const refreshToken = jwtAuthenticator.createRefreshToken(req, email);
         res.json({
+          success: true,
           userInfo: rows[0],
           accessToken: jwtAuthenticator.createToken(),
-          refreshToken: jwtAuthenticator.createRefreshToken(email),
+          refreshToken: refreshToken,
         });
-      else res.json({ message: "no user" });
+      } else res.json({ success: false, message: "password is wrong" });
     }
   );
 });

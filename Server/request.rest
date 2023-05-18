@@ -2,9 +2,13 @@ GET http://localhost:8000/getAllStocks
 
 ###
 
-POST http://localhost:8000/loginWithEmail
+POST http://localhost:8000/setRefreshToken
 Content-Type: application.json
 
 {
-    "email" : "coolguysiun@Naver.com"
+    "token" : "coolguysiun@Naver.com"
 }
+
+###
+
+GET http://localhost:8000/getRefreshToken
