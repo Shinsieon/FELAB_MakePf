@@ -1,5 +1,5 @@
 import configData from "./config.json";
-
+import { getAccessToken, getRefreshToken } from "./Cookie";
 const API_END_POINT = configData.LOCAL_IP;
 const request = async (url, method, body) => {
   if (method === "POST" || method === "post") {
@@ -7,7 +7,8 @@ const request = async (url, method, body) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        //"Authorization" : `Bearer ${accessToken}`
+        accessToken: `Bearer ${getAccessToken()}`,
+        refreshToken: getRefreshToken(),
       },
       body: JSON.stringify(body),
     });

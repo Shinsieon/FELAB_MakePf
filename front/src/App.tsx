@@ -6,8 +6,7 @@ import KakaoRedirectHandler from "./KakaoRedirectHandler";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import configData from "../src/config.json";
-import { getCookieToken } from "./Cookie";
-import { setRefreshToken } from "./Cookie";
+import { setRefreshToken, getRefreshToken } from "./Cookie";
 import { useDispatch } from "react-redux";
 import { authChanger } from "./Store";
 import fetchApi from "./httpFetch";
@@ -19,7 +18,7 @@ function App() {
   useEffect(() => {
     if (!window.Kakao.isInitialized())
       window.Kakao.init(configData.KAKAO_APIKEY);
-    const userToken = getCookieToken();
+    const userToken = getRefreshToken();
     if (!userToken) {
       navigate("/login");
       return;
@@ -36,7 +35,6 @@ function App() {
           console.log(getUserInfo());
           fetchApi("availableCheck", "POST", {
             email: getUserInfo().email,
-            refreshToken: userToken, //accesstoken
           }).then((response) => {
             console.log(response.data);
             if (response.data) {

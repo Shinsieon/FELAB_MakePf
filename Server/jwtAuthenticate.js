@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 var jwtAuthenticator = {
-  createToken: (email) => {
+  createAccessToken: (email) => {
     const accessToken = jwt.sign(
       { email: email },
       process.env.ACCESS_TOKEN_SECRET,
@@ -21,18 +21,32 @@ var jwtAuthenticator = {
     return refreshToken;
   },
   authenticateToken: (req, res, next) => {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-    if (token == null) return res.sendStatus(401);
-
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-      if (err)
-        return res.json({ success: false, message: "access token is fired" });
-      req.user = user;
-      next();
-    });
+    console.log("!!@!@req");
+    const authHeader = req.headers["accesstoken"];
+    const refreshToken = req.headers["refreshtoken"];
+    const accessToken = authHeader && authHeader.split(" ")[1];
+    console.log(accessToken);
+    try {
+      jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        if (err) console.log("accesstoken error", err);
+      });
+      console.log("//accessToken 성공!");
+      //next();
+    } catch (err) {
+      console.log("//accessToken 실패!");
+      try {
+        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+        //next();
+      } catch (err) {
+        console.log("//refreshToken 실패!");
+        res.status(401).send({
+          success: false,
+          message: "No authorized",
+        });
+      }
+    }
   },
-  authenticateRefreshToken: async (token, email) => {
+  authenticateRefreshToken: async (accessToken, refreshToken) => {
     //const getAsync = promisify(redisClient.get).bind(redisClient);
 
     try {

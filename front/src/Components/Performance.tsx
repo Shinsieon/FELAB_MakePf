@@ -18,7 +18,6 @@ import styled from "styled-components";
 import SimpleSlider from "./Carousel";
 import configData from "../config.json";
 import { useSelector } from "react-redux";
-import { getCookieToken } from "../Cookie";
 
 const PStyle = styled.p`
   font-size: 0.8rem;
@@ -64,7 +63,6 @@ function PortfolioPerformance() {
     axios
       .post(configData.LOCAL_IP + ":8000/getUserAssetPerformance", {
         email: localStorage.getItem("userEmail"),
-        refreshToken: getCookieToken(),
       })
       .then((response) => {
         if (response && response.data === 5) return;
@@ -128,7 +126,6 @@ function IndivisualPerformance() {
     axios
       .post(configData.LOCAL_IP + ":8000/getIndivisualPerformance", {
         email: localStorage.getItem("userEmail"),
-        userToken: getCookieToken(),
       })
       .then((response) => {
         if (response && response.data === 5) return;

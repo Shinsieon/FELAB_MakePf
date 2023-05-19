@@ -94,8 +94,8 @@ app.post("/loginWithKakao", async (req, res) => {
       if (rows.length > 0) {
         res.json({
           userInfo: rows[0],
-          accessToken: jwtAuthenticator.createToken(email),
-          refreshToken: jwtAuthenticator.createRefreshToken(email),
+          accessToken: jwtAuthenticator.createAccessToken(email),
+          refreshToken: jwtAuthenticator.createRefreshToken(req, email),
         });
       } else {
         //디비에 계정 생성
@@ -133,7 +133,7 @@ app.post("/loginWithEmail", async (req, res) => {
         res.json({
           success: true,
           userInfo: rows[0],
-          accessToken: jwtAuthenticator.createToken(),
+          accessToken: jwtAuthenticator.createAccessToken(),
           refreshToken: refreshToken,
         });
       } else res.json({ success: false, message: "password is wrong" });
@@ -155,6 +155,14 @@ app.post(
     // return result.json();
   }
 );
+app.post("/getRefreshToken", (req, res) => {
+  console.log(req.body);
+  res.send(jwtAuthenticator.createRefreshToken(req, req.body.email));
+});
+app.post("/getAccessToken", (req, res) => {
+  console.log(req.body);
+  res.send(jwtAuthenticator.createAccessToken("coolguysiun@naver.com"));
+});
 
 app.get("/getAllStocks", (req, res) => {
   res.json({ msg: "hello" });
