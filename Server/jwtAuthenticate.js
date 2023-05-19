@@ -5,7 +5,7 @@ var jwtAuthenticator = {
     const accessToken = jwt.sign(
       { email: email },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "10m" }
+      { expiresIn: "5s" }
     );
     return accessToken;
   },
@@ -21,22 +21,19 @@ var jwtAuthenticator = {
     return refreshToken;
   },
   authenticateToken: (req, res, next) => {
-    console.log("!!@!@req");
     const authHeader = req.headers["accesstoken"];
     const refreshToken = req.headers["refreshtoken"];
     const accessToken = authHeader && authHeader.split(" ")[1];
     console.log(accessToken);
     try {
-      jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) console.log("accesstoken error", err);
-      });
+      jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
       console.log("//accessToken 성공!");
-      //next();
+      next();
     } catch (err) {
       console.log("//accessToken 실패!");
       try {
         jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-        //next();
+        next();
       } catch (err) {
         console.log("//refreshToken 실패!");
         res.status(401).send({
