@@ -1,5 +1,6 @@
 import configData from "./config.json";
 import { getAccessToken, getRefreshToken } from "./Cookie";
+
 const API_END_POINT = configData.LOCAL_IP;
 const request = async (url, method, body) => {
   if (method === "POST" || method === "post") {
@@ -23,7 +24,7 @@ const request = async (url, method, body) => {
       return json;
     }
   }
-  throw new Error("요청에 실패함");
+  return false;
 };
 
 const fetchApi = async (apiUrl, method, body) =>

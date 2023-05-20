@@ -1,11 +1,12 @@
 const jwt = require("jsonwebtoken");
 
+const AUTHORIZATION_FAILED = 501;
 var jwtAuthenticator = {
   createAccessToken: (email) => {
     const accessToken = jwt.sign(
       { email: email },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "5s" }
+      { expiresIn: "10m" }
     );
     return accessToken;
   },
@@ -36,28 +37,12 @@ var jwtAuthenticator = {
         next();
       } catch (err) {
         console.log("//refreshToken 실패!");
-        res.status(401).send({
+        res.json({
           success: false,
+          errCode: AUTHORIZATION_FAILED,
           message: "No authorized",
         });
       }
-    }
-  },
-  authenticateRefreshToken: async (accessToken, refreshToken) => {
-    //const getAsync = promisify(redisClient.get).bind(redisClient);
-
-    try {
-      const data = await getAsync(email);
-      if (token === data) {
-        try {
-          jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
-          return true;
-        } catch (err) {
-          return false;
-        }
-      } else return false;
-    } catch (err) {
-      return false;
     }
   },
 };

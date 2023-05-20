@@ -1,17 +1,15 @@
 import axios from "axios";
 import kakaoLoginIcon from "./assets/images/kakao_logo.png";
 import configData from "./config.json";
-import { setRefreshToken, setUserInfo } from "./Cookie";
+import { setRefreshToken, setUserInfo, setAccessToken } from "./Cookie";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { authChanger } from "./Store";
 import fetchApi from "./httpFetch";
 
 const { Kakao } = window;
 
 const loginWithKakao = () => {
-  console.log("kakao login btn pressed");
   Kakao.Auth.authorize({
     redirectUri: configData.LOCAL_IP + ":3000/login/oauth",
     scope: "profile_nickname, account_email, profile_image, gender, age_range",
@@ -67,12 +65,16 @@ const loginWithEmail = async ({
     email: email,
     password: password,
   });
-  console.log(result);
   callback(result);
 };
 
 function Login() {
-  const [isRegister, setIsRegister] = useState(false);
+  const location = useLocation();
+  var isRegi = false;
+  if (location && location.state) {
+    isRegi = location.state.isRegister;
+  }
+  const [isRegister, setIsRegister] = useState(isRegi);
 
   return (
     <div className="absolute bottom-0 left-0 right-0 top-0 grid place-items-center">
@@ -287,12 +289,11 @@ function UserLogin({ setIsRegister }: { setIsRegister: Function }) {
               callback: (data: any) => {
                 if (data.success === true) {
                   setRefreshToken(data.refreshToken);
+                  setAccessToken(data.accessToken);
                   setUserInfo(data.userInfo);
-                  dispatch({
-                    type: authChanger.SET_TOKEN,
-                    payload: data.accessToken,
-                  });
                   navigate("/home");
+                } else {
+                  alert(data.message);
                 }
               },
             });

@@ -1,9 +1,9 @@
-import axios from "axios";
 import { useEffect } from "react";
 import Profile from "./Profile";
-import configData from "../config.json";
 import Dashboard_PfRetLinBox from "./Dashboard_PfRetLinBox";
 import Dashboard_PfPieBox from "./Dashboard_PfPieBox";
+import fetchApi from "../httpFetch";
+import { getUserInfo } from "../Cookie";
 
 import {
   Chart as ChartJS,
@@ -42,7 +42,7 @@ function Dashboard() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    getMyStocks(dispatch);
+    getUserAssets(dispatch);
   });
   return (
     <div>
@@ -68,28 +68,22 @@ function DashboardMent() {
   );
 }
 
-export const getMyStocks = (dispatch: any) => {
-  axios
-    .post(configData.LOCAL_IP + ":8000/getMyStocks", {
-      email: localStorage.getItem("userEmail"),
-      userToken: localStorage.getItem("access_token"),
-    })
-    .then((response) => {
-      const result: Iasset[] = [];
-      if (response.data.length === 0 || response.data === 5) {
-      } else {
-        for (var i = 0; i < response.data.length; i++) {
-          var item = response.data[i];
-          result.push({
-            code: item.fields.code,
-            name: item.fields.name,
-            weight: item.fields.weight,
-            amount: item.fields.amount,
-            investmentPeriod: item.fields.investmentperiod,
-          });
-        }
-      }
-      dispatch({ type: assetChanger.SET_ASSET, asset: result });
-    });
+export const getUserAssets = async (dispatch: any) => {
+  let result = await fetchApi("getUserAssets", "post", {
+    userInfo: getUserInfo(),
+  });
+  if (result.success) {
+    // const result: Iasset[] = [];
+    //   for (var i = 0; i < response.data.length; i++) {
+    //     var item = response.data[i];
+    //     result.push({
+    //       code: item.fields.code,
+    //       name: item.fields.name,
+    //       weight: item.fields.weight,
+    //       amount: item.fields.amount,
+    //       investmentPeriod: item.fields.investmentperiod,
+    //     });
+    //   }
+  }
 };
 export default Dashboard;

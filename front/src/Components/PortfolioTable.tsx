@@ -3,7 +3,7 @@ import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import { useDispatch, useSelector } from "react-redux";
 import { Iasset } from "./Dashboard";
-import { getMyStocks } from "./Dashboard";
+import { getUserAssets } from "./Dashboard";
 import {
   AiFillDelete,
   AiFillCheckSquare,
@@ -57,7 +57,7 @@ function Portfolio_Table() {
       })
       .then((response) => {
         if (response.status === 200) {
-          getMyStocks(dispatch);
+          getUserAssets(dispatch);
           setIsSaved(true);
           setTimeout(() => {
             setIsSaved(false);

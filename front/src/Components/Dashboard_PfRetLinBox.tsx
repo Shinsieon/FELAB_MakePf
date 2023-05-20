@@ -4,23 +4,26 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { screenChanger } from "../Store";
-import configData from "../config.json";
-import axios from "axios";
+import fetchApi from "../httpFetch";
+import { getUserInfo } from "../Cookie";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard_PfRetLinBox() {
   const assets: Iasset[] = useSelector((state: any) => state.assetReducer);
   const [labels, setLabels] = useState<string[]>([]);
   const [retMean, setRetMean] = useState<string[]>([]);
-  const getUserAssetRetArray = () => {
-    axios
-      .post(configData.LOCAL_IP + ":8000/getUserAssetRetArray", {
-        email: localStorage.getItem("userEmail"),
-        userToken: localStorage.getItem("access_token"),
-      })
-      .then((response) => {
-        setLabels(response.data.date);
-        setRetMean(response.data.mean);
-      });
+  const navigate = useNavigate();
+  const getUserAssetRetArray = async () => {
+    let result = await fetchApi("getUserAssetRetArray", "POST", {
+      userInfo: getUserInfo(),
+    });
+    if (!result.success && result.errCode === 501) {
+      //authorization failed
+      navigate("/login");
+    } else {
+      // setLabels(response.data.date);
+      // setRetMean(response.data.mean);
+    }
   };
   const dispatch = useDispatch();
   const changeScreenToPf = () => {

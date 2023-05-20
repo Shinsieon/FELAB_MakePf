@@ -20,33 +20,7 @@ const scrReducer = (state = <Dashboard />, action: any) => {
   }
 };
 
-const SET_TOKEN = "authReducer/SET_TOKEN";
-const DELETE_TOKEN = "authReducer/DELETE_TOKEN";
-export const authChanger = {
-  SET_TOKEN,
-  DELETE_TOKEN,
-};
-const authInitialState = {
-  authenticated: false,
-  accessToken: null,
-  expireTime: null,
-};
 const TOKEN_TIME_OUT = 600 * 1000;
-
-export const authReducer = (state: any = authInitialState, payload: any) => {
-  var nState = { ...state };
-  switch (payload.type) {
-    case SET_TOKEN:
-      nState.authenticated = true;
-      nState.accessToken = payload.token;
-      nState.expireTime = new Date().getTime() + TOKEN_TIME_OUT;
-      return nState;
-    case DELETE_TOKEN:
-      return authInitialState;
-    default:
-      return state;
-  }
-};
 
 const SET_ASSET = "assetReducer/SET_ASSET";
 export const assetChanger = {
@@ -63,7 +37,6 @@ export const assetReducer = (state: Iasset[] = [], payload: any) => {
 
 const rootReducer = combineReducers({
   assetReducer,
-  authReducer,
   scrReducer,
 });
 

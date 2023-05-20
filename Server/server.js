@@ -84,7 +84,7 @@ age : 10~19, 20~29, 30~39, 40~49, 50~59
 */
 app.post("/loginWithKakao", async (req, res) => {
   const { userInfo } = req.body;
-  const { nickname, image } = userInfo.properties;
+  const { nickname, profile_image } = userInfo.properties;
   const { email, gender, age } = userInfo.kakao_account; //카카오는 디비에 비번을 저장하지 않는다.
   await dbConnection.sendQuery(
     conn,
@@ -92,26 +92,35 @@ app.post("/loginWithKakao", async (req, res) => {
     async (rows) => {
       console.log(rows);
       if (rows.length > 0) {
+        //Db에 이미지 업데이트
+        if (profile_image) {
+          console.log(profile_image);
+          await dbConnection.sendQuery(
+            conn,
+            `UPDATE USERTBL SET image = '${profile_image}' WHERE email ='${email}'`
+          );
+        }
         res.json({
+          success: true,
           userInfo: rows[0],
           accessToken: jwtAuthenticator.createAccessToken(email),
           refreshToken: jwtAuthenticator.createRefreshToken(req, email),
         });
       } else {
         //디비에 계정 생성
-        await dbConnection.sendQuery(
-          conn,
-          `INSERT INTO USERTBL values ('${nickname}','${email.toLowerCase()}','${cryptoPassword(
-            password
-          )}','${image}','${gender}','${age}');`,
-          () => {
-            res.json({
-              success: true,
-              userInfo: userInfo,
-              message: "회원가입에 성공했습니다",
-            });
-          }
-        );
+        res.json({
+          success: false,
+          userInfo: userInfo,
+          errCode: NO_USER_ERROR,
+          message: "No User",
+        });
+        // await dbConnection.sendQuery(
+        //   conn,
+        //   `INSERT INTO USERTBL values ('${nickname}','${email.toLowerCase()}','${cryptoPassword(
+        //     password
+        //   )}','${image}','${gender}','${age}');`,
+        //   () => {}
+        // );
       }
     }
   );
@@ -145,12 +154,16 @@ app.post(
   "/getUserAssets",
   jwtAuthenticator.authenticateToken,
   async (req, res) => {
-    conn.query("SELECT * FROM USERASSET", (err, rows, fields) => {
-      if (err) console.log("query error");
-      else {
-        console.log(rows);
+    const email = req.body.email;
+    conn.query(
+      `SELECT * FROM USERASSET WHERE email='${email}'`,
+      (err, rows, fields) => {
+        if (err) console.log("query error");
+        else {
+          console.log(rows);
+        }
       }
-    });
+    );
     // let result = await sendQuery(getDbConnection(), "SELECT * FROM USERASSET");
     // return result.json();
   }
@@ -170,7 +183,13 @@ app.get("/getAllStocks", (req, res) => {
 
 app.post("/saveUserAsset", (req, res) => {});
 
-app.get("/getUserAssetRetArray", (req, res) => {});
+app.post(
+  "/getUserAssetRetArray",
+  jwtAuthenticator.authenticateToken,
+  (req, res) => {
+    res.json({ msg: "hello" });
+  }
+);
 
 app.get("/getUserAssetPerformance", (req, res) => {});
 
