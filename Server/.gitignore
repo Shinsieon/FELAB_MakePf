@@ -16,4 +16,5 @@ media
 /config.json
 *.env
 *.rest
+*.ipynb
 /cryptoPassword.js

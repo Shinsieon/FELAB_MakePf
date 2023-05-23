@@ -5,6 +5,7 @@ import manImage from "../assets/images/man.png";
 import womanImage from "../assets/images/woman.png";
 
 import { RiLogoutBoxLine } from "react-icons/ri";
+import { getUserInfo } from "../Cookie";
 
 const logoutFunc = () => {
   window.Kakao.Auth.logout(() => {
@@ -29,8 +30,8 @@ function Profile() {
   const [userImage, setUserIamge] = useState("");
   var userGender: string = localStorage.getItem("userGender") || "";
   useEffect(() => {
-    setUserName(localStorage.getItem("userName") || "");
-    setUserIamge(localStorage.getItem("userImage") || "");
+    setUserName(getUserInfo().name);
+    setUserIamge(getUserInfo().image);
   }, []);
   return (
     <div className="absolute flex h-10 w-200 top-10 left-10 cursor-default rounded">
