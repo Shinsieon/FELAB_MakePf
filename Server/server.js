@@ -177,8 +177,17 @@ app.post("/getAccessToken", (req, res) => {
   res.send(jwtAuthenticator.createAccessToken("coolguysiun@naver.com"));
 });
 
-app.get("/getAllStocks", (req, res) => {
-  res.json({ msg: "hello" });
+app.get("/getAllStocks", async (req, res) => {
+  await dbConnection.sendQuery(
+    conn,
+    `SELECT * FROM KRXSTOCKS;`,
+    (rows, fields) => {
+      //회원정보가 있다는 뜻이므로 jwt토큰을 생성해 전달
+      if (rows.length > 0) {
+        res.json(rows);
+      }
+    }
+  );
 });
 
 app.post("/saveUserAsset", (req, res) => {});

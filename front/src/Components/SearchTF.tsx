@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import styled from "styled-components";
 import { Iasset } from "./Dashboard";
-import configData from "../config.json";
+import fetchApi from "../httpFetch";
 
 type stockType = {
   code: string;
@@ -55,15 +54,19 @@ function SearchTF(props: any) {
     props.setTempAssets(nAssets);
   };
   useEffect(() => {
-    axios.get(configData.LOCAL_IP + ":8000/getAllStocks").then((response) => {
-      if (response.status === 200) {
-        const dataToArr: stockType[] = [];
-        Object.keys(response.data).map((item, idx) => {
-          dataToArr.push({ code: item, name: response.data[item] });
+    const getAllStocks = async () => {
+      let result = await fetchApi("getAllStocks", "GET");
+      result = await result
+        .filter((item: any) => item.Market === "KOSPI")
+        .map((item: any) => {
+          return {
+            code: item.Code,
+            name: item.Name,
+          };
         });
-        setAllStocks(dataToArr);
-      }
-    });
+      await setAllStocks([...result]);
+    };
+    getAllStocks();
   }, []);
   return (
     <div

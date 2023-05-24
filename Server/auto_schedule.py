@@ -29,6 +29,7 @@ class autoUpdate:
     def getOhlcvWithReturn(self):
         df = stock.get_market_ohlcv(self.startDate, self.endDate, "005930","m") #월별 시고저종+ 거래량
         print(df)
+        
     def getKospiClose(self):
         result_df = pd.DataFrame()
         process_num = 0
@@ -46,6 +47,15 @@ class autoUpdate:
             print(str(process_num) + "/ " + str(stock_list_len))
             if(process_num == 10):
                 break
+
+    def getKRXCodes(self):
+        stocks = fdr.StockListing('KRX') # 코스피, 코스닥, 코넥스 전체
+        stocks[['Code', 'ISU_CD', 'Name', 'Market']]
+        # db_connection_str = 'mysql+pymysql://root:su970728!@localhost:3306/foliogram'
+        # db_connection = create_engine(db_connection_str)
+        # conn = db_connection.connect()
+        # result_df.to_sql(name='KOSPI', con=db_connection, if_exists='append',index=True)
+
             
 db = autoUpdate()
 db.getOhlcvWithReturn()

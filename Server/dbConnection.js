@@ -39,7 +39,7 @@ var dbConnection = {
     con.query(query, (error, rows, fields) => {
       if (error) throw error;
       else {
-        if (callback) callback(rows);
+        if (callback) callback(rows, fields);
       }
     });
     //con.end();

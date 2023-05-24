@@ -30,8 +30,12 @@ function Profile() {
   const [userImage, setUserIamge] = useState("");
   var userGender: string = localStorage.getItem("userGender") || "";
   useEffect(() => {
-    setUserName(getUserInfo().name);
-    setUserIamge(getUserInfo().image);
+    try {
+      setUserName(getUserInfo().name);
+      setUserIamge(getUserInfo().image);
+    } catch (e) {
+      console.log("cookie is empty");
+    }
   }, []);
   return (
     <div className="absolute flex h-10 w-200 top-10 left-10 cursor-default rounded">
