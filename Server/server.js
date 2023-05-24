@@ -88,7 +88,7 @@ app.post("/loginWithKakao", async (req, res) => {
   const { email, gender, age } = userInfo.kakao_account; //카카오는 디비에 비번을 저장하지 않는다.
   await dbConnection.sendQuery(
     conn,
-    `SELECT * FROM USERTBL WHERE email='${email}'`,
+    `SELECT * FROM USERTBL WHERE email='${email.toLowerCase()}'`,
     async (rows) => {
       console.log(rows);
       if (rows.length > 0) {
@@ -97,7 +97,7 @@ app.post("/loginWithKakao", async (req, res) => {
           console.log(profile_image);
           await dbConnection.sendQuery(
             conn,
-            `UPDATE USERTBL SET image = '${profile_image}' WHERE email ='${email}'`
+            `UPDATE USERTBL SET image = '${profile_image}' WHERE email ='${email.toLowerCase()}'`
           );
         }
         res.json({
@@ -132,7 +132,7 @@ app.post("/loginWithEmail", async (req, res) => {
 
   await dbConnection.sendQuery(
     conn,
-    `SELECT * FROM USERTBL WHERE email='${email}' and password='${cryptoPassword(
+    `SELECT * FROM USERTBL WHERE email='${email.toLowerCase()}' and password='${cryptoPassword(
       password
     )}'`,
     (rows) => {
@@ -154,14 +154,12 @@ app.post(
   "/getUserAssets",
   jwtAuthenticator.authenticateToken,
   async (req, res) => {
-    const email = req.body.email;
-    conn.query(
-      `SELECT * FROM USERASSET WHERE email='${email}'`,
-      (err, rows, fields) => {
-        if (err) console.log("query error");
-        else {
-          console.log(rows);
-        }
+    const { userInfo } = req.body;
+    await dbConnection.sendQuery(
+      conn,
+      `SELECT * FROM USERASSET WHERE email='${userInfo.email.toLowerCase()}';`,
+      (rows) => {
+        res.json(rows);
       }
     );
     // let result = await sendQuery(getDbConnection(), "SELECT * FROM USERASSET");
@@ -190,7 +188,41 @@ app.get("/getAllStocks", async (req, res) => {
   );
 });
 
-app.post("/saveUserAsset", (req, res) => {});
+app.post("/saveUserAsset", jwtAuthenticator.authenticateToken, (req, res) => {
+  const { userInfo, assets } = req.body;
+  console.log(req.body);
+  const insertAssets = (assets) => {
+    var query = "";
+    for (var i = 0; i < assets.length; i++) {
+      query += `('${userInfo.email.toLowerCase()}','${assets[i].code}','${
+        assets[i].name
+      }','${assets[i].weight}','${assets[i].amount}','${
+        assets[i].investmentPeriod
+      }')`;
+      if (i === assets.length - 1) {
+        query += ";";
+      } else query += ",";
+    }
+    dbConnection.sendQuery(conn, `INSERT INTO USERASSET values ${query}`);
+  };
+  //기존에 자산이 있는 고객이면 delete 후 insert
+  dbConnection.sendQuery(
+    conn,
+    `SELECT * FROM USERASSET WHERE email='${userInfo.email}'`,
+    (rows) => {
+      if (rows.length > 0) {
+        dbConnection.sendQuery(
+          conn,
+          `DELETE FROM USERASSET WHERE email='${userInfo.email}';`,
+          () => {
+            insertAssets(assets);
+          }
+        );
+      } else insertAssets(assets);
+      res.json({ success: true, message: "saved succesfully" });
+    }
+  );
+});
 
 app.post(
   "/getUserAssetRetArray",

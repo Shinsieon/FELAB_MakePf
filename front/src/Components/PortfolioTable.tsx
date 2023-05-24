@@ -11,10 +11,10 @@ import {
 } from "react-icons/ai";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import configData from "../config.json";
+import fetchApi from "../httpFetch";
 
 import SearchTF from "./SearchTF";
+import { getUserInfo } from "../Cookie";
 function Portfolio_Table() {
   const assets: Iasset[] = useSelector((state: any) => state.assetReducer);
   const [tempAssets, setTempAssets] = useState<Iasset[]>([...assets]);
@@ -42,28 +42,25 @@ function Portfolio_Table() {
       setTempAssets(tempArr);
     }
   };
-  const saveBtnClicked = () => {
+  const saveBtnClicked = async () => {
     if (tempAssets.length === 0) {
       alert("자산 정보가 없습니다");
       return;
     }
     if (tempAssets.filter((item) => item.amount <= 0).length > 0)
       alert("투자금액이 0원인 자산이 있습니다.");
-    axios
-      .post(configData.LOCAL_IP + ":8000/saveUserAsset", {
-        email: localStorage.getItem("userEmail"),
-        userToken: localStorage.getItem("access_token"),
-        assets: tempAssets,
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          getUserAssets(dispatch);
-          setIsSaved(true);
-          setTimeout(() => {
-            setIsSaved(false);
-          }, 1000);
-        } else setIsSaved(false);
-      });
+    let result = await fetchApi("saveUserAsset", "POST", {
+      userInfo: getUserInfo(),
+      assets: tempAssets,
+    });
+    console.log(result);
+    if (result.success) {
+      getUserAssets(dispatch);
+      setIsSaved(true);
+      setTimeout(() => {
+        setIsSaved(false);
+      }, 1000);
+    } else setIsSaved(false);
   };
   const noData = (): JSX.Element => {
     return (

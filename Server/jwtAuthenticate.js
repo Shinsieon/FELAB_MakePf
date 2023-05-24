@@ -26,6 +26,7 @@ var jwtAuthenticator = {
     const refreshToken = req.headers["refreshtoken"];
     const accessToken = authHeader && authHeader.split(" ")[1];
     console.log(accessToken);
+    console.log(refreshToken);
     try {
       jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
       console.log("//accessToken 성공!");

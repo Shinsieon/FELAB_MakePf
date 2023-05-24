@@ -72,18 +72,19 @@ export const getUserAssets = async (dispatch: any) => {
   let result = await fetchApi("getUserAssets", "post", {
     userInfo: getUserInfo(),
   });
-  if (result.success) {
-    // const result: Iasset[] = [];
-    //   for (var i = 0; i < response.data.length; i++) {
-    //     var item = response.data[i];
-    //     result.push({
-    //       code: item.fields.code,
-    //       name: item.fields.name,
-    //       weight: item.fields.weight,
-    //       amount: item.fields.amount,
-    //       investmentPeriod: item.fields.investmentperiod,
-    //     });
-    //   }
+  if (result) {
+    const asset: Iasset[] = [];
+    for (var i = 0; i < result.length; i++) {
+      var item = result[i];
+      asset.push({
+        code: item.code,
+        name: item.name,
+        weight: item.weight,
+        amount: item.amount,
+        investmentPeriod: item.investmentperiod,
+      });
+    }
+    dispatch({ type: assetChanger.SET_ASSET, asset: asset });
   }
 };
 export default Dashboard;
