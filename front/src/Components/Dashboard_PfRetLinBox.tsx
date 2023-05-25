@@ -17,13 +17,11 @@ function Dashboard_PfRetLinBox() {
     let result = await fetchApi("getUserAssetRetArray", "POST", {
       userInfo: getUserInfo(),
     });
-    if (!result.success && result.errCode === 501) {
-      //authorization failed
-      navigate("/login");
-    } else {
-      // setLabels(response.data.date);
-      // setRetMean(response.data.mean);
-    }
+    console.log(result);
+    //authorization failed
+    //navigate("/login");
+    // setLabels(response.data.date);
+    // setRetMean(response.data.mean);
   };
   const dispatch = useDispatch();
   const changeScreenToPf = () => {

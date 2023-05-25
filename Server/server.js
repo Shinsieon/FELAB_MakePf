@@ -228,6 +228,8 @@ app.post(
   "/getUserAssetRetArray",
   jwtAuthenticator.authenticateToken,
   (req, res) => {
+    const {userInfo} = req.body;
+    
     res.json({ msg: "hello" });
   }
 );
