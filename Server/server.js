@@ -227,10 +227,42 @@ app.post("/saveUserAsset", jwtAuthenticator.authenticateToken, (req, res) => {
 app.post(
   "/getUserAssetRetArray",
   jwtAuthenticator.authenticateToken,
-  (req, res) => {
-    const {userInfo} = req.body;
-    
-    res.json({ msg: "hello" });
+  async (req, res) => {
+    const { userInfo } = req.body;
+    var dateArr = [];
+    var assetRet = {};
+
+    const getRet = async (callback) => {
+      result = {};
+      dbConnection.sendQuery(
+        conn,
+        `SELECT * FROM USERASSET WHERE email='${userInfo.email}'`,
+        (rows) => {
+          if (!rows) return;
+          for (let row of rows) {
+            dbConnection.sendQuery(
+              conn,
+              `SELECT * FROM KOSPI_M WHERE code = '${
+                row.code
+              }' ORDER BY Date DESC LIMIT ${parseInt(row.investmentperiod)}`,
+              (rows_) => {
+                result[row.code] = rows_.map((item) => {
+                  return {
+                    Close: item.Close,
+                    Date: new Date(item.Date).toLocaleDateString(),
+                  };
+                });
+                callback(result);
+              }
+            );
+          }
+        }
+      );
+    };
+
+    getRet((result) => {
+      console.log(result);
+    });
   }
 );
 
