@@ -13,11 +13,11 @@ import {
   Legend,
 } from "chart.js";
 import { Radar } from "react-chartjs-2";
-import axios from "axios";
 import styled from "styled-components";
 import SimpleSlider from "./Carousel";
-import configData from "../config.json";
 import { useSelector } from "react-redux";
+import fetchApi from "../httpFetch";
+import { getUserInfo } from "../Cookie";
 
 const PStyle = styled.p`
   font-size: 0.8rem;
@@ -60,22 +60,23 @@ function PortfolioPerformance() {
   useEffect(() => {
     console.log("render here");
     //user의 포트폴리오 성과 with benchmark
-    axios
-      .post(configData.LOCAL_IP + ":8000/getUserAssetPerformance", {
-        email: localStorage.getItem("userEmail"),
-      })
-      .then((response) => {
-        if (response && response.data === 5) return;
-        console.log(response);
+    const getUserAssetPerformance = async () => {
+      let result = await fetchApi("getUserAssetPerformance", "POST", {
+        userInfo: getUserInfo(),
+      });
+      if (result.success) {
         const arr: number[] = [
-          response.data.retMean,
-          response.data.sharpe,
-          response.data.std,
-          response.data.mdd,
+          result.mean,
+          result.sharpe,
+          result.std,
+          result.mdd,
         ];
         setUserPortData([...arr]);
         setIsDataLoaded(true);
-      });
+      } else {
+      }
+    };
+    getUserAssetPerformance();
   }, [assets]);
   return (
     <div className="bg-[#251342] h-full w-full rounded-xl text-white p-5">
@@ -123,17 +124,14 @@ function IndivisualPerformance() {
   const assets = useSelector((state: any) => state.assetReducer);
   const [assetFundArr, setAssetFund] = useState<TassetFundamental[]>([]);
   useEffect(() => {
-    axios
-      .post(configData.LOCAL_IP + ":8000/getIndivisualPerformance", {
-        email: localStorage.getItem("userEmail"),
-      })
-      .then((response) => {
-        if (response && response.data === 5) return;
-
-        var dataObj = response.data;
+    const getIndivisualPerformance = async () => {
+      let result = await fetchApi("getIndivisualPerformance", "POST", {
+        userInfo: getUserInfo(),
+      });
+      if (result.success) {
         var tempArr: TassetFundamental[] = [];
-        console.log(dataObj);
-        Object.keys(dataObj).forEach((item) => {
+        console.log(result);
+        Object.keys(result).forEach((item) => {
           var tempObj: TassetFundamental = {
             CODE: "",
             PER: 0,
@@ -141,14 +139,15 @@ function IndivisualPerformance() {
             RETURN: 0,
           };
           tempObj["CODE"] = item;
-          tempObj["PER"] = dataObj[item].PER;
-          tempObj["EPS"] = dataObj[item].EPS;
-          tempObj["RETURN"] = dataObj[item].RETURN;
+          tempObj["PER"] = result[item].PER;
+          tempObj["EPS"] = result[item].EPS;
+          tempObj["RETURN"] = result[item].RETURN;
           tempArr.push(tempObj);
         });
         tempArr.sort((a, b) => b.RETURN - a.RETURN);
         setAssetFund(tempArr);
-      });
+      }
+    };
   }, [assets]);
   return (
     <div className="bg-white h-full w-full rounded-xl text-white p-5">

@@ -150,22 +150,21 @@ app.post("/loginWithEmail", async (req, res) => {
   );
 });
 
-app.post(
-  "/getUserAssets",
-  jwtAuthenticator.authenticateToken,
-  async (req, res) => {
-    const { userInfo } = req.body;
-    await dbConnection.sendQuery(
-      conn,
-      `SELECT * FROM USERASSET WHERE email='${userInfo.email.toLowerCase()}';`,
-      (rows) => {
-        res.json(rows);
-      }
-    );
-    // let result = await sendQuery(getDbConnection(), "SELECT * FROM USERASSET");
-    // return result.json();
-  }
-);
+const getUserAssets = (email, callback) => {
+  dbConnection.sendQuery(
+    conn,
+    `SELECT * FROM USERASSET WHERE email='${email.toLowerCase()}';`,
+    (rows) => {
+      callback(rows);
+    }
+  );
+};
+app.post("/getUserAssets", jwtAuthenticator.authenticateToken, (req, res) => {
+  const { userInfo } = req.body;
+  getUserAssets(userInfo.email, (rows) => {
+    res.json(rows);
+  });
+});
 app.post("/getRefreshToken", (req, res) => {
   console.log(req.body);
   res.send(jwtAuthenticator.createRefreshToken(req, req.body.email));
@@ -176,16 +175,12 @@ app.post("/getAccessToken", (req, res) => {
 });
 
 app.get("/getAllStocks", async (req, res) => {
-  await dbConnection.sendQuery(
-    conn,
-    `SELECT * FROM KRXSTOCKS;`,
-    (rows, fields) => {
-      //회원정보가 있다는 뜻이므로 jwt토큰을 생성해 전달
-      if (rows.length > 0) {
-        res.json(rows);
-      }
+  await dbConnection.sendQuery(conn, `SELECT * FROM KRXSTOCKS;`, (rows) => {
+    //회원정보가 있다는 뜻이므로 jwt토큰을 생성해 전달
+    if (rows.length > 0) {
+      res.json(rows);
     }
-  );
+  });
 });
 
 app.post("/saveUserAsset", jwtAuthenticator.authenticateToken, (req, res) => {
@@ -206,66 +201,92 @@ app.post("/saveUserAsset", jwtAuthenticator.authenticateToken, (req, res) => {
     dbConnection.sendQuery(conn, `INSERT INTO USERASSET values ${query}`);
   };
   //기존에 자산이 있는 고객이면 delete 후 insert
-  dbConnection.sendQuery(
-    conn,
-    `SELECT * FROM USERASSET WHERE email='${userInfo.email}'`,
-    (rows) => {
-      if (rows.length > 0) {
-        dbConnection.sendQuery(
-          conn,
-          `DELETE FROM USERASSET WHERE email='${userInfo.email}';`,
-          () => {
-            insertAssets(assets);
-          }
-        );
-      } else insertAssets(assets);
-      res.json({ success: true, message: "saved succesfully" });
-    }
-  );
+  getUserAssets(userInfo.email, (rows) => {
+    if (rows.length > 0) {
+      dbConnection.sendQuery(
+        conn,
+        `DELETE FROM USERASSET WHERE email='${userInfo.email}';`,
+        () => {
+          insertAssets(assets);
+        }
+      );
+    } else insertAssets(assets);
+    res.json({ success: true, message: "saved succesfully" });
+  });
 });
 
+const getUserAssetRetArray = (email, callback) => {
+  var retResult = {};
+  var invPer = 12; //최장기 투자기간
+
+  dbConnection.sendQuery(
+    conn,
+    "SELECT Date, code, `Change` FROM KOSPI_M where code IN (select code from USERASSET where email='" +
+      email +
+      "');",
+    (rows) => {
+      if (!rows) return;
+      console.log(rows);
+      for (var i = 0; i < rows.length; i++) {
+        var date = new Date(rows[i].Date).toLocaleDateString();
+        if (retResult[date]) {
+          retResult[date].push(rows[i]["Change"]);
+        } else retResult[date] = [rows[i]["Change"]];
+      }
+      console.log(retResult);
+      const investmentDate = Object.keys(retResult)
+        .sort()
+        .splice(Object.keys(retResult).length - invPer);
+      var avgArr = [];
+      for (var i = 0; i < invPer; i++) {
+        if (retResult[investmentDate[i]]) {
+          const average =
+            retResult[investmentDate[i]].reduce((a, b) => a + b, 0) /
+            retResult[investmentDate[i]].length;
+          avgArr.push(average);
+        }
+      }
+      callback({ date: investmentDate, mean: avgArr });
+    }
+  );
+};
 app.post(
   "/getUserAssetRetArray",
   jwtAuthenticator.authenticateToken,
-  async (req, res) => {
+  (req, res) => {
     const { userInfo } = req.body;
-    var dateArr = [];
-    var assetRet = {};
-
-    const getRet = async (callback) => {
-      result = {};
-      dbConnection.sendQuery(
-        conn,
-        `SELECT * FROM USERASSET WHERE email='${userInfo.email}'`,
-        (rows) => {
-          if (!rows) return;
-          for (let row of rows) {
-            dbConnection.sendQuery(
-              conn,
-              `SELECT * FROM KOSPI_M WHERE code = '${
-                row.code
-              }' ORDER BY Date DESC LIMIT ${parseInt(row.investmentperiod)}`,
-              (rows_) => {
-                result[row.code] = rows_.map((item) => {
-                  return {
-                    Close: item.Close,
-                    Date: new Date(item.Date).toLocaleDateString(),
-                  };
-                });
-                callback(result);
-              }
-            );
-          }
-        }
-      );
-    };
-
-    getRet((result) => {
-      console.log(result);
+    getUserAssetRetArray(userInfo.email, ({ date, mean }) => {
+      res.json({ success: true, date: date, mean: mean });
     });
   }
 );
 
-app.get("/getUserAssetPerformance", (req, res) => {});
+app.post(
+  "/getUserAssetPerformance",
+  jwtAuthenticator.authenticateToken,
+  (req, res) => {
+    const { userInfo } = req.body;
+    getUserAssetRetArray(userInfo.email, ({ date, mean }) => {
+      const mean_ = mean.reduce((a, b) => a + b, 0) / mean.length;
+      const std = Math.sqrt(
+        mean.map((x) => Math.pow(x - mean_, 2)).reduce((a, b) => a + b) /
+          mean.length
+      );
+      const sharpe = "";
+      const mdd = "";
+      res.json({
+        success: true,
+        mean: mean_,
+        std: std,
+        sharpe: sharpe,
+        mdd: mdd,
+      });
+    });
+  }
+);
 
-app.get("/getIndivisualPerformance", (req, res) => {});
+app.post(
+  "/getIndivisualPerformance",
+  jwtAuthenticator.authenticateToken,
+  (req, res) => {}
+);
