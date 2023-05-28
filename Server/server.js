@@ -313,5 +313,13 @@ app.post("/getNaverNews", function (req, res) {
 });
 
 app.get("/getNoti", (req, res) => {
-  res.json({ success: true });
+  const nowDate = new Date().toISOString().slice(0, 19).replace("T", " ");
+  console.log(nowDate);
+  dbConnection.sendQuery(
+    conn,
+    `SELECT * FROM NOTI WHERE end_date > '${nowDate}'`,
+    (rows) => {
+      res.json({ success: true, notis: rows });
+    }
+  );
 });
