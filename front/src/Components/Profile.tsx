@@ -16,7 +16,7 @@ const logoutFunc = () => {
 };
 function Logout() {
   return (
-    <div className="cursor-pointer mt-1">
+    <div className="cursor-pointer mt-0.5">
       <RiLogoutBoxLine
         onClick={logoutFunc}
         size="20"
@@ -28,7 +28,7 @@ function Logout() {
 function Profile() {
   const [userName, setUserName] = useState("");
   const [userImage, setUserIamge] = useState("");
-  var userGender: string = localStorage.getItem("userGender") || "";
+  var userGender: string = getUserInfo().userGender;
   useEffect(() => {
     try {
       setUserName(getUserInfo().name);
@@ -38,24 +38,13 @@ function Profile() {
     }
   }, []);
   return (
-    <div className="absolute flex h-10 w-200 top-10 left-10 cursor-default rounded">
+    <div className="absolute flex h-10 w-200 top-10 left-10 cursor-default rounded shadow-2xl p-2">
       <img
-        style={{
-          width: "2rem",
-          height: "2rem",
-          borderRadius: "2rem",
-        }}
+        className="rounded-xl"
         src={userImage || (userGender === "M" ? manImage : womanImage)}
         alt="profile_image"
       ></img>
-      <h3
-        style={{
-          fontSize: "1rem",
-          margin: "5px",
-          color: "#3F3035",
-          fontWeight: "bold",
-        }}
-      >
+      <h3 className="text-base font-bold text-[#3F3035] mx-2">
         {userName} 님 반갑습니다
       </h3>
       <Logout></Logout>

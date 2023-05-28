@@ -14,16 +14,18 @@ function App() {
     if (!window.Kakao.isInitialized())
       window.Kakao.init(configData.KAKAO_APIKEY);
     const userToken = getRefreshToken();
-    if (!userToken) {
-      navigate("/login");
-      return;
-    }
+
     try {
       //window.Kakao.Auth.setAccessToken(userToken);
       window.Kakao.API.request({
         url: "/v2/user/me",
         success: (response: any) => {
           navigate("/home");
+        },
+        fail: (response: any) => {
+          if (!userToken) {
+            navigate("/login");
+          } else navigate("/home");
         },
       });
     } catch (err) {

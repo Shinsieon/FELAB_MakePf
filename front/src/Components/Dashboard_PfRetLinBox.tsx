@@ -19,7 +19,7 @@ function Dashboard_PfRetLinBox() {
     });
     if (result.success) {
       setLabels(result.date);
-      setRetMean(result.mean);
+      setRetMean(result.mean.map((item: any) => item * 100));
     }
 
     console.log(result);
@@ -66,7 +66,7 @@ function Dashboard_PfRetLinBox() {
             labels,
             datasets: [
               {
-                label: "포트폴리오 평균 수익률",
+                label: "포트폴리오 평균 수익률(%)",
                 data: retMean,
                 borderColor: "rgb(255, 99, 132)",
                 backgroundColor: "rgba(255, 99, 132, 0.5)",

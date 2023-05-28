@@ -59,7 +59,7 @@ function Dashboard() {
 }
 function DashboardMent() {
   return (
-    <div className="absolute font-bold top-20 left-12 text-left">
+    <div className="absolute font-bold top-20 left-12 text-left ">
       <label className="text-5xl leading-10 font-bold my-10">
         Manage your <br />
         Portfolio

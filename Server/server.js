@@ -15,6 +15,7 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const port = process.env.port || 8000;
+const request = require("request");
 
 /*db 커넥션 */
 const dbConnection = require(__dirname + "/dbConnection");
@@ -272,8 +273,8 @@ app.post(
         mean.map((x) => Math.pow(x - mean_, 2)).reduce((a, b) => a + b) /
           mean.length
       );
-      const sharpe = "";
-      const mdd = "";
+      const sharpe = (mean_ - 0.03) / std;
+      const mdd = (Math.abs(Math.min(...mean)) / Math.max(...mean) - 1) * 100;
       res.json({
         success: true,
         mean: mean_,
@@ -290,3 +291,25 @@ app.post(
   jwtAuthenticator.authenticateToken,
   (req, res) => {}
 );
+
+app.post("/getNaverNews", function (req, res) {
+  const { keyword } = req.body;
+  var api_url =
+    "https://openapi.naver.com/v1/search/blog?query=" + encodeURI(keyword); // JSON 결과
+  var options = {
+    url: api_url,
+    headers: {
+      "X-Naver-Client-Id": process.env.NAVER_SEARCH_API_KEY,
+      "X-Naver-Client-Secret": process.env.NAVER_SEARCH_API_SEC,
+    },
+  };
+  request.get(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.writeHead(200, { "Content-Type": "text/json;charset=utf-8" });
+      res.end(body);
+    } else {
+      res.status(response.statusCode).end();
+      console.log("error = " + response.statusCode);
+    }
+  });
+});

@@ -47,8 +47,10 @@ function Portfolio_Table() {
       alert("자산 정보가 없습니다");
       return;
     }
-    if (tempAssets.filter((item) => item.amount <= 0).length > 0)
+    if (tempAssets.filter((item) => item.amount <= 0).length > 0) {
       alert("투자금액이 0원인 자산이 있습니다.");
+      return;
+    }
     let result = await fetchApi("saveUserAsset", "POST", {
       userInfo: getUserInfo(),
       assets: tempAssets,

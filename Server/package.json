@@ -19,7 +19,8 @@
     "jsonwebtoken": "^9.0.0",
     "mysql": "^2.18.1",
     "redis": "^4.6.6",
-    "redix": "^1.0.22"
+    "redix": "^1.0.22",
+    "request": "^2.88.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
