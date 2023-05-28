@@ -55,6 +55,23 @@ class autoUpdate:
         # db_connection = create_engine(db_connection_str)
         # conn = db_connection.connect()
         # result_df.to_sql(name='KOSPI', con=db_connection, if_exists='append',index=True)
+    
+    def getKospiFundamental(self):
+        result_df = pd.DataFrame()
+        process_num = 0
+        stnd_date = "2022-01-01"
+        end_date = datetime.today().strftime("%Y%m%d")
+        stock_list = stock.get_market_ticker_list()
+        stock_list_len = len(stock_list)
+
+        for code in stock_list:
+            df = stock.get_market_fundamental(stnd_date, end_date,code,freq='m')
+            df = df.reset_index()
+            df['code'] = code
+            result_df = pd.concat([result_df, df], axis=0)
+            process_num+=1
+            time.sleep(1)
+            print(str(process_num) + "/ " + str(stock_list_len))
 
             
 db = autoUpdate()
