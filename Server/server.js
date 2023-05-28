@@ -227,14 +227,12 @@ const getUserAssetRetArray = (email, callback) => {
       "');",
     (rows) => {
       if (!rows) return;
-      console.log(rows);
       for (var i = 0; i < rows.length; i++) {
         var date = new Date(rows[i].Date).toLocaleDateString();
         if (retResult[date]) {
           retResult[date].push(rows[i]["Change"]);
         } else retResult[date] = [rows[i]["Change"]];
       }
-      console.log(retResult);
       const investmentDate = Object.keys(retResult)
         .sort()
         .splice(Object.keys(retResult).length - invPer);
@@ -312,4 +310,8 @@ app.post("/getNaverNews", function (req, res) {
       console.log("error = " + response.statusCode);
     }
   });
+});
+
+app.get("/getNoti", (req, res) => {
+  res.json({ success: true });
 });
