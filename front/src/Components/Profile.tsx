@@ -103,23 +103,31 @@ function ProfileDrpDown() {
 function Noti() {
   const [noti, setNoti] = useState([]);
   const [isNoti, setIsNoti] = useState(false);
+  const [notiShow, setNotiShow] = useState(false);
   const getNoti = async () => {
     let result = await fetchApi("getNoti", "GET");
     if (result.success) {
-      console.log("hi");
       setIsNoti(true);
+      setNoti(result.notis);
     }
   };
   useEffect(() => {
     getNoti();
-  });
+  }, []);
   return (
     <div>
-      <img className="w-8 h-8 mx-2" src={notification} alt="notification"></img>
+      <img
+        className="w-8 h-8 mx-2 cursor-pointer"
+        src={notification}
+        alt="notification"
+        onClick={() => {
+          setNotiShow(!notiShow);
+        }}
+      ></img>
       {isNoti ? (
-        <div className="absolute right-10 bg-red w-10 h-10 rounded-full"></div>
+        <div className="absolute right-[5.5rem] top-2 bg-red-600 w-2 h-2 rounded-full"></div>
       ) : (
-        <div>asdlkasdkl;</div>
+        <div></div>
       )}
     </div>
   );
