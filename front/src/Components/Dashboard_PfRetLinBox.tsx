@@ -6,13 +6,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { screenChanger } from "../Store";
 import fetchApi from "../httpFetch";
 import { getUserInfo } from "../Cookie";
-import { useNavigate } from "react-router-dom";
 
 function Dashboard_PfRetLinBox() {
   const assets: Iasset[] = useSelector((state: any) => state.assetReducer);
   const [labels, setLabels] = useState<string[]>([]);
   const [retMean, setRetMean] = useState<string[]>([]);
-  const navigate = useNavigate();
   const getUserAssetRetArray = async () => {
     let result = await fetchApi("getUserAssetRetArray", "POST", {
       userInfo: getUserInfo(),
@@ -21,8 +19,6 @@ function Dashboard_PfRetLinBox() {
       setLabels(result.date);
       setRetMean(result.mean.map((item: any) => item * 100));
     }
-
-    console.log(result);
   };
   const dispatch = useDispatch();
   const changeScreenToPf = () => {
@@ -32,21 +28,27 @@ function Dashboard_PfRetLinBox() {
     getUserAssetRetArray();
   }, []);
   const options = {
-    responsive: true,
+    scales: {
+      x: {
+        display: false,
+      },
+    },
     plugins: {
       legend: {
-        position: "top" as const,
+        display: false,
       },
       title: {
         display: true,
-        text: "자산별 수익률 변동 그래프",
+        padding: 20,
+        text: "Portfolio Returns(%)",
+        font: { size: 15 },
       },
     },
   };
   if (assets.length === 0) {
     return (
       <div
-        className="absolute top-60 bg-gray-600 h-50 w-1/2 right-10 rounded-lg md:flex place-items-center hover:bg-gray-500 text-white flex-col justify-center"
+        className="absolute top-[7rem] bg-gray-600 h-52 w-1/3 right-10 rounded-lg md:flex place-items-center hover:bg-gray-500 text-white flex-col justify-center"
         onClick={changeScreenToPf}
       >
         <AiOutlinePlusCircle
@@ -59,7 +61,7 @@ function Dashboard_PfRetLinBox() {
     );
   } else {
     return (
-      <div className="absolute top-60 bg-white h-50 w-1/2 right-10 rounded-lg md:flex">
+      <div className="absolute top-[7rem] bg-white h-52 w-1/3 right-10 rounded-lg md:flex">
         <Line
           options={options}
           data={{
@@ -70,6 +72,8 @@ function Dashboard_PfRetLinBox() {
                 data: retMean,
                 borderColor: "rgb(255, 99, 132)",
                 backgroundColor: "rgba(255, 99, 132, 0.5)",
+                pointBorderWidth: 0,
+                fill: true,
               },
             ],
           }}
