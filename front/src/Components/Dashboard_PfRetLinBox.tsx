@@ -7,6 +7,35 @@ import { screenChanger } from "../Store";
 import fetchApi from "../httpFetch";
 import { getUserInfo } from "../Cookie";
 
+const numberToMonth = (month: string) => {
+  switch (month) {
+    case "1":
+      return "Jan";
+    case "2":
+      return "Feb";
+    case "3":
+      return "Mar";
+    case "4":
+      return "Apr";
+    case "5":
+      return "May";
+    case "6":
+      return "Jun";
+    case "7":
+      return "Jul";
+    case "8":
+      return "Aug";
+    case "9":
+      return "Sep";
+    case "10":
+      return "Oct";
+    case "11":
+      return "Nov";
+    case "12":
+      return "Dec";
+  }
+};
+
 function Dashboard_PfRetLinBox() {
   const assets: Iasset[] = useSelector((state: any) => state.assetReducer);
   const [labels, setLabels] = useState<string[]>([]);
@@ -16,7 +45,11 @@ function Dashboard_PfRetLinBox() {
       userInfo: getUserInfo(),
     });
     if (result.success) {
-      setLabels(result.date);
+      setLabels(
+        result.date.map((item: string) =>
+          numberToMonth(item.split(".")[1].replace(" ", ""))
+        )
+      );
       setRetMean(result.mean.map((item: any) => item * 100));
     }
   };
@@ -28,9 +61,10 @@ function Dashboard_PfRetLinBox() {
     getUserAssetRetArray();
   }, []);
   const options = {
+    maintainAspectRatio: false,
     scales: {
       x: {
-        display: false,
+        display: true,
       },
     },
     plugins: {
@@ -61,7 +95,7 @@ function Dashboard_PfRetLinBox() {
     );
   } else {
     return (
-      <div className="absolute top-[7rem] bg-white h-52 w-1/3 right-10 rounded-lg md:flex">
+      <div className="absolute top-[7rem] bg-white h-64 w-1/4 right-10 rounded-lg md:flex">
         <Line
           options={options}
           data={{
