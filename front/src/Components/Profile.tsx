@@ -102,18 +102,10 @@ type Tnoti = {
   title: string;
   content: string;
 };
+
 function Noti() {
-  const [notiShow, setNotiShow] = useState(false);
-  return <div></div>;
-}
-function Noti_() {
   const [noti, setNoti] = useState<Tnoti[]>([]);
   const [notiShow, setNotiShow] = useState(false);
-  const notiShowRef = useRef(notiShow);
-  var Obj = { current_obj: false };
-
-  console.log(Obj);
-  console.log(notiShowRef);
   const notiRef = useRef(null);
 
   const handleNoti = useCallback(
@@ -130,9 +122,6 @@ function Noti_() {
   );
 
   useEffect(() => {
-    Obj.current_obj = true;
-    notiShowRef.current = true;
-
     const getNoti = async () => {
       let result = await fetchApi("getNoti", "GET");
       if (result.success) {
@@ -142,11 +131,18 @@ function Noti_() {
     getNoti();
   }, []);
   useEffect(() => {
+    const handleNoti = (e: any) => {
+      if (notiRef.current && notiRef.current !== e.target) {
+        setNotiShow(false);
+      } else if (notiRef.current && notiRef.current === e.target) {
+        setNotiShow(!notiShow);
+      }
+    };
     document.addEventListener("mousedown", handleNoti);
     return () => {
       document.removeEventListener("mousedown", handleNoti);
     };
-  }, [handleNoti]);
+  }, [notiShow]);
 
   return (
     <div>
