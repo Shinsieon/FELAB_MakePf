@@ -43,22 +43,17 @@ function ProfileDrpDown() {
   const [userGender, setUserGender] = useState("");
   const [profileDrpShow, setProfileDrpShow] = useState(false);
   const menuRef = useRef(null);
-  const closeOpenMenus = useCallback((e: any) => {
-    if (menuRef.current && profileDrpShow && menuRef.current !== e.target) {
-      setProfileDrpShow(false);
-    }
-  }, []);
 
   useEffect(() => {
     try {
       setUserName(getUserInfo().email);
       setUserIamge(getUserInfo().image);
       setUserGender(getUserInfo().userGender);
-      document.addEventListener("mousedown", closeOpenMenus);
+      document.addEventListener("mousedown", () => {});
     } catch (e) {
       console.log("cookie is empty");
     }
-  }, [closeOpenMenus]);
+  }, []);
   return (
     <div className="relative inline-block text-left dropdown">
       <span className="rounded-md">
@@ -108,39 +103,60 @@ type Tnoti = {
   content: string;
 };
 function Noti() {
-  const [noti, setNoti] = useState<Tnoti[]>([]);
-  const [isNoti, setIsNoti] = useState(false);
   const [notiShow, setNotiShow] = useState(false);
+  return <div></div>;
+}
+function Noti_() {
+  const [noti, setNoti] = useState<Tnoti[]>([]);
+  const [notiShow, setNotiShow] = useState(false);
+  const notiShowRef = useRef(notiShow);
+  var Obj = { current_obj: false };
+
+  console.log(Obj);
+  console.log(notiShowRef);
   const notiRef = useRef(null);
-  const closeOpenMenus = useCallback((e: any) => {
-    console.log("hi");
-    if (notiRef.current && notiShow && notiRef.current !== e.target) {
-      setNotiShow(false);
-    }
-  }, []);
-  const getNoti = async () => {
-    let result = await fetchApi("getNoti", "GET");
-    if (result.success) {
-      setIsNoti(true);
-      setNoti([...result.notis]);
-    }
-  };
+
+  const handleNoti = useCallback(
+    (e: any) => {
+      console.log(notiShow);
+      console.log(notiRef.current === e.target);
+      if (notiRef.current && notiRef.current !== e.target) {
+        setNotiShow(false);
+      } else if (notiRef.current && notiRef.current === e.target) {
+        setNotiShow(!notiShow);
+      }
+    },
+    [notiShow]
+  );
+
   useEffect(() => {
+    Obj.current_obj = true;
+    notiShowRef.current = true;
+
+    const getNoti = async () => {
+      let result = await fetchApi("getNoti", "GET");
+      if (result.success) {
+        setNoti([...result.notis]);
+      }
+    };
     getNoti();
-    document.addEventListener("mousedown", closeOpenMenus);
-  }, [closeOpenMenus]);
+  }, []);
+  useEffect(() => {
+    document.addEventListener("mousedown", handleNoti);
+    return () => {
+      document.removeEventListener("mousedown", handleNoti);
+    };
+  }, [handleNoti]);
+
   return (
     <div>
       <img
         className="w-8 h-8 mx-2 cursor-pointer"
         src={notification}
         alt="notification"
-        onClick={() => {
-          setNotiShow(true);
-        }}
         ref={notiRef}
       ></img>
-      {isNoti ? (
+      {noti.length > 0 ? (
         <div className="absolute right-[5.5rem] top-2 bg-red-600 w-2 h-2 rounded-full"></div>
       ) : (
         <div></div>
