@@ -129,7 +129,7 @@ function Noti() {
       }
     };
     getNoti();
-  }, []);
+  }, [noti]);
   useEffect(() => {
     const handleNoti = (e: any) => {
       if (notiRef.current && notiRef.current !== e.target) {
