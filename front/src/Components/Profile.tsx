@@ -129,6 +129,7 @@ function Noti() {
       }
     };
     getNoti();
+    getNoti();
   }, [noti]);
   useEffect(() => {
     const handleNoti = (e: any) => {
