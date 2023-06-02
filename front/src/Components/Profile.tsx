@@ -42,32 +42,45 @@ function ProfileDrpDown() {
   const [userImage, setUserIamge] = useState("");
   const [userGender, setUserGender] = useState("");
   const [profileDrpShow, setProfileDrpShow] = useState(false);
-  const menuRef = useRef(null);
+  const profileRef = useRef(null);
+  const handleNoti = useCallback(
+    (e: any) => {
+      if (profileRef.current && profileRef.current !== e.target) {
+        if (e.target.id === "profileImg") {
+          setProfileDrpShow(!profileDrpShow);
+        } else setProfileDrpShow(false);
+      } else if (profileRef.current && profileRef.current === e.target) {
+        setProfileDrpShow(!profileDrpShow);
+      }
+    },
+    [profileDrpShow]
+  );
 
   useEffect(() => {
     try {
       setUserName(getUserInfo().email);
       setUserIamge(getUserInfo().image);
       setUserGender(getUserInfo().userGender);
-      document.addEventListener("mousedown", () => {});
+      document.addEventListener("mousedown", handleNoti);
     } catch (e) {
       console.log("cookie is empty");
     }
-  }, []);
+    return () => {
+      document.removeEventListener("mousedown", handleNoti);
+    };
+  }, [handleNoti]);
   return (
     <div className="relative inline-block text-left dropdown">
       <span className="rounded-md">
         <button
           className="inline-flex justify-center w-full leading-5 transition duration-150 ease-in-out rounded-md "
-          onClick={() => {
-            setProfileDrpShow(true);
-          }}
+          ref={profileRef}
         >
           <img
             className="rounded-full w-10 h-10 mx-2 "
             src={userImage || (userGender === "M" ? manImage : womanImage)}
             alt="profile_image"
-            ref={menuRef}
+            id="profileImg"
           ></img>
           <img className="w-5" src={dropdown} alt="dropdown" />
         </button>
@@ -128,7 +141,6 @@ function Noti() {
         setNoti([...result.notis]);
       }
     };
-    getNoti();
     getNoti();
   }, [noti]);
   useEffect(() => {
