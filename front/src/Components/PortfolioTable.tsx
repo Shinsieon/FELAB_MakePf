@@ -88,8 +88,8 @@ function Portfolio_Table() {
     }
   }, [tempAssets]);
   return (
-    <div className="absolute w-[40vw] h-[60vh] top-28 left-16">
-      <div className="bg-white rounded-xl p-3 md:h-full overflow-auto">
+    <div className="absolute w-[30vw] h-[60vh] top-28 left-16">
+      <div className="bg-white rounded-xl p-3 h-full overflow-auto pb-10">
         {isAddBtnClicked ? (
           <SearchTF
             tempAssets={tempAssets}
@@ -123,8 +123,8 @@ function Portfolio_Table() {
             {tempAssets.length > 0 ? (
               tempAssets.map((item: Iasset, idx) => (
                 <tr key={idx}>
-                  <td>{item.name}</td>
-                  <th>
+                  <td className="text-xs">{item.name}</td>
+                  <th className="text-xs">
                     <div>
                       <Form.Control
                         type="number"
@@ -164,26 +164,48 @@ function Portfolio_Table() {
             )}
           </tbody>
         </Table>
-      </div>
-      <div className="bg-sky-500 opacity-90 rounded-xl p-3 h-14 flex justify-evenly text-white mt-3">
-        <p>종목 수 {tempAssets.length}</p>
-        <p>투자금액 {amountSum} 원</p>
-        <p>투자기간 {period} 개월</p>
-        {isSaved ? (
-          <AiFillCheckSquare size={25} color="black"></AiFillCheckSquare>
-        ) : (
-          <button
-            className="bg-white hover:bg-gray-100 text-gray-800 font-bold px-4 border border-gray-400 rounded shadow"
-            onClick={() => {
-              saveBtnClicked();
-            }}
-          >
-            Save!
-          </button>
-        )}
+        <BottomSumBar
+          tempAssets={tempAssets}
+          amountSum={amountSum}
+          period={period}
+          isSaved={isSaved}
+          handleSaveClicked={saveBtnClicked}
+        />
       </div>
     </div>
   );
 }
-
+function BottomSumBar({
+  tempAssets,
+  amountSum,
+  period,
+  isSaved,
+  handleSaveClicked,
+}: {
+  tempAssets: Iasset[];
+  amountSum: number;
+  period: number;
+  isSaved: boolean;
+  handleSaveClicked: Function;
+}) {
+  return (
+    <div className="bottom-5 bg-sky-500 opacity-90 rounded-xl p-3 h-14 flex justify-evenly text-white mt-3">
+      <p>종목 수 {tempAssets.length}</p>
+      <p>투자금액 {amountSum} 원</p>
+      <p>투자기간 {period} 개월</p>
+      {isSaved ? (
+        <AiFillCheckSquare size={25} color="black"></AiFillCheckSquare>
+      ) : (
+        <button
+          className="bg-white hover:bg-gray-100 text-gray-800 font-bold px-4 border border-gray-400 rounded shadow"
+          onClick={() => {
+            handleSaveClicked();
+          }}
+        >
+          Save!
+        </button>
+      )}
+    </div>
+  );
+}
 export default Portfolio_Table;

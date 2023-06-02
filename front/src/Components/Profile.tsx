@@ -30,7 +30,7 @@ function Logout() {
 }
 function Profile() {
   return (
-    <div className="absolute flex w-200 top-10 right-10 cursor-default p-2">
+    <div className="absolute flex w-200 top-5 right-10 cursor-default p-2">
       <Noti></Noti>
       <ProfileDrpDown />
     </div>

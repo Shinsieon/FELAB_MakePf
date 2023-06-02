@@ -65,6 +65,12 @@ function Dashboard_PfRetLinBox() {
     scales: {
       x: {
         display: true,
+        ticks: {
+          font: {
+            size: 10,
+            color: "red",
+          },
+        },
       },
     },
     plugins: {
@@ -95,7 +101,7 @@ function Dashboard_PfRetLinBox() {
     );
   } else {
     return (
-      <div className="absolute top-[7rem] bg-white h-64 w-1/4 right-10 rounded-lg md:flex">
+      <div className="absolute top-[5rem] bg-white h-64 w-1/4 right-10 rounded-lg md:flex">
         <Line
           options={options}
           data={{
