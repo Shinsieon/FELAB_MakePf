@@ -15,7 +15,7 @@ import fetchApi from "../httpFetch";
 
 import SearchTF from "./SearchTF";
 import { getUserInfo } from "../Cookie";
-function Portfolio_Table() {
+function PortfolioTable() {
   const assets: Iasset[] = useSelector((state: any) => state.assetReducer);
   const [tempAssets, setTempAssets] = useState<Iasset[]>([...assets]);
   const [isAddBtnClicked, setIsAddBtnClicked] = useState(false);
@@ -66,7 +66,7 @@ function Portfolio_Table() {
   };
   const noData = (): JSX.Element => {
     return (
-      <td colSpan={6} className="text-center">
+      <td colSpan={6} className="text-center bg-white">
         자산 정보가 없습니다
       </td>
     );
@@ -88,124 +88,114 @@ function Portfolio_Table() {
     }
   }, [tempAssets]);
   return (
-    <div className="absolute w-[30vw] h-[60vh] top-28 left-16">
-      <div className="bg-white rounded-xl p-3 h-full overflow-auto pb-10">
-        {isAddBtnClicked ? (
-          <SearchTF
-            tempAssets={tempAssets}
-            setTempAssets={setTempAssets}
-          ></SearchTF>
-        ) : (
-          ""
-        )}
-        <AiFillPlusCircle
-          size="40"
-          style={{
-            cursor: "pointer",
-            position: "absolute",
-            right: "0",
-            top: "0",
-          }}
-          onClick={() => {
-            addBtnToggle();
-          }}
-        ></AiFillPlusCircle>
-        <Table striped size="sm" responsive="sm">
-          <thead>
-            <tr>
-              <th style={{ width: "30%" }}>종목명</th>
-              <th style={{ width: "40%" }}>금액(원)</th>
-              <th style={{ width: "30%" }}>투자기간(m)</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody style={{ overflowY: "scroll" }}>
-            {tempAssets.length > 0 ? (
-              tempAssets.map((item: Iasset, idx) => (
-                <tr key={idx}>
-                  <td className="text-xs">{item.name}</td>
-                  <th className="text-xs">
-                    <div>
-                      <Form.Control
-                        type="number"
-                        size="sm"
-                        placeholder={item.amount.toString()}
-                        id="amountField"
-                        defaultValue={item.amount}
-                        onChange={(e: any) => {
-                          inputChanged(item.code, e);
-                        }}
-                      ></Form.Control>
-                    </div>
-                  </th>
-                  <th>
+    <div className="absolute w-[70%] h-full p-2">
+      {isAddBtnClicked ? (
+        <SearchTF
+          tempAssets={tempAssets}
+          setTempAssets={setTempAssets}
+        ></SearchTF>
+      ) : (
+        ""
+      )}
+      <AiFillPlusCircle
+        size="40"
+        className="cursor-pointer absolute right-0"
+        onClick={() => {
+          addBtnToggle();
+        }}
+      ></AiFillPlusCircle>
+      <Table striped size="sm" className="mt-5 h-[40vh] overflow-y-auto">
+        <thead>
+          <tr>
+            <th style={{ width: "30%" }}>종목명</th>
+            <th style={{ width: "40%" }}>금액(원)</th>
+            <th style={{ width: "30%" }}>투자기간(m)</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody style={{ overflowY: "scroll" }}>
+          {tempAssets.length > 0 ? (
+            tempAssets.map((item: Iasset, idx) => (
+              <tr key={idx}>
+                <td className="text-xs">{item.name}</td>
+                <th className="text-xs">
+                  <div>
                     <Form.Control
                       type="number"
                       size="sm"
-                      placeholder={item.investmentPeriod.toString()}
-                      id="investmentPeriodField"
+                      placeholder={item.amount.toString()}
+                      id="amountField"
+                      defaultValue={item.amount}
                       onChange={(e: any) => {
                         inputChanged(item.code, e);
                       }}
                     ></Form.Control>
-                  </th>
-                  <th>
-                    <AiFillDelete
-                      size="25"
-                      onClick={() => {
-                        deleteAsset(item.code);
-                      }}
-                    ></AiFillDelete>
-                  </th>
-                </tr>
-              ))
-            ) : (
-              <tr>{noData()}</tr>
-            )}
-          </tbody>
-        </Table>
-        <BottomSumBar
-          tempAssets={tempAssets}
-          amountSum={amountSum}
-          period={period}
-          isSaved={isSaved}
-          handleSaveClicked={saveBtnClicked}
-        />
-      </div>
+                  </div>
+                </th>
+                <th>
+                  <Form.Control
+                    type="number"
+                    size="sm"
+                    placeholder={item.investmentPeriod.toString()}
+                    id="investmentPeriodField"
+                    onChange={(e: any) => {
+                      inputChanged(item.code, e);
+                    }}
+                  ></Form.Control>
+                </th>
+                <th>
+                  <AiFillDelete
+                    size="25"
+                    onClick={() => {
+                      deleteAsset(item.code);
+                    }}
+                  ></AiFillDelete>
+                </th>
+              </tr>
+            ))
+          ) : (
+            <tr>{noData()}</tr>
+          )}
+        </tbody>
+      </Table>
+      <BottomSumBar
+        tempAssets={tempAssets}
+        amountSum={amountSum}
+        isSaved={isSaved}
+        handleSaveClicked={saveBtnClicked}
+      />
     </div>
   );
 }
 function BottomSumBar({
   tempAssets,
   amountSum,
-  period,
   isSaved,
   handleSaveClicked,
 }: {
   tempAssets: Iasset[];
   amountSum: number;
-  period: number;
   isSaved: boolean;
   handleSaveClicked: Function;
 }) {
   return (
-    <div className="bottom-5 bg-sky-500 opacity-90 rounded-xl p-3 h-14 flex justify-evenly text-white mt-3">
-      <p>종목 수 {tempAssets.length}</p>
-      <p>투자금액 {amountSum} 원</p>
-      <p>투자기간 {period} 개월</p>
+    <div className="absolute bottom-5 w-full text-white bg-gray-800 font-medium rounded-lg text-sm px-1 py-2 dark:bg-gray-800 flex justify-center dark:border-gray-700">
+      <p>Assets {tempAssets.length}</p>
+      <p>Total Amount {amountSum} 원</p>
       {isSaved ? (
         <AiFillCheckSquare size={25} color="black"></AiFillCheckSquare>
       ) : (
         <button
-          className="bg-white hover:bg-gray-100 text-gray-800 font-bold px-4 border border-gray-400 rounded shadow"
+          type="button"
+          className="w-[3rem] h-[1.5rem] text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 ml-3"
           onClick={() => {
             handleSaveClicked();
           }}
         >
-          Save!
+          Save
         </button>
       )}
     </div>
   );
 }
-export default Portfolio_Table;
+export default PortfolioTable;

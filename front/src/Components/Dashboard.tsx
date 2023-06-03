@@ -18,6 +18,7 @@ import {
 } from "chart.js";
 import { useDispatch } from "react-redux";
 import { assetChanger } from "../Store";
+import DashboardAssets from "./DashboardAssets";
 
 ChartJS.register(
   ArcElement,
@@ -50,16 +51,15 @@ function Dashboard() {
         <FaDiceD6 />
         Dashboard
       </TitleLabel> */}
-      <DashboardMent></DashboardMent>
-      <Dashboard_PfPieBox></Dashboard_PfPieBox>
-      <Dashboard_PfRetLinBox></Dashboard_PfRetLinBox>
+      <DashboardMent />
+      <DashboardAssets />
       <Profile></Profile>
     </div>
   );
 }
 function DashboardMent() {
   return (
-    <div className="absolute font-bold top-20 left-12 text-left ">
+    <div className="absolute font-bold top-5 left-12 text-left ">
       <label className="text-5xl leading-10 font-bold my-10">
         Manage your <br />
         Portfolio

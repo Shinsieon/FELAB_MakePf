@@ -142,7 +142,7 @@ function Noti() {
       }
     };
     getNoti();
-  }, [noti]);
+  }, []);
   useEffect(() => {
     const handleNoti = (e: any) => {
       if (notiRef.current && notiRef.current !== e.target) {
@@ -155,7 +155,7 @@ function Noti() {
     return () => {
       document.removeEventListener("mousedown", handleNoti);
     };
-  }, [notiShow]);
+  }, [handleNoti]);
 
   return (
     <div>
