@@ -215,36 +215,6 @@ function PortfolioPerformanceBar({
     </div>
   );
 }
-function IndividualPerformanceBar({ item }: { item: TassetFundamental }) {
-  return (
-    <div
-      style={{
-        width: "100%",
-        height: "4rem",
-        backgroundColor:
-          item.RETURN > 0 ? "rgba(219,0,0,0.15)" : "rgba(70,102,255,0.15)",
-        borderRadius: "1rem",
-        marginBottom: "5px",
-        textAlign: "center",
-        display: "flex",
-        flexDirection: "column",
-        padding: "15px",
-        color: "rgba(35,35,35)",
-      }}
-    >
-      <div style={{ textAlign: "left" }}>
-        <h5>{item.CODE}</h5>
-      </div>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <PStyle>월평균수익률 {item.RETURN.toFixed(2)}</PStyle>
-        <PStyle>PER {item.PER.toFixed(2)}</PStyle>
-        <PStyle>EPS {item.EPS.toFixed(2)}</PStyle>
-        <PStyle></PStyle>
-        <PStyle></PStyle>
-      </div>
-    </div>
-  );
-}
 function RadarChart({ userPortData }: { userPortData: number[] }) {
   console.log(userPortData);
   const labels = ["평균수익률", "샤프비율", "표준편차", "mdd"];
