@@ -1,5 +1,4 @@
 import Dashboard, { Iasset } from "./Components/Dashboard";
-import Portfolio from "./Components/Portfolio";
 import { createStore, combineReducers } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 
@@ -14,7 +13,7 @@ const scrReducer = (state = <Dashboard />, action: any) => {
     case SET_DASHBOARD:
       return <Dashboard />;
     case SET_PORTFOLIO:
-      return <Portfolio />;
+    //return <Portfolio />;
     default:
       return state;
   }

@@ -25,7 +25,12 @@ dbConnection.connect(conn);
 /*db 커넥션 */
 
 /*cors 설정 */
-const whitelist = ["http://localhost:3000", "http://localhost:8000"];
+const whitelist = [
+  "http://localhost:3000",
+  "http://localhost:8000",
+  "http://172.30.1.29:8000",
+  "http://172.30.1.29:3000",
+];
 const corsOptions = {
   origin: (origin, callback) => {
     console.log("trying origin " + origin);

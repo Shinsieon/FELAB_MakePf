@@ -1,8 +1,4 @@
 import { useEffect, useState } from "react";
-import cashFlow from "../assets/images/cash-flow.png";
-import cost from "../assets/images/cost.png";
-import std from "../assets/images/std.png";
-import mdd from "../assets/images/mdd.png";
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -12,20 +8,9 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Radar } from "react-chartjs-2";
-import styled from "styled-components";
-import SimpleSlider from "./SimpleSlider";
 import { useSelector } from "react-redux";
 import fetchApi from "../httpFetch";
 import { getUserInfo } from "../Cookie";
-import DashboardPfPieBox from "./DashboardPfPieBox";
-import DashboardPfRetLinBox from "./DashboardPfRetLinBox";
-
-const PStyle = styled.p`
-  font-size: 0.8rem;
-  text-align: left;
-  margin: 0;
-`;
 
 ChartJS.register(
   RadialLinearScale,
@@ -40,7 +25,7 @@ function Performance() {
   return (
     <div className="h-full w-full rounded-xl ">
       <p className="font-bold text-gray-800 text-xl">
-        {getUserInfo().name}님의 포트폴리오 성과
+        {getUserInfo()?.name}님의 포트폴리오 성과
       </p>
       <div>
         <PortfolioPerformance />
