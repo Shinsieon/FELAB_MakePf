@@ -7,20 +7,21 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import configData from "../src/config.json";
 import { getRefreshToken } from "./Cookie";
-
+import { getUserInfo } from "./Cookie";
 function App() {
   const navigate = useNavigate();
   useEffect(() => {
     if (!window.Kakao.isInitialized())
       window.Kakao.init(configData.KAKAO_APIKEY);
-    const userToken = getRefreshToken();
+    const userToken = getRefreshToken() && getUserInfo();
 
     try {
       //window.Kakao.Auth.setAccessToken(userToken);
       window.Kakao.API.request({
         url: "/v2/user/me",
         success: (response: any) => {
-          navigate("/home");
+          if (!userToken) navigate("/login");
+          else navigate("/home");
         },
         fail: (response: any) => {
           if (!userToken) {

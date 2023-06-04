@@ -101,23 +101,26 @@ function DashboardPfRetLinBox() {
     );
   } else {
     return (
-      <div className="bg-white md:flex rounded-xl">
-        <Line
-          options={options}
-          data={{
-            labels,
-            datasets: [
-              {
-                label: "포트폴리오 평균 수익률(%)",
-                data: retMean,
-                borderColor: "rgb(255, 99, 132)",
-                backgroundColor: "rgba(255, 99, 132, 0.5)",
-                pointBorderWidth: 0,
-                fill: true,
-              },
-            ],
-          }}
-        ></Line>
+      <div>
+        <p className="font-bold text-gray-800 text-xl h-[4vh]"></p>
+        <div className="bg-white rounded-xl">
+          <Line
+            options={options}
+            data={{
+              labels,
+              datasets: [
+                {
+                  label: "포트폴리오 평균 수익률(%)",
+                  data: retMean,
+                  borderColor: "rgb(255, 99, 132)",
+                  backgroundColor: "rgba(255, 99, 132, 0.5)",
+                  pointBorderWidth: 0,
+                  fill: true,
+                },
+              ],
+            }}
+          ></Line>
+        </div>
       </div>
     );
   }

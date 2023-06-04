@@ -48,22 +48,20 @@ function Dashboard() {
   });
   return (
     <div>
-      {/* <TitleLabel>
-        <FaDiceD6 />
-        Dashboard
-      </TitleLabel> */}
-      <DashboardMent />
+      <div className="absolute top-10 h-[62vh] left-[4vw] md:w-[35vw]">
+        <DashboardMent />
+      </div>
       <div className="absolute top-[25vh] h-[62vh] left-[4vw] md:w-[35vw]">
         <PortfolioTable />
       </div>
-      <div className="absolute top-[25vh] h-[62vh] left-[40vw] md:w-[35vw]">
+      <div className="absolute top-[25vh] h-[62vh] left-[41vw] md:w-[35vw]">
         <Performance />
       </div>
-      <div className="absolute top-[25vh] h-[62vh] left-[75vw] md:w-[20vw] flex flex-col ml-2">
-        <div className="flex-1">
+      <div className="absolute top-[25vh] h-[62vh] left-[78vw] md:w-[17vw]">
+        <div className="mb-2">
           <DashboardPfRetLinBox />
         </div>
-        <div className="flex-1">
+        <div className="h-1/2">
           <DashboardPfPieBox />
         </div>
       </div>
@@ -73,7 +71,7 @@ function Dashboard() {
 }
 function DashboardMent() {
   return (
-    <div className="absolute font-bold top-5 left-12 text-left ">
+    <div className="font-bold text-left ">
       <label className="text-5xl leading-10 font-bold my-10">
         Manage your <br />
         Portfolio

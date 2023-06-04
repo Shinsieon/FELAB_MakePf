@@ -1,4 +1,3 @@
-import axios from "axios";
 import kakaoLoginIcon from "./assets/images/kakao_logo.png";
 import configData from "./config.json";
 import { setRefreshToken, setUserInfo, setAccessToken } from "./Cookie";
@@ -16,7 +15,7 @@ const loginWithKakao = () => {
   });
 };
 
-const registerWithEmail = ({
+const registerWithEmail = async ({
   name,
   email,
   password,
@@ -31,27 +30,20 @@ const registerWithEmail = ({
   gender: string;
   callback: Function;
 }) => {
-  axios
-    .post(configData.LOCAL_IP + ":8000/registerWithEmail", {
-      name: name,
-      email: email,
-      password: password,
-      age: age,
-      gender: gender,
-    })
-    .then((response) => {
-      console.log(response);
-      if (response && response.data) {
-        if (response.data.success) {
-          alert(response.data.message);
-          callback(response.data);
-        } else {
-          alert("이미 존재하는 사용자입니다");
-        }
-      }
-    });
+  let result = await fetchApi("registerWithEmail", "POST", {
+    name: name,
+    email: email,
+    password: password,
+    age: age,
+    gender: gender,
+  });
+  if (result.success) {
+    alert(result.message);
+    callback(result.data);
+  } else {
+    alert("이미 존재하는 사용자입니다");
+  }
 };
-
 const loginWithEmail = async ({
   email,
   password,
@@ -61,10 +53,12 @@ const loginWithEmail = async ({
   password: string;
   callback: Function;
 }) => {
+  console.log(email);
   let result = await fetchApi("loginWithEmail", "POST", {
     email: email,
     password: password,
   });
+  console.log("result" + result);
   callback(result);
 };
 
@@ -135,9 +129,6 @@ function UserRegister({ setIsRegister }: { setIsRegister: Function }) {
       <form
         className="px-6 pt-3 pb-8 w-full"
         onSubmit={(e: any) => {
-          if (!age || !gender) {
-            alert("");
-          }
           e.preventDefault();
           registerWithEmail({
             name: name,
@@ -266,7 +257,6 @@ function UserRegister({ setIsRegister }: { setIsRegister: Function }) {
 }
 
 function UserLogin({ setIsRegister }: { setIsRegister: Function }) {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPw] = useState("");
@@ -287,6 +277,7 @@ function UserLogin({ setIsRegister }: { setIsRegister: Function }) {
               password: password,
 
               callback: (data: any) => {
+                console.log(data);
                 if (data.success === true) {
                   setRefreshToken(data.refreshToken);
                   setAccessToken(data.accessToken);

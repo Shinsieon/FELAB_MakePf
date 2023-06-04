@@ -1,6 +1,6 @@
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useEffect, useState } from "react";
-import { Pie } from "react-chartjs-2";
+import { Pie, Doughnut } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 import { screenChanger } from "../Store";
 import { getRandomColor } from "../RandomColorGenerator";
@@ -39,6 +39,17 @@ const DashboardPfPieBox = () => {
   }, [assets]);
   const options = {
     maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        font: { size: 5 },
+      },
+      title: {
+        display: true,
+        text: "Assets",
+        font: { size: 15 },
+      },
+    },
   };
   const data = {
     labels: pieData["labels"],
@@ -64,8 +75,8 @@ const DashboardPfPieBox = () => {
     );
   }
   return (
-    <div className="bg-white rounded-xl">
-      <Pie data={data} options={options}></Pie>
+    <div className="bg-white rounded-xl h-full">
+      <Doughnut data={data} options={options}></Doughnut>
     </div>
   );
 };

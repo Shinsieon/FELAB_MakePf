@@ -18,7 +18,6 @@ import { getUserInfo } from "../Cookie";
 function PortfolioTable() {
   const assets: Iasset[] = useSelector((state: any) => state.assetReducer);
   const [tempAssets, setTempAssets] = useState<Iasset[]>([...assets]);
-  console.log(assets);
   const [isAddBtnClicked, setIsAddBtnClicked] = useState(false);
   const [amountSum, setAmountSum] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
@@ -65,10 +64,10 @@ function PortfolioTable() {
       }, 1000);
     } else setIsSaved(false);
   };
-
   useEffect(() => {
-    console.log(tempAssets);
-    console.log(assets);
+    setTempAssets(assets);
+  }, [assets]);
+  useEffect(() => {
     if (tempAssets.length > 0) {
       var total = 0;
       var period = 0;
@@ -86,23 +85,23 @@ function PortfolioTable() {
   }, [tempAssets]);
   return (
     <div className="w-full h-full p-2 bg-white rounded-xl">
-      <div className="h-[10%] flex">
-        {isAddBtnClicked ? (
+      {isAddBtnClicked ? (
+        <div className="h-[10%] flex">
           <SearchTF
             tempAssets={tempAssets}
             setTempAssets={setTempAssets}
           ></SearchTF>
-        ) : (
-          <div></div>
-        )}
-        <AiFillPlusCircle
-          size="40"
-          className="cursor-pointer absolute right-2"
-          onClick={() => {
-            addBtnToggle();
-          }}
-        ></AiFillPlusCircle>
-      </div>
+        </div>
+      ) : (
+        <div></div>
+      )}
+      <AiFillPlusCircle
+        size="40"
+        className="cursor-pointer absolute right-0 -top-5"
+        onClick={() => {
+          addBtnToggle();
+        }}
+      ></AiFillPlusCircle>
       <div className="h-[70%] overflow-y-auto">
         <Table size="sm" className="mt-2 ">
           <thead>

@@ -128,6 +128,7 @@ app.post("/loginWithKakao", async (req, res) => {
 });
 
 app.post("/loginWithEmail", async (req, res) => {
+  console.log("this is login");
   const { email, password } = req.body;
   console.log(email);
 
