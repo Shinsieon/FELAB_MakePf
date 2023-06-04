@@ -14,7 +14,7 @@ import {
 } from "chart.js";
 import { Radar } from "react-chartjs-2";
 import styled from "styled-components";
-import SimpleSlider from "./Carousel";
+import SimpleSlider from "./SimpleSlider";
 import { useSelector } from "react-redux";
 import fetchApi from "../httpFetch";
 import { getUserInfo } from "../Cookie";
@@ -36,7 +36,7 @@ ChartJS.register(
 
 function Performance() {
   return (
-    <div className="absolute top-28 h-[70vh] left-[47vw] md:w-1/3 flex">
+    <div className="h-full w-full rounded">
       <SimpleSlider
         children={[PortfolioPerformance, IndivisualPerformance]}
       ></SimpleSlider>
@@ -44,7 +44,7 @@ function Performance() {
   );
 }
 
-function PortfolioPerformance() {
+export function PortfolioPerformance() {
   const assets = useSelector((state: any) => state.assetReducer);
   const [userPortData, setUserPortData] = useState<number[]>([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -58,7 +58,6 @@ function PortfolioPerformance() {
   const icons = [cashFlow, cost, std, mdd];
 
   useEffect(() => {
-    console.log("render here");
     //user의 포트폴리오 성과 with benchmark
     const getUserAssetPerformance = async () => {
       let result = await fetchApi("getUserAssetPerformance", "POST", {
@@ -79,13 +78,12 @@ function PortfolioPerformance() {
     getUserAssetPerformance();
   }, [assets]);
   return (
-    <div className="bg-[#251342] h-full w-full rounded-xl text-white p-5">
+    <div className="bg-[#251342] text-white p-3 overflow-y-auto rounded-xl h-[55vh]">
       <h5 className="font-bold text-white">포트폴리오 성과</h5>
       {assets.length > 0 ? (
         <div>
           <PStyle>
-            {localStorage.getItem("userName")}님의 자산 데이터를 바탕으로 성과를
-            도출했습니다.
+            {getUserInfo().name}님의 자산 데이터를 바탕으로 성과를 도출했습니다.
           </PStyle>
           {isDataLoaded ? (
             userPortData.map((item, idx) => (
@@ -106,7 +104,7 @@ function PortfolioPerformance() {
         </div>
       ) : (
         <div className="h-[200px]">
-          <h5 className="text-sm text-left m-0">
+          <h5 className="text-sm text-left">
             아직 자산이 설정되지 않았습니다.
           </h5>
         </div>
@@ -153,20 +151,10 @@ function IndivisualPerformance() {
     <div className="bg-white h-full w-full rounded-xl text-white p-5">
       <h5 className="font-bold text-black">개별종목 성과</h5>
       {assets.length > 0 ? (
-        <div>
-          {assetFundArr.map((item, idx) => {
-            return (
-              <div key={idx}>
-                <IndividualPerformanceBar
-                  item={item}
-                ></IndividualPerformanceBar>
-              </div>
-            );
-          })}
-        </div>
+        <div></div>
       ) : (
         <div className="h-[200px]">
-          <h5 className="text-sm text-left m-0 text-black">
+          <h5 className="text-sm text-left text-black">
             아직 자산이 설정되지 않았습니다.
           </h5>
         </div>

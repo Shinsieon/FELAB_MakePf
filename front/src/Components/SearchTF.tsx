@@ -9,8 +9,8 @@ type stockType = {
 };
 const StyledUl = styled.ul`
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: 1.6rem;
+  right: 2rem;
   background-color: rgba(0, 0, 0, 0.5);
   height: 40vh;
   width: 20vw;
@@ -81,11 +81,11 @@ function SearchTF(props: any) {
         placeholder="찾으시는 종목을 검색해주세요"
         style={{
           position: "absolute",
-          right: "1.8rem",
+          right: "3rem",
           width: "20vw",
           height: "2rem",
           fontSize: "0.8rem",
-          padding: "1rem 1.5rem",
+          padding: "1.3rem 1.5rem",
           borderRadius: "1rem",
           border: "none",
           backgroundColor: "#eee",

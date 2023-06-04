@@ -11,7 +11,7 @@ type pieDataType = {
   colors: string[];
 };
 
-const Dashboard_PfPieBox = () => {
+const DashboardPfPieBox = () => {
   const assets = useSelector((state: any) => state.assetReducer);
   const [pieData, setPieData] = useState<pieDataType>({
     labels: [],
@@ -37,7 +37,9 @@ const Dashboard_PfPieBox = () => {
       colors: colors,
     });
   }, [assets]);
-
+  const options = {
+    maintainAspectRatio: false,
+  };
   const data = {
     labels: pieData["labels"],
     datasets: [
@@ -53,7 +55,7 @@ const Dashboard_PfPieBox = () => {
   if (assets.length === 0) {
     return (
       <div
-        className="absolute top-60 bg-gray-600 h-50 w-1/3 left-12 rounded-lg md:flex place-items-center hover:bg-gray-500 text-white flex-col justify-center"
+        className="bg-gray-600 md:flex place-items-center hover:bg-gray-500 text-white flex-col justify-center rounded-xl"
         onClick={changeScreenToPf}
       >
         <AiOutlinePlusCircle size={"5rem"} color={"white"} />
@@ -62,9 +64,9 @@ const Dashboard_PfPieBox = () => {
     );
   }
   return (
-    <div className="absolute top-60 bg-white h-50 w-1/3 left-12 rounded-lg md:flex">
-      <Pie data={data}></Pie>
+    <div className="bg-white rounded-xl">
+      <Pie data={data} options={options}></Pie>
     </div>
   );
 };
-export default Dashboard_PfPieBox;
+export default DashboardPfPieBox;

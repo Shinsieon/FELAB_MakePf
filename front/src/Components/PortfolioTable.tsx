@@ -18,6 +18,7 @@ import { getUserInfo } from "../Cookie";
 function PortfolioTable() {
   const assets: Iasset[] = useSelector((state: any) => state.assetReducer);
   const [tempAssets, setTempAssets] = useState<Iasset[]>([...assets]);
+  console.log(assets);
   const [isAddBtnClicked, setIsAddBtnClicked] = useState(false);
   const [amountSum, setAmountSum] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
@@ -44,7 +45,7 @@ function PortfolioTable() {
   };
   const saveBtnClicked = async () => {
     if (tempAssets.length === 0) {
-      alert("자산 정보가 없습니다");
+      alert("저장할 자산이 없습니다");
       return;
     }
     if (tempAssets.filter((item) => item.amount <= 0).length > 0) {
@@ -64,14 +65,10 @@ function PortfolioTable() {
       }, 1000);
     } else setIsSaved(false);
   };
-  const noData = (): JSX.Element => {
-    return (
-      <td colSpan={6} className="text-center bg-white">
-        자산 정보가 없습니다
-      </td>
-    );
-  };
+
   useEffect(() => {
+    console.log(tempAssets);
+    console.log(assets);
     if (tempAssets.length > 0) {
       var total = 0;
       var period = 0;
@@ -88,82 +85,92 @@ function PortfolioTable() {
     }
   }, [tempAssets]);
   return (
-    <div className="absolute w-[70%] h-full p-2">
-      {isAddBtnClicked ? (
-        <SearchTF
-          tempAssets={tempAssets}
-          setTempAssets={setTempAssets}
-        ></SearchTF>
-      ) : (
-        ""
-      )}
-      <AiFillPlusCircle
-        size="40"
-        className="cursor-pointer absolute right-0"
-        onClick={() => {
-          addBtnToggle();
-        }}
-      ></AiFillPlusCircle>
-      <Table striped size="sm" className="mt-5 h-[40vh] overflow-y-auto">
-        <thead>
-          <tr>
-            <th style={{ width: "30%" }}>종목명</th>
-            <th style={{ width: "40%" }}>금액(원)</th>
-            <th style={{ width: "30%" }}>투자기간(m)</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody style={{ overflowY: "scroll" }}>
-          {tempAssets.length > 0 ? (
-            tempAssets.map((item: Iasset, idx) => (
-              <tr key={idx}>
-                <td className="text-xs">{item.name}</td>
-                <th className="text-xs">
-                  <div>
+    <div className="w-full h-full p-2 bg-white rounded-xl">
+      <div className="h-[10%] flex">
+        {isAddBtnClicked ? (
+          <SearchTF
+            tempAssets={tempAssets}
+            setTempAssets={setTempAssets}
+          ></SearchTF>
+        ) : (
+          <div></div>
+        )}
+        <AiFillPlusCircle
+          size="40"
+          className="cursor-pointer absolute right-2"
+          onClick={() => {
+            addBtnToggle();
+          }}
+        ></AiFillPlusCircle>
+      </div>
+      <div className="h-[70%] overflow-y-auto">
+        <Table size="sm" className="mt-2 ">
+          <thead>
+            <tr>
+              <th className="w-[40%]">종목명</th>
+              <th className="w-[30%]">금액(원)</th>
+              <th className="w-[30%]">투자기간(m)</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {tempAssets.length > 0 ? (
+              tempAssets.map((item: Iasset, idx) => (
+                <tr key={idx}>
+                  <td>{item.name}</td>
+                  <th>
+                    <div>
+                      <Form.Control
+                        type="number"
+                        size="sm"
+                        placeholder={item.amount.toString()}
+                        id="amountField"
+                        defaultValue={item.amount}
+                        onChange={(e: any) => {
+                          inputChanged(item.code, e);
+                        }}
+                      ></Form.Control>
+                    </div>
+                  </th>
+                  <th>
                     <Form.Control
                       type="number"
                       size="sm"
-                      placeholder={item.amount.toString()}
-                      id="amountField"
-                      defaultValue={item.amount}
+                      placeholder={item.investmentPeriod.toString()}
+                      id="investmentPeriodField"
                       onChange={(e: any) => {
                         inputChanged(item.code, e);
                       }}
                     ></Form.Control>
-                  </div>
-                </th>
-                <th>
-                  <Form.Control
-                    type="number"
-                    size="sm"
-                    placeholder={item.investmentPeriod.toString()}
-                    id="investmentPeriodField"
-                    onChange={(e: any) => {
-                      inputChanged(item.code, e);
-                    }}
-                  ></Form.Control>
-                </th>
-                <th>
-                  <AiFillDelete
-                    size="25"
-                    onClick={() => {
-                      deleteAsset(item.code);
-                    }}
-                  ></AiFillDelete>
+                  </th>
+                  <th>
+                    <AiFillDelete
+                      size="25"
+                      onClick={() => {
+                        deleteAsset(item.code);
+                      }}
+                    ></AiFillDelete>
+                  </th>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <th colSpan={6} className="text-center bg-white h-[10px]">
+                  자산 정보가 없습니다.
                 </th>
               </tr>
-            ))
-          ) : (
-            <tr>{noData()}</tr>
-          )}
-        </tbody>
-      </Table>
-      <BottomSumBar
-        tempAssets={tempAssets}
-        amountSum={amountSum}
-        isSaved={isSaved}
-        handleSaveClicked={saveBtnClicked}
-      />
+            )}
+          </tbody>
+        </Table>
+      </div>
+      <div className="absolute bottom-5 h-[10%] w-[97%] flex justify-center">
+        <BottomSumBar
+          tempAssets={tempAssets}
+          amountSum={amountSum}
+          isSaved={isSaved}
+          handleSaveClicked={saveBtnClicked}
+        />
+      </div>
     </div>
   );
 }
@@ -179,7 +186,7 @@ function BottomSumBar({
   handleSaveClicked: Function;
 }) {
   return (
-    <div className="absolute bottom-5 w-full text-white bg-gray-800 font-medium rounded-lg text-sm px-1 py-2 dark:bg-gray-800 flex justify-center dark:border-gray-700">
+    <div className="mx-2 text-white bg-gray-800 font-medium rounded-lg text-sm px-1 py-2 dark:bg-gray-800 flex justify-evenly w-full dark:border-gray-700">
       <p>Assets {tempAssets.length}</p>
       <p>Total Amount {amountSum} 원</p>
       {isSaved ? (

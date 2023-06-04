@@ -35,7 +35,7 @@ export default function SimpleSlider({
     [autoplay, loop, speed]
   );
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-auto rounded">
       <Slider {...settings}>
         {children.map((item, idx) => (
           <div key={idx}>{item()}</div>

@@ -36,7 +36,7 @@ const numberToMonth = (month: string) => {
   }
 };
 
-function Dashboard_PfRetLinBox() {
+function DashboardPfRetLinBox() {
   const assets: Iasset[] = useSelector((state: any) => state.assetReducer);
   const [labels, setLabels] = useState<string[]>([]);
   const [retMean, setRetMean] = useState<string[]>([]);
@@ -88,7 +88,7 @@ function Dashboard_PfRetLinBox() {
   if (assets.length === 0) {
     return (
       <div
-        className="absolute top-[7rem] bg-gray-600 h-52 w-1/3 right-10 rounded-lg md:flex place-items-center hover:bg-gray-500 text-white flex-col justify-center"
+        className="absolute top-[7rem] bg-gray-600 h-52 w-1/3 right-10 rounded-xl md:flex place-items-center hover:bg-gray-500 text-white flex-col justify-center"
         onClick={changeScreenToPf}
       >
         <AiOutlinePlusCircle
@@ -101,7 +101,7 @@ function Dashboard_PfRetLinBox() {
     );
   } else {
     return (
-      <div className="absolute top-[5rem] bg-white h-64 w-1/4 right-10 rounded-lg md:flex">
+      <div className="bg-white md:flex rounded-xl">
         <Line
           options={options}
           data={{
@@ -123,4 +123,4 @@ function Dashboard_PfRetLinBox() {
   }
 }
 
-export default Dashboard_PfRetLinBox;
+export default DashboardPfRetLinBox;

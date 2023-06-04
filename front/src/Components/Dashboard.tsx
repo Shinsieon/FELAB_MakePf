@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import Profile from "./Profile";
-import Dashboard_PfRetLinBox from "./Dashboard_PfRetLinBox";
-import Dashboard_PfPieBox from "./Dashboard_PfPieBox";
+import DashboardPfRetLinBox from "./DashboardPfRetLinBox";
+import DashboardPfPieBox from "./DashboardPfPieBox";
+import Performance from "./Performance";
+import PortfolioTable from "./PortfolioTable";
 import fetchApi from "../httpFetch";
 import { getUserInfo } from "../Cookie";
 
@@ -18,7 +20,6 @@ import {
 } from "chart.js";
 import { useDispatch } from "react-redux";
 import { assetChanger } from "../Store";
-import DashboardAssets from "./DashboardAssets";
 
 ChartJS.register(
   ArcElement,
@@ -52,7 +53,20 @@ function Dashboard() {
         Dashboard
       </TitleLabel> */}
       <DashboardMent />
-      <DashboardAssets />
+      <div className="absolute top-[25vh] h-[62vh] left-[4vw] md:w-[35vw]">
+        <PortfolioTable />
+      </div>
+      <div className="absolute top-[25vh] h-[62vh] left-[40vw] md:w-[35vw]">
+        <Performance />
+      </div>
+      <div className="absolute top-[25vh] h-[62vh] left-[75vw] md:w-[20vw] flex flex-col ml-2">
+        <div className="flex-1">
+          <DashboardPfRetLinBox />
+        </div>
+        <div className="flex-1">
+          <DashboardPfPieBox />
+        </div>
+      </div>
       <Profile></Profile>
     </div>
   );
