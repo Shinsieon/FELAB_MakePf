@@ -90,8 +90,8 @@ age : 10~19, 20~29, 30~39, 40~49, 50~59
 */
 app.post("/loginWithKakao", async (req, res) => {
   const { userInfo } = req.body;
-  const { nickname, profile_image } = userInfo.properties;
-  const { email, gender, age } = userInfo.kakao_account; //카카오는 디비에 비번을 저장하지 않는다.
+  const { profile_image } = userInfo.properties;
+  const { email } = userInfo.kakao_account; //카카오는 디비에 비번을 저장하지 않는다.
   await dbConnection.sendQuery(
     conn,
     `SELECT * FROM USERTBL WHERE email='${email.toLowerCase()}'`,
