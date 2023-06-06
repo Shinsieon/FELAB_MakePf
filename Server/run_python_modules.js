@@ -7,5 +7,6 @@ result_.stdout.on("data", (result) => {
 });
 
 result_.stderr.on("data", function (data) {
+  console.log("에러발생");
   console.log(data.toString());
 });
