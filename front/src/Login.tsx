@@ -135,15 +135,7 @@ function UserRegister({ setIsRegister }: { setIsRegister: Function }) {
             password: password,
             age: age,
             gender: gender,
-            callback: ({
-              userName,
-              accessToken,
-              refreshToken,
-            }: {
-              userName: string;
-              accessToken: string;
-              refreshToken: string;
-            }) => {
+            callback: () => {
               setIsRegister(false); //다시 로그인으로
             },
           });
