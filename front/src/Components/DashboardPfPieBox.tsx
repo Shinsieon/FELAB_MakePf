@@ -66,11 +66,12 @@ const DashboardPfPieBox = () => {
   if (assets.length === 0) {
     return (
       <div
-        className="bg-gray-600 md:flex place-items-center hover:bg-gray-500 text-white flex-col justify-center rounded-xl"
+        className="bg-gray-800 md:flex place-items-center text-white flex-col justify-center rounded-xl h-full"
         onClick={changeScreenToPf}
       >
-        <AiOutlinePlusCircle size={"5rem"} color={"white"} />
-        <p>보유한 자산이 없습니다. 추가해주세요</p>
+        <p className="text-sm text-center">
+          보유한 자산이 없습니다. 추가해주세요
+        </p>
       </div>
     );
   }

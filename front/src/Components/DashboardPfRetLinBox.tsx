@@ -87,16 +87,16 @@ function DashboardPfRetLinBox() {
   };
   if (assets.length === 0) {
     return (
-      <div
-        className="absolute top-[7rem] bg-gray-600 h-52 w-1/3 right-10 rounded-xl md:flex place-items-center hover:bg-gray-500 text-white flex-col justify-center"
-        onClick={changeScreenToPf}
-      >
-        <AiOutlinePlusCircle
-          size={"5rem"}
-          color={"white"}
-          onClick={() => console.log("click")}
-        />
-        <p>보유한 자산이 없습니다. 추가해주세요</p>
+      <div>
+        <p className="font-bold text-gray-800 text-xl h-[4vh] p-2"></p>
+        <div
+          className="bg-gray-800 rounded-xl md:flex place-items-center text-white flex-col justify-center h-[20vh]"
+          onClick={changeScreenToPf}
+        >
+          <p className="text-sm text-center">
+            보유한 자산이 없습니다. 추가해주세요
+          </p>
+        </div>
       </div>
     );
   } else {

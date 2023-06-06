@@ -84,7 +84,7 @@ export const getUserAssets = async (dispatch: any) => {
   let result = await fetchApi("getUserAssets", "post", {
     userInfo: getUserInfo(),
   });
-  if (result) {
+  if (result.success) {
     const asset: Iasset[] = [];
     for (var i = 0; i < result.length; i++) {
       var item = result[i];

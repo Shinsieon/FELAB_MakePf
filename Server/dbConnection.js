@@ -42,7 +42,6 @@ var dbConnection = {
         if (callback) callback(rows, fields);
       }
     });
-    //con.end();
   },
   initSession: (app) => {
     /*express-session 커넥션 */

@@ -10,18 +10,13 @@ import { RiLogoutBoxLine } from "react-icons/ri";
 import { getUserInfo } from "../Cookie";
 import fetchApi from "../httpFetch";
 
-const logoutFunc = () => {
-  window.Kakao.Auth.logout(() => {
-    alert("로그아웃 되었습니다");
-    localStorage.clear();
-    window.location.href = "/home";
-  });
-};
-function Logout() {
+function Logout({ clickHandler }: { clickHandler: Function }) {
   return (
     <div className="cursor-pointer mt-0.5">
       <RiLogoutBoxLine
-        onClick={logoutFunc}
+        onClick={() => {
+          clickHandler();
+        }}
         size="20"
         color="tomato"
       ></RiLogoutBoxLine>
@@ -55,6 +50,15 @@ function ProfileDrpDown() {
     },
     [profileDrpShow]
   );
+
+  const logoutFunc = useCallback((e: any) => {
+    console.log("hello");
+    window.Kakao.Auth.logout(() => {
+      alert("로그아웃 되었습니다");
+      localStorage.clear();
+      window.location.href = "/home";
+    });
+  }, []);
 
   useEffect(() => {
     try {
@@ -95,14 +99,14 @@ function ProfileDrpDown() {
               </p>
             </div>
             <div className="py-1 flex"></div>
-            <a
+            <button
               tabIndex={0}
-              className="text-gray-700 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
+              className="text-gray-700 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left cursor-pointer"
               onClick={logoutFunc}
             >
               Logout
-              <Logout />
-            </a>
+              <Logout clickHandler={logoutFunc} />
+            </button>
           </div>
         </div>
       ) : (
