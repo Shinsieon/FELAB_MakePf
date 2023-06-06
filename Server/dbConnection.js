@@ -11,7 +11,7 @@ var dbConnInfo = {
     database: config.DATABASE,
   },
   real: {
-    host: config.REALHOST,
+    host: config.HOST,
     user: config.USER,
     password: config.PASSWORD,
     database: config.DATABASE,
