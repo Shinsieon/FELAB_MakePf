@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useCallback, Ref } from "react";
 import { useState, useEffect } from "react";
 
 import manImage from "../assets/images/man.png";
@@ -9,6 +9,7 @@ import "react-dropdown/style.css";
 import { RiLogoutBoxLine } from "react-icons/ri";
 import { getUserInfo } from "../Cookie";
 import fetchApi from "../httpFetch";
+import { removeCookieToken } from "../Cookie";
 
 function Logout({ clickHandler }: { clickHandler: Function }) {
   return (
@@ -38,8 +39,10 @@ function ProfileDrpDown() {
   const [userGender, setUserGender] = useState("");
   const [profileDrpShow, setProfileDrpShow] = useState(false);
   const profileRef = useRef(null);
+  const logoutBtnRef = useRef(null);
   const handleNoti = useCallback(
     (e: any) => {
+      console.log(e.target);
       if (profileRef.current && profileRef.current !== e.target) {
         if (e.target.id === "profileImg") {
           setProfileDrpShow(!profileDrpShow);
@@ -47,18 +50,22 @@ function ProfileDrpDown() {
       } else if (profileRef.current && profileRef.current === e.target) {
         setProfileDrpShow(!profileDrpShow);
       }
+      if (e.target === logoutBtnRef.current) {
+        logoutFunc();
+      }
     },
     [profileDrpShow]
   );
 
-  const logoutFunc = useCallback((e: any) => {
-    console.log("hello");
+  const logoutFunc = () => {
+    console.log(window.Kakao.Auth);
+    removeCookieToken();
     window.Kakao.Auth.logout(() => {
       alert("로그아웃 되었습니다");
       localStorage.clear();
-      window.location.href = "/home";
+      window.location.href = "/login";
     });
-  }, []);
+  };
 
   useEffect(() => {
     try {
@@ -100,12 +107,12 @@ function ProfileDrpDown() {
             </div>
             <div className="py-1 flex"></div>
             <button
+              ref={logoutBtnRef}
               tabIndex={0}
               className="text-gray-700 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left cursor-pointer"
               onClick={logoutFunc}
             >
               Logout
-              <Logout clickHandler={logoutFunc} />
             </button>
           </div>
         </div>

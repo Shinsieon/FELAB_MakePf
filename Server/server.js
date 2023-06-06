@@ -102,11 +102,16 @@ app.post("/loginWithKakao", async (req, res) => {
 
 app.post("/loginWithEmail", async (req, res) => {
   const { email, password } = req.body;
-  LoginModel.loginWithEmail({ email, password }, (result, data) => {
-    if (result) {
-      res.json({ success: true, data: data });
-    } else res.json({ success: false, message: "password is wrong" });
-  });
+  const refreshToken = jwtAuthenticator.createRefreshToken(req, email);
+
+  LoginModel.loginWithEmail(
+    { email, password, refreshToken },
+    (result, data) => {
+      if (result) {
+        res.json({ success: true, data: data });
+      } else res.json({ success: false, message: "password is wrong" });
+    }
+  );
 });
 
 app.post("/getUserAssets", jwtAuthenticator.authenticateToken, (req, res) => {
@@ -138,6 +143,7 @@ app.get("/getAllStocks", async (req, res) => {
 app.post("/saveUserAsset", jwtAuthenticator.authenticateToken, (req, res) => {
   const { userInfo, assets } = req.body;
   UserAssetModel.setUserAsset(userInfo.email, assets, (result) => {
+    console.log("result!", result);
     if (result) res.json({ success: true, message: "saved succesfully" });
     else res.json({ success: false, message: "save failed" });
   });
@@ -164,7 +170,6 @@ app.post(
   jwtAuthenticator.authenticateToken,
   (req, res) => {
     const { userInfo } = req.body;
-    console.log("여기야?");
     UserAssetModel.getUserAssetRetArray(userInfo.email, (result, obj) => {
       console.log(result);
       if (result) {

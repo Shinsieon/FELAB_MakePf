@@ -88,7 +88,6 @@ function DashboardPfRetLinBox() {
   if (assets.length === 0) {
     return (
       <div>
-        <p className="font-bold text-gray-800 text-xl h-[4vh] p-2"></p>
         <div
           className="bg-gray-800 rounded-xl md:flex place-items-center text-white flex-col justify-center h-[20vh]"
           onClick={changeScreenToPf}
@@ -102,7 +101,7 @@ function DashboardPfRetLinBox() {
   } else {
     return (
       <div>
-        <p className="font-bold text-gray-800 text-xl h-[4vh]"></p>
+        <p className="font-bold text-gray-800 text-xl"></p>
         <div className="bg-white rounded-xl">
           <Line
             options={options}

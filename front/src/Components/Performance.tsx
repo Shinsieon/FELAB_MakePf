@@ -106,7 +106,7 @@ function PortfolioPerformanceBar({
   value: number;
 }) {
   return (
-    <div className="flex bg-white rounded-xl my-2">
+    <div className="flex bg-gray-100 rounded-xl my-2">
       <div className="w-[80%] flex flex-col ml-5 my-3">
         <span className="font-semibold text-gray-900 ">{label}</span>
         <span className="font-semibold text-sm text-gray-500">{content}</span>

@@ -56,15 +56,17 @@ function SearchTF(props: any) {
   useEffect(() => {
     const getAllStocks = async () => {
       let result = await fetchApi("getAllStocks", "GET");
-      result = await result
-        .filter((item: any) => item.Market === "KOSPI")
-        .map((item: any) => {
-          return {
-            code: item.Code,
-            name: item.Name,
-          };
-        });
-      await setAllStocks([...result]);
+      if (result.success) {
+        result = await result.data
+          .filter((item: any) => item.Market === "KOSPI")
+          .map((item: any) => {
+            return {
+              code: item.Code,
+              name: item.Name,
+            };
+          });
+        await setAllStocks([...result]);
+      }
     };
     getAllStocks();
   }, []);

@@ -61,7 +61,7 @@ class LoginModel {
       }
     );
   };
-  loginWithEmail = async ({ email, password }, callback) => {
+  loginWithEmail = async ({ email, password, refreshToken }, callback) => {
     this.dbConnection.sendQuery(
       this.conn,
       `SELECT * FROM USERTBL WHERE email='${email.toLowerCase()}' and password='${cryptoPassword(
@@ -69,7 +69,6 @@ class LoginModel {
       )}'`,
       (rows) => {
         if (rows.length > 0) {
-          const refreshToken = jwtAuthenticator.createRefreshToken(req, email);
           callback(true, {
             success: true,
             userInfo: rows[0],

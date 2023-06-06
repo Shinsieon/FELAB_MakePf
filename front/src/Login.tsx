@@ -58,7 +58,6 @@ const loginWithEmail = async ({
     email: email,
     password: password,
   });
-  console.log("result" + result);
   callback(result);
 };
 
@@ -276,15 +275,14 @@ function UserLogin({ setIsRegister }: { setIsRegister: Function }) {
               email: email,
               password: password,
 
-              callback: (data: any) => {
-                console.log(data);
-                if (data.success === true) {
-                  setRefreshToken(data.refreshToken);
-                  setAccessToken(data.accessToken);
-                  setUserInfo(data.userInfo);
+              callback: (result: any) => {
+                if (result.success === true) {
+                  setRefreshToken(result.data.refreshToken);
+                  setAccessToken(result.data.accessToken);
+                  setUserInfo(result.data.userInfo);
                   navigate("/home");
                 } else {
-                  alert(data.message);
+                  alert(result.message);
                 }
               },
             });

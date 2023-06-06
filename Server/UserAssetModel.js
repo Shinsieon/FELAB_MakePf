@@ -20,14 +20,27 @@ class UserAssetModel {
           query += ";";
         } else query += ",";
       }
-      this.dbConnection.sendQuery(
-        this.conn,
-        `INSERT INTO USERASSET values ${query}`,
-        (rows) => {
-          this.getUserAssets(email);
-          callback(true);
-        }
-      );
+      if (query === "") {
+        //아무 자산이 없다면 다 제거
+        this.dbConnection.sendQuery(
+          this.conn,
+          `DELETE FROM USERASSET WHERE email='${email}';`,
+          () => {
+            callback(true);
+          }
+        );
+      } else {
+        this.dbConnection.sendQuery(
+          this.conn,
+          `INSERT INTO USERASSET values ${query}`,
+          (rows) => {
+            this.getUserAssets(email, (result) => {
+              if (result) callback(true);
+              else callback(false);
+            });
+          }
+        );
+      }
     };
     //기존에 자산이 있는 고객이면 delete 후 insert
     this.getUserAssets(email, (rows) => {
@@ -40,7 +53,6 @@ class UserAssetModel {
           }
         );
       } else insertAssets(assets);
-      callback(true);
     });
   };
   getUserAssets = async (email, callback) => {
@@ -56,14 +68,12 @@ class UserAssetModel {
     );
   };
   getUserAssetSise = async (email, callback) => {
-    console.log(email);
     await this.dbConnection.sendQuery(
       this.conn,
       "SELECT Date, code, `Change` FROM KOSPI_M where code IN (select code from USERASSET where email='" +
         email +
         "');",
       (rows) => {
-        console.log("결과다!!!", rows);
         if (rows.length === 0) {
           callback(false);
         } else {
@@ -79,7 +89,6 @@ class UserAssetModel {
     var retResult = {};
     //asset과 동시에 시세 정보도 로드한다.
     this.getUserAssetSise(email, (result, rows) => {
-      console.log(result);
       if (result) {
         for (var i = 0; i < rows.length; i++) {
           var date = new Date(rows[i].Date).toLocaleDateString();
@@ -101,7 +110,6 @@ class UserAssetModel {
         }
         callback(true, { date: investmentDate, mean: avgArr });
       } else {
-        console.log("are u here?");
         callback(false);
       }
     });

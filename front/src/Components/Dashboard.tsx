@@ -54,15 +54,17 @@ function Dashboard() {
       <div className="absolute top-[25vh] h-[62vh] left-[4vw] md:w-[35vw]">
         <PortfolioTable />
       </div>
-      <div className="absolute top-[25vh] h-[62vh] left-[41vw] md:w-[35vw]">
-        <Performance />
-      </div>
-      <div className="absolute top-[25vh] h-[62vh] left-[78vw] md:w-[17vw]">
-        <div className="mb-2">
-          <DashboardPfRetLinBox />
+      <div className="absolute top-[25vh] md:w-[55vw] bg-white rounded-xl h-[62vh] left-[41vw] py-2 pl-2 flex">
+        <div className="h-[58vh] md:w-[35vw]">
+          <Performance />
         </div>
-        <div className="h-1/2">
-          <DashboardPfPieBox />
+        <div className="h-[62vh] md:w-[17vw] ml-4">
+          <div className="mb-4">
+            <DashboardPfRetLinBox />
+          </div>
+          <div className="h-1/2">
+            <DashboardPfPieBox />
+          </div>
         </div>
       </div>
       <Profile></Profile>
@@ -86,8 +88,8 @@ export const getUserAssets = async (dispatch: any) => {
   });
   if (result.success) {
     const asset: Iasset[] = [];
-    for (var i = 0; i < result.length; i++) {
-      var item = result[i];
+    for (var i = 0; i < result.data.length; i++) {
+      var item = result.data[i];
       asset.push({
         code: item.code,
         name: item.name,
