@@ -21,7 +21,7 @@ class LoginModel {
             this.conn,
             `INSERT INTO USERTBL values ('${name}','${email.toLowerCase()}','${cryptoPassword(
               password
-            )}','','${gender}','${age}','0');`,
+            )}','','${gender}','${age}');`,
             () => {
               callback(true);
             }
