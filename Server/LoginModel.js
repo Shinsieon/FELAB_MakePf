@@ -17,8 +17,8 @@ class LoginModel {
         if (rows.length > 0) {
           callback(false);
         } else {
-          await dbConnection.sendQuery(
-            conn,
+          this.dbConnection.sendQuery(
+            this.conn,
             `INSERT INTO USERTBL values ('${name}','${email.toLowerCase()}','${cryptoPassword(
               password
             )}','','${gender}','${age}','0');`,
@@ -38,8 +38,8 @@ class LoginModel {
         if (rows.length > 0) {
           //Db에 이미지 업데이트
           if (profile_image) {
-            await dbConnection.sendQuery(
-              conn,
+            this.dbConnection.sendQuery(
+              this.conn,
               `UPDATE USERTBL SET image = '${profile_image}' WHERE email ='${email.toLowerCase()}'`
             );
           }
