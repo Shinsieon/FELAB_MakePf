@@ -4,10 +4,13 @@ Web development side project : Python Django with React by Typescript
 ver 1.0
 1. kakao api login
 2. JWT login
-3. python django rest framework api server
+3. node rest framework api server
 4. Dashboard
-5. Personal Portfolio
 
+<img width="722" alt="image" src="https://github.com/Shinsieon/MakePortfolio/assets/56333934/98069461-ea35-4ef0-ad23-913b52bead95">
+
+** 기능
+종목 검색, 수익률
 
 ------------------------------------
 Original Source : 
