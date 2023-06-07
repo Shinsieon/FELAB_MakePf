@@ -88,6 +88,7 @@ function DashboardPfRetLinBox() {
   if (assets.length === 0) {
     return (
       <div>
+        <p className="font-bold text-gray-800 text-xl h-[4vh]"> </p>
         <div
           className="bg-gray-800 rounded-xl md:flex place-items-center text-white flex-col justify-center h-[20vh]"
           onClick={changeScreenToPf}

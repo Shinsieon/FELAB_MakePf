@@ -66,7 +66,7 @@ const DashboardPfPieBox = () => {
   if (assets.length === 0) {
     return (
       <div
-        className="bg-gray-800 md:flex place-items-center text-white flex-col justify-center rounded-xl h-full"
+        className="bg-gray-800 md:flex place-items-center text-white flex-col justify-center rounded-xl h-[29vh] "
         onClick={changeScreenToPf}
       >
         <p className="text-sm text-center">

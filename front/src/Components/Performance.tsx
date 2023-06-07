@@ -86,7 +86,7 @@ export function PortfolioPerformance() {
           )}
         </div>
       ) : (
-        <div className="text-white h-[55vh] overflow-y-auto bg-gray-800 rounded-xl flex justify-center place-items-center">
+        <div className="text-white h-[53vh] overflow-y-auto bg-gray-800 rounded-xl flex justify-center place-items-center">
           <h5 className="text-sm text-left">
             아직 자산이 설정되지 않았습니다.
           </h5>
