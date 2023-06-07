@@ -19,7 +19,7 @@ class LoginModel {
         } else {
           this.dbConnection.sendQuery(
             this.conn,
-            `INSERT INTO USERTBL values ('${name}','${email.toLowerCase()}','${cryptoPassword(
+            `INSERT INTO USERTBL values ('NULL','${name}','${email.toLowerCase()}','${cryptoPassword(
               password
             )}','','${gender}','${age}');`,
             () => {
