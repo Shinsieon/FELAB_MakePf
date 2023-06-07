@@ -34,7 +34,7 @@ class SAVE_SISEDATA:
             result_df = pd.concat([result_df, df], axis=0)
             process_num+=1
             time.sleep(1)
-            print(str(process_num) + "/ " + str(stock_list_len))
+            print(str(process_num) + "/ " + str(stock_list_len),flush=True)
 
         print("get_monthly_kospi_sise saved")
         self.saveDB(result_df, "KOSPI_M")
@@ -53,7 +53,7 @@ class SAVE_SISEDATA:
             result_df = pd.concat([result_df, df], axis=0)
             process_num+=1
             time.sleep(1)
-            print(str(process_num) + "/ " + str(stock_list_len))
+            print(str(process_num) + "/ " + str(stock_list_len),flush=True)
         print("get_monthly_kospi_fundamental saved")
         self.saveDB(result_df, "KOSPI_FUNDAMENTAL_M")
 
@@ -68,6 +68,6 @@ class SAVE_SISEDATA:
 
 if __name__ == "__main__":
     cls = SAVE_SISEDATA()
-    cls.get_monthly_kospi_sise()
+    #cls.get_monthly_kospi_sise()
     cls.get_Korea_stock_list()
     #cls.get_monthly_kospi_fundamental()
