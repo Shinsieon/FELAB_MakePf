@@ -62,7 +62,7 @@ class SAVE_SISEDATA:
         db_connection = create_engine(db_connection_str)
         conn = db_connection.connect()
         try:
-            df.to_sql(name=table_name, con=db_connection, if_exists='fail', index=True )
+            df.to_sql(name=table_name, con=db_connection, if_exists='append', index=True )
         except:
             print("table exists")
 
