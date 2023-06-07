@@ -63,10 +63,7 @@ class SAVE_SISEDATA:
         conn = db_connection.connect()
         print(df)
         print(table_name)
-        try:
-            df.to_sql(name=table_name, con=db_connection, if_exists='append', index=True )
-        except:
-            print("table exists")
+        df.to_sql(name=table_name, con=db_connection, if_exists='append', index=True )
 
 if __name__ == "__main__":
     cls = SAVE_SISEDATA()
