@@ -71,7 +71,7 @@ function ProfileDrpDown() {
     try {
       setUserName(getUserInfo().email);
       setUserIamge(getUserInfo().image);
-      setUserGender(getUserInfo().userGender);
+      setUserGender(getUserInfo().gender);
       document.addEventListener("mousedown", handleNoti);
     } catch (e) {
       console.log("cookie is empty");
