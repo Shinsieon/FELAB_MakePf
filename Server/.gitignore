@@ -17,4 +17,5 @@ media
 *.env
 *.rest
 *.ipynb
+
 /cryptoPassword.js

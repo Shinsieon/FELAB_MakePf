@@ -35,7 +35,7 @@ class SAVE_SISEDATA:
             process_num+=1
             time.sleep(1)
             print(str(process_num) + "/ " + str(stock_list_len))
-            break
+
         print("get_monthly_kospi_sise saved")
         self.saveDB(result_df, "KOSPI_M")
     def get_monthly_kospi_fundamental(self):
@@ -49,13 +49,11 @@ class SAVE_SISEDATA:
             if(df.empty) :
                 continue
             df = df.rename(columns = {'날짜' : 'Date'}, inplace = True)
-            print(df)
             df['code'] = code
             result_df = pd.concat([result_df, df], axis=0)
             process_num+=1
             time.sleep(1)
             print(str(process_num) + "/ " + str(stock_list_len))
-            break
         print("get_monthly_kospi_fundamental saved")
         self.saveDB(result_df, "KOSPI_FUNDAMENTAL_M")
 
