@@ -61,6 +61,8 @@ class SAVE_SISEDATA:
         db_connection_str = 'mysql+pymysql://root:'+self.password+'@localhost:3306/foliogram'
         db_connection = create_engine(db_connection_str)
         conn = db_connection.connect()
+        print(df)
+        print(table_name)
         try:
             df.to_sql(name=table_name, con=db_connection, if_exists='append', index=True )
         except:
