@@ -1,11 +1,11 @@
 class StockModel {
-  init(dbConnection) {
-    this.dbConnection = dbConnection;
-    this.conn = this.dbConnection.init();
-    this.dbConnection.connect(this.conn);
+  init(DBConnector) {
+    this.DBConnector = DBConnector;
+    this.conn = this.DBConnector.init();
+    this.DBConnector.connect(this.conn);
   }
   getAllStocks = async (callback) => {
-    this.dbConnection.sendQuery(
+    this.DBConnector.sendQuery(
       this.conn,
       `SELECT * FROM KRXSTOCKS;`,
       (rows) => {

@@ -1,11 +1,11 @@
 /*db 커넥션 */
 class UserAssetModel {
-  init(dbConnection) {
+  init(DBConnector) {
     this.userAsset = {};
     this.userAssetSise = {};
-    this.dbConnection = dbConnection;
-    this.conn = this.dbConnection.init();
-    this.dbConnection.connect(this.conn);
+    this.DBConnector = DBConnector;
+    this.conn = this.DBConnector.init();
+    this.DBConnector.connect(this.conn);
   }
   setUserAsset = async (email, assets, callback) => {
     const insertAssets = (assets) => {
@@ -22,7 +22,7 @@ class UserAssetModel {
       }
       if (query === "") {
         //아무 자산이 없다면 다 제거
-        this.dbConnection.sendQuery(
+        this.DBConnector.sendQuery(
           this.conn,
           `DELETE FROM USERASSET WHERE email='${email}';`,
           () => {
@@ -30,7 +30,7 @@ class UserAssetModel {
           }
         );
       } else {
-        this.dbConnection.sendQuery(
+        this.DBConnector.sendQuery(
           this.conn,
           `INSERT INTO USERASSET values ${query}`,
           (rows) => {
@@ -45,7 +45,7 @@ class UserAssetModel {
     //기존에 자산이 있는 고객이면 delete 후 insert
     this.getUserAssets(email, (rows) => {
       if (rows.length > 0) {
-        this.dbConnection.sendQuery(
+        this.DBConnector.sendQuery(
           this.conn,
           `DELETE FROM USERASSET WHERE email='${email}';`,
           () => {
@@ -56,7 +56,7 @@ class UserAssetModel {
     });
   };
   getUserAssets = async (email, callback) => {
-    await this.dbConnection.sendQuery(
+    await this.DBConnector.sendQuery(
       this.conn,
       `SELECT * FROM USERASSET WHERE email='${email.toLowerCase()}';`,
       (rows) => {
@@ -68,7 +68,7 @@ class UserAssetModel {
     );
   };
   getUserAssetSise = async (email, callback) => {
-    await this.dbConnection.sendQuery(
+    await this.DBConnector.sendQuery(
       this.conn,
       "SELECT Date, code, `Change` FROM KOSPI_M where code IN (select code from USERASSET where email='" +
         email +

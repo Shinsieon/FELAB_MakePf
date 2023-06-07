@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 const AUTHORIZATION_FAILED = 501;
-var jwtAuthenticator = {
+var AuthModel = {
   createAccessToken: (email) => {
     const accessToken = jwt.sign(
       { email: email },
@@ -46,4 +46,4 @@ var jwtAuthenticator = {
   },
 };
 
-module.exports = jwtAuthenticator;
+module.exports = AuthModel;

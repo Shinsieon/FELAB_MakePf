@@ -18,7 +18,7 @@ var dbConnInfo = {
   },
 };
 
-var dbConnection = {
+var DBConnector = {
   init: () => {
     console.log(os.hostname());
     if (os.hostname() === "sinsieon-ui-MacBookPro.local") {
@@ -61,19 +61,4 @@ var dbConnection = {
     );
   },
 };
-module.exports = dbConnection;
-
-// export const getDbConnection = () => {
-//   const connection = mysql.createConnection({
-//     host: config.HOST,
-//     user: config.USER,
-//     password: config.PASSWORD,
-//     database: config.DATABASE,
-//   });
-//   connection.connect();
-//   return connection;
-// };
-
-// export const sendQuery = (con, query) => {
-//
-// };
+module.exports = DBConnector;

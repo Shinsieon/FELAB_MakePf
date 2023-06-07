@@ -1,23 +1,23 @@
-const cryptoPassword = require("./cryptoPassword");
-const jwtAuthenticator = require("./jwtAuthenticate");
+const cryptoPassword = require("../cryptoPassword");
+const AuthModel = require("../Models/AuthModel");
 class LoginModel {
-  init(dbConnection) {
-    this.dbConnection = dbConnection;
-    this.conn = this.dbConnection.init();
-    this.dbConnection.connect(this.conn);
+  init(DBConnector) {
+    this.DBConnector = DBConnector;
+    this.conn = this.DBConnector.init();
+    this.DBConnector.connect(this.conn);
   }
   registerWithEmail = async (
     { name, email, password, age, gender },
     callback
   ) => {
-    this.dbConnection.sendQuery(
+    this.DBConnector.sendQuery(
       this.conn,
       `SELECT * FROM USERTBL WHERE email='${email}'`,
       async (rows) => {
         if (rows.length > 0) {
           callback(false);
         } else {
-          this.dbConnection.sendQuery(
+          this.DBConnector.sendQuery(
             this.conn,
             `INSERT INTO USERTBL values (0,'${name}','${email.toLowerCase()}','${cryptoPassword(
               password
@@ -31,14 +31,14 @@ class LoginModel {
     );
   };
   loginWithKakao = async ({ userInfo, profile_image, email }, callback) => {
-    this.dbConnection.sendQuery(
+    this.DBConnector.sendQuery(
       this.conn,
       `SELECT * FROM USERTBL WHERE email='${email.toLowerCase()}'`,
       async (rows) => {
         if (rows.length > 0) {
           //Db에 이미지 업데이트
           if (profile_image) {
-            this.dbConnection.sendQuery(
+            this.DBConnector.sendQuery(
               this.conn,
               `UPDATE USERTBL SET image = '${profile_image}' WHERE email ='${email.toLowerCase()}'`
             );
@@ -46,8 +46,8 @@ class LoginModel {
           callback(true, {
             success: true,
             userInfo: rows[0],
-            accessToken: jwtAuthenticator.createAccessToken(email),
-            refreshToken: jwtAuthenticator.createRefreshToken(req, email),
+            accessToken: AuthModel.createAccessToken(email),
+            refreshToken: AuthModel.createRefreshToken(req, email),
           });
         } else {
           //디비에 계정 생성
@@ -62,7 +62,7 @@ class LoginModel {
     );
   };
   loginWithEmail = async ({ email, password, refreshToken }, callback) => {
-    this.dbConnection.sendQuery(
+    this.DBConnector.sendQuery(
       this.conn,
       `SELECT * FROM USERTBL WHERE email='${email.toLowerCase()}' and password='${cryptoPassword(
         password
@@ -72,7 +72,7 @@ class LoginModel {
           callback(true, {
             success: true,
             userInfo: rows[0],
-            accessToken: jwtAuthenticator.createAccessToken(),
+            accessToken: AuthModel.createAccessToken(),
             refreshToken: refreshToken,
           });
         } else callback(false);

@@ -8,7 +8,7 @@ USER_EXISTS_ERROR = 501;
 /* 비밀번호 암호화 */
 
 /*jwt 인증 */
-const jwtAuthenticator = require("./jwtAuthenticate");
+const AuthModel = require("./Models/AuthModel");
 
 const express = require("express");
 const app = express();
@@ -16,20 +16,20 @@ const path = require("path");
 const port = process.env.port || 8000;
 const request = require("request");
 
-const UserAssetModel = require("./UserAssetModel");
-const LoginModel = require("./LoginModel");
-const StockModel = require("./StockModel");
-const NotiModel = require("./NotiModel");
+const UserAssetModel = require("./Models/UserAssetModel");
+const LoginModel = require("./Models/LoginModel");
+const StockModel = require("./Models/StockModel");
+const NotiModel = require("./Models/NotiModel");
 
 /*db 커넥션 */
-const dbConnection = require(__dirname + "/dbConnection");
-const conn = dbConnection.init();
-dbConnection.initSession(app);
+const DBConnector = require(__dirname + "/DBConnector");
+const conn = DBConnector.init();
+DBConnector.initSession(app);
 
-UserAssetModel.init(dbConnection);
-LoginModel.init(dbConnection);
-StockModel.init(dbConnection);
-NotiModel.init(dbConnection);
+UserAssetModel.init(DBConnector);
+LoginModel.init(DBConnector);
+StockModel.init(DBConnector);
+NotiModel.init(DBConnector);
 /*db 커넥션 */
 
 /*cors 설정 */
@@ -102,7 +102,7 @@ app.post("/loginWithKakao", async (req, res) => {
 
 app.post("/loginWithEmail", async (req, res) => {
   const { email, password } = req.body;
-  const refreshToken = jwtAuthenticator.createRefreshToken(req, email);
+  const refreshToken = AuthModel.createRefreshToken(req, email);
 
   LoginModel.loginWithEmail(
     { email, password, refreshToken },
@@ -114,7 +114,7 @@ app.post("/loginWithEmail", async (req, res) => {
   );
 });
 
-app.post("/getUserAssets", jwtAuthenticator.authenticateToken, (req, res) => {
+app.post("/getUserAssets", AuthModel.authenticateToken, (req, res) => {
   const { userInfo } = req.body;
   UserAssetModel.getUserAssets(userInfo.email, (result, rows) => {
     if (result) {
@@ -123,11 +123,11 @@ app.post("/getUserAssets", jwtAuthenticator.authenticateToken, (req, res) => {
   });
 });
 app.post("/getRefreshToken", (req, res) => {
-  res.send(jwtAuthenticator.createRefreshToken(req, req.body.email));
+  res.send(AuthModel.createRefreshToken(req, req.body.email));
 });
 app.post("/getAccessToken", (req, res) => {
   console.log(req.body);
-  res.send(jwtAuthenticator.createAccessToken("coolguysiun@naver.com"));
+  res.send(AuthModel.createAccessToken("coolguysiun@naver.com"));
 });
 
 app.get("/getAllStocks", async (req, res) => {
@@ -140,7 +140,7 @@ app.get("/getAllStocks", async (req, res) => {
   });
 });
 
-app.post("/saveUserAsset", jwtAuthenticator.authenticateToken, (req, res) => {
+app.post("/saveUserAsset", AuthModel.authenticateToken, (req, res) => {
   const { userInfo, assets } = req.body;
   UserAssetModel.setUserAsset(userInfo.email, assets, (result) => {
     console.log("result!", result);
@@ -149,25 +149,21 @@ app.post("/saveUserAsset", jwtAuthenticator.authenticateToken, (req, res) => {
   });
 });
 
-app.post(
-  "/getUserAssetRetArray",
-  jwtAuthenticator.authenticateToken,
-  (req, res) => {
-    const { userInfo } = req.body;
-    UserAssetModel.getUserAssetRetArray(userInfo.email, (result, obj) => {
-      console.log("result");
-      if (result) {
-        res.json({ success: true, date: obj.date, mean: obj.mean });
-      } else {
-        res.json({ success: false, message: "User Assets are not exist" });
-      }
-    });
-  }
-);
+app.post("/getUserAssetRetArray", AuthModel.authenticateToken, (req, res) => {
+  const { userInfo } = req.body;
+  UserAssetModel.getUserAssetRetArray(userInfo.email, (result, obj) => {
+    console.log("result");
+    if (result) {
+      res.json({ success: true, date: obj.date, mean: obj.mean });
+    } else {
+      res.json({ success: false, message: "User Assets are not exist" });
+    }
+  });
+});
 
 app.post(
   "/getUserAssetPerformance",
-  jwtAuthenticator.authenticateToken,
+  AuthModel.authenticateToken,
   (req, res) => {
     const { userInfo } = req.body;
     UserAssetModel.getUserAssetRetArray(userInfo.email, (result, obj) => {
