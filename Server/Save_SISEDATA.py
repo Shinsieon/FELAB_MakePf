@@ -36,6 +36,7 @@ class SAVE_SISEDATA:
             time.sleep(1)
             print(str(process_num) + "/ " + str(stock_list_len),flush=True)
 
+        result_df['Date'] = result_df['Date'].dt.strftime('%Y%m%d')
         print("get_monthly_kospi_sise saved")
         self.saveDB(result_df, "KOSPI_M")
     def get_monthly_kospi_fundamental(self):
