@@ -1,4 +1,4 @@
-import Dashboard, { Iasset } from "./Components/Dashboard";
+import Dashboard, { Iasset } from "./Pages/Dashboard";
 import { createStore, combineReducers } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 
@@ -13,13 +13,12 @@ const scrReducer = (state = <Dashboard />, action: any) => {
     case SET_DASHBOARD:
       return <Dashboard />;
     case SET_PORTFOLIO:
+      break;
     //return <Portfolio />;
     default:
       return state;
   }
 };
-
-const TOKEN_TIME_OUT = 600 * 1000;
 
 const SET_ASSET = "assetReducer/SET_ASSET";
 export const assetChanger = {

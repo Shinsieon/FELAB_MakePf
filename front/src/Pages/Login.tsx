@@ -1,7 +1,6 @@
-import kakaoLoginIcon from "./assets/images/kakao_logo.png";
+import kakaoLoginIcon from "../assets/images/kakao_logo.png";
 import configData from "../config.json";
 import { setRefreshToken, setUserInfo, setAccessToken } from "../Cookie";
-import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import fetchApi from "../httpFetch";
@@ -232,7 +231,7 @@ function UserRegister({ setIsRegister }: { setIsRegister: Function }) {
             회원가입
           </button>
         </div>
-        <a
+        <button
           className="text-right cursor-pointer text-sm"
           onClick={() => {
             setIsRegister(false);
@@ -240,7 +239,7 @@ function UserRegister({ setIsRegister }: { setIsRegister: Function }) {
         >
           {" "}
           로그인으로 이동하기
-        </a>
+        </button>
       </form>
       <p className="text-center text-gray-500 text-xs"></p>
     </div>
@@ -312,7 +311,7 @@ function UserLogin({ setIsRegister }: { setIsRegister: Function }) {
               alt="kakao login"
             />
           </div>
-          <a
+          <button
             className="text-right cursor-pointer text-sm"
             onClick={() => {
               setIsRegister(true);
@@ -320,7 +319,7 @@ function UserLogin({ setIsRegister }: { setIsRegister: Function }) {
           >
             {" "}
             회원가입
-          </a>
+          </button>
           <div className="my-2">
             <p className="text-xs my-2">
               최초 회원가입 시 이용약관, 개인정보처리방침에 동의하게 됩니다.

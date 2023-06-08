@@ -8,23 +8,23 @@ import { getUserInfo } from "../Cookie";
 
 const numberToMonth = (month: string) => {
   switch (month) {
-    case "1":
+    case "01":
       return "Jan";
-    case "2":
+    case "02":
       return "Feb";
-    case "3":
+    case "03":
       return "Mar";
-    case "4":
+    case "04":
       return "Apr";
-    case "5":
+    case "05":
       return "May";
-    case "6":
+    case "06":
       return "Jun";
-    case "7":
+    case "07":
       return "Jul";
-    case "8":
+    case "08":
       return "Aug";
-    case "9":
+    case "09":
       return "Sep";
     case "10":
       return "Oct";
@@ -45,9 +45,7 @@ function DashboardPfRetLinBox() {
     });
     if (result.success) {
       setLabels(
-        result.date.map((item: string) =>
-          numberToMonth(item.split(".")[1].replace(" ", ""))
-        )
+        result.date.map((item: string) => numberToMonth(item.substring(4, 6)))
       );
       setRetMean(result.mean.map((item: any) => item * 100));
     }

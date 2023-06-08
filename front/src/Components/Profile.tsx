@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, Ref } from "react";
+import { useRef, useCallback } from "react";
 import { useState, useEffect } from "react";
 
 import manImage from "../assets/images/man.png";
@@ -6,24 +6,10 @@ import womanImage from "../assets/images/woman.png";
 import notification from "../assets/images/notification.png";
 import dropdown from "../assets/images/down-arrow.png";
 import "react-dropdown/style.css";
-import { RiLogoutBoxLine } from "react-icons/ri";
 import { getUserInfo } from "../Cookie";
 import fetchApi from "../httpFetch";
 import { removeCookieToken } from "../Cookie";
 
-function Logout({ clickHandler }: { clickHandler: Function }) {
-  return (
-    <div className="cursor-pointer mt-0.5">
-      <RiLogoutBoxLine
-        onClick={() => {
-          clickHandler();
-        }}
-        size="20"
-        color="tomato"
-      ></RiLogoutBoxLine>
-    </div>
-  );
-}
 function Profile() {
   return (
     <div className="absolute flex w-200 top-5 right-10 cursor-default p-2">

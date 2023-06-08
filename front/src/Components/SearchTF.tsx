@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Iasset } from "./Dashboard";
+import { Iasset } from "../Pages/Dashboard";
 import fetchApi from "../httpFetch";
 
 type stockType = {

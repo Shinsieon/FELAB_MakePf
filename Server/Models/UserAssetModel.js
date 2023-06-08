@@ -93,15 +93,13 @@ class UserAssetModel {
     this.getUserAssetSise(email, (result, rows) => {
       if (result) {
         for (var i = 0; i < rows.length; i++) {
-          var date = new Date(rows[i].Date).toLocaleDateString();
-          if (retResult[date]) {
-            retResult[date].push(rows[i]["Change"]);
-          } else retResult[date] = [rows[i]["Change"]];
+          if (retResult[rows[i].Date]) {
+            retResult[rows[i].Date].push(rows[i]["Change"]);
+          } else retResult[rows[i].Date] = [rows[i]["Change"]];
         }
         const investmentDate = Object.keys(retResult)
           .sort()
           .splice(Object.keys(retResult).length - invPer);
-        console.log(investmentDate);
         var avgArr = [];
         for (var i = 0; i < invPer; i++) {
           if (retResult[investmentDate[i]]) {

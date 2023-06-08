@@ -2,8 +2,8 @@
 import Table from "react-bootstrap/esm/Table";
 import Form from "react-bootstrap/esm/Form";
 import { useDispatch, useSelector } from "react-redux";
-import { Iasset } from "./Dashboard";
-import { getUserAssets } from "./Dashboard";
+import { Iasset } from "../Pages/Dashboard";
+import { getUserAssets } from "../Pages/Dashboard";
 import {
   AiFillDelete,
   AiFillCheckSquare,
@@ -21,7 +21,6 @@ function PortfolioTable() {
   const [isAddBtnClicked, setIsAddBtnClicked] = useState(false);
   const [amountSum, setAmountSum] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
-  const [period, setPeriod] = useState(0);
 
   const dispatch = useDispatch();
   const addBtnToggle = () => {
@@ -73,10 +72,10 @@ function PortfolioTable() {
           period = tempAssets[i].investmentPeriod;
       }
       setAmountSum(total ? total : 0);
-      setPeriod(period);
+      //setPeriod(period);
     } else {
       setAmountSum(0);
-      setPeriod(0);
+      //setPeriod(0);
     }
   }, [tempAssets]);
   return (
