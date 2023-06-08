@@ -68,6 +68,6 @@ class SAVE_SISEDATA:
 
 if __name__ == "__main__":
     cls = SAVE_SISEDATA()
-    #cls.get_monthly_kospi_sise()
+    cls.get_monthly_kospi_sise()
     cls.get_Korea_stock_list()
     #cls.get_monthly_kospi_fundamental()
