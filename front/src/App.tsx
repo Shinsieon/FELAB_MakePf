@@ -8,9 +8,7 @@ import { useNavigate } from "react-router-dom";
 import configData from "./config.json";
 import { getRefreshToken } from "./Cookie";
 import { getUserInfo } from "./Cookie";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const queryClient = new QueryClient();
 function App() {
   const navigate = useNavigate();
   useEffect(() => {
@@ -38,16 +36,14 @@ function App() {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <div className="absolute cover w-screen h-screen bg-white font-sm">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/login/oauth" element={<KakaoRedirectHandler />} />
-        </Routes>
-      </div>
-    </QueryClientProvider>
+    <div className="absolute cover w-screen h-screen bg-white font-sm">
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/login/oauth" element={<KakaoRedirectHandler />} />
+      </Routes>
+    </div>
   );
 }
 
