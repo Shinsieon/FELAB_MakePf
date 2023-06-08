@@ -1,13 +1,16 @@
 import "./App.css";
 import { Route, Routes } from "react-router";
-import Home from "./Components/Home";
-import Login from "./Login";
+import Home from "./Pages/Home";
+import Login from "./Pages/Login";
 import KakaoRedirectHandler from "./KakaoRedirectHandler";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import configData from "../src/config.json";
+import configData from "./config.json";
 import { getRefreshToken } from "./Cookie";
 import { getUserInfo } from "./Cookie";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 function App() {
   const navigate = useNavigate();
   useEffect(() => {
@@ -35,14 +38,16 @@ function App() {
   }, []);
 
   return (
-    <div className="absolute cover w-screen h-screen bg-white font-sm">
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/login/oauth" element={<KakaoRedirectHandler />} />
-      </Routes>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <div className="absolute cover w-screen h-screen bg-white font-sm">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/login/oauth" element={<KakaoRedirectHandler />} />
+        </Routes>
+      </div>
+    </QueryClientProvider>
   );
 }
 

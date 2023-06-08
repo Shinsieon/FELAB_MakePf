@@ -1,4 +1,4 @@
-const config = require("./config.json");
+const config = require("../config.json");
 const mysql = require("mysql");
 const os = require("os");
 const session = require("express-session");

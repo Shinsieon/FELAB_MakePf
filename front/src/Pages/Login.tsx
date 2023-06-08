@@ -1,10 +1,10 @@
 import kakaoLoginIcon from "./assets/images/kakao_logo.png";
-import configData from "./config.json";
-import { setRefreshToken, setUserInfo, setAccessToken } from "./Cookie";
+import configData from "../config.json";
+import { setRefreshToken, setUserInfo, setAccessToken } from "../Cookie";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import fetchApi from "./httpFetch";
+import fetchApi from "../httpFetch";
 
 const { Kakao } = window;
 

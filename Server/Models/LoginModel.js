@@ -1,4 +1,4 @@
-const cryptoPassword = require("../cryptoPassword");
+const cryptoPassword = require("../Library/CryptoPassword");
 const AuthModel = require("../Models/AuthModel");
 class LoginModel {
   init(DBConnector) {

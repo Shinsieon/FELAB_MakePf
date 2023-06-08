@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import Profile from "./Profile";
-import DashboardPfRetLinBox from "./DashboardPfRetLinBox";
-import DashboardPfPieBox from "./DashboardPfPieBox";
-import Performance from "./Performance";
-import PortfolioTable from "./PortfolioTable";
+import Profile from "../Components/Profile";
+import DashboardPfRetLinBox from "../Components/DashboardPfRetLinBox";
+import DashboardPfPieBox from "../Components/DashboardPfPieBox";
+import Performance from "../Components/Performance";
+import PortfolioTable from "../Components/PortfolioTable";
 import fetchApi from "../httpFetch";
 import { getUserInfo } from "../Cookie";
 

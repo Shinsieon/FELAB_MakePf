@@ -1,6 +1,6 @@
 //import "bootstrap/dist/css/bootstrap.min.css";
-import Table from "react-bootstrap/Table";
-import Form from "react-bootstrap/Form";
+import Table from "react-bootstrap/esm/Table";
+import Form from "react-bootstrap/esm/Form";
 import { useDispatch, useSelector } from "react-redux";
 import { Iasset } from "./Dashboard";
 import { getUserAssets } from "./Dashboard";

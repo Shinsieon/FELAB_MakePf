@@ -22,7 +22,7 @@ const StockModel = require("./Models/StockModel");
 const NotiModel = require("./Models/NotiModel");
 
 /*db 커넥션 */
-const DBConnector = require(__dirname + "/DBConnector");
+const DBConnector = require(__dirname + "/Library/DBConnector");
 const conn = DBConnector.init();
 DBConnector.initSession(app);
 

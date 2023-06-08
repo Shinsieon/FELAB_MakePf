@@ -1,6 +1,5 @@
 import { Line } from "react-chartjs-2";
-import { Iasset } from "./Dashboard";
-import { AiOutlinePlusCircle } from "react-icons/ai";
+import { Iasset } from "../Pages/Dashboard";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { screenChanger } from "../Store";

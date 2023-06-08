@@ -1,5 +1,5 @@
 import { useMediaQuery } from "react-responsive";
-import NavBar from "./NavBar";
+import NavBar from "../Components/NavBar";
 import { connect } from "react-redux";
 export const Mobile = ({
   children,
