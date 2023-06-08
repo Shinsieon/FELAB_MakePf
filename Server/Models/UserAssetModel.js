@@ -101,6 +101,7 @@ class UserAssetModel {
         const investmentDate = Object.keys(retResult)
           .sort()
           .splice(Object.keys(retResult).length - invPer);
+        console.log(investmentDate);
         var avgArr = [];
         for (var i = 0; i < invPer; i++) {
           if (retResult[investmentDate[i]]) {
