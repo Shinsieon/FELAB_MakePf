@@ -24,7 +24,7 @@ class UserAssetModel {
         //아무 자산이 없다면 다 제거
         this.DBConnector.sendQuery(
           this.conn,
-          `DELETE FROM USERASSET WHERE email='${email}';`,
+          `DELETE FROM USERASSET WHERE email='${email.toLowerCase()}';`,
           () => {
             callback(true);
           }
@@ -44,10 +44,12 @@ class UserAssetModel {
     };
     //기존에 자산이 있는 고객이면 delete 후 insert
     this.getUserAssets(email, (rows) => {
-      if (rows.length > 0) {
+      console.log(rows, email);
+
+      if (rows) {
         this.DBConnector.sendQuery(
           this.conn,
-          `DELETE FROM USERASSET WHERE email='${email}';`,
+          `DELETE FROM USERASSET WHERE email='${email.toLowerCase()}';`,
           () => {
             insertAssets(assets);
           }
@@ -55,8 +57,8 @@ class UserAssetModel {
       } else insertAssets(assets);
     });
   };
-  getUserAssets = async (email, callback) => {
-    await this.DBConnector.sendQuery(
+  getUserAssets = (email, callback) => {
+    this.DBConnector.sendQuery(
       this.conn,
       `SELECT * FROM USERASSET WHERE email='${email.toLowerCase()}';`,
       (rows) => {
